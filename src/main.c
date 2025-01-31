@@ -7,9 +7,9 @@ int main (int ac, char **av, char **env)
     if (ac > 1)
     {
         char *test = "Hello MiniHell";
-        ft_printf(test);
+        printf("%s\n",test);
         int n = ft_strlen(test);
-        ft_printf("\n %d\n", n);
+        printf("\n %d\n", n);
     }
     return 0;
 }
