@@ -13,9 +13,14 @@ OBJ_DIR = obj
 LIBFT_DIR = utils/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-SRC = 	main.c init/initialize_shell.c \
+SRC = 	main.c \
+		init/initialize_shell.c \
 		prompt/read_input_line.c  \
+		prompt/get_env_info.c  \
+		prompt/create_prompt.c \
 		free/free_memory.c \
+		free/free_list_memory.c \
+		exit/exit_with_error.c \
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC))
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

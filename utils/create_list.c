@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_memory.c                                      :+:      :+:    :+:   */
+/*   create_list.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/03 21:24:31 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/03 21:24:31 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/05 19:36:07 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/05 19:36:07 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
 
-void free_allocated_memory(char **arr)
+void	ft_lstadd_back(t_app **shell, t_app *new)
 {
-    int i;
+	t_app	*last;
 
-    if (!arr)
-        return ;
-    i = 0;
-    while (arr[i])
-    {
-        free(arr[i]);
-        arr[i] = NULL;
-        i++;
-    }
-    free(arr);
-    arr = NULL;
+	if (!new)
+		return ;
+	if (*lst == NULL)
+	{
+		*lst = new;
+		return ;
+	}
+	last = ft_lstlast(*lst);
+	last->next = new;
 }

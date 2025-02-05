@@ -12,37 +12,13 @@
 
 #include "../../includes/minishell.h"
 
-t_app  *initialize_shell(void)
+t_cmd *initialize_cmd(void)
 {
-    t_app *new;
+    t_cmd *new;
 
-    new = malloc(sizeof(t_app));
+    new = malloc(sizeof(t_cmd));
     if (!new)
-        return NULL;
-    new->path = ft_split(getenv("PATH"), ':');
-    if (!new->path)
-        return NULL;
-    new->user = getenv("USER");
-    if (!new->user)
-    {
-        new->user = ft_strdup("unknown");
-        if (!new->user)
-            return NULL;
-    }
-    new->name = getenv("NAME");
-    if (!new->name)
-    {
-        new->name = ft_strdup("shell-root");
-        if (!new->name)
-            return NULL;
-    }
-    new->pwd = getcwd(NULL, 0);
-    if (!new->pwd)
-    {
-        new->pwd = ft_strdup("");
-        if (!new->pwd)
-            return NULL;
-    }
+        exit(1);
     new->args = NULL;
 	new->input = NULL;
 	new->output = NULL;
@@ -50,4 +26,14 @@ t_app  *initialize_shell(void)
     new->prev = NULL;
 	new->append = 0;
     return new;
+}
+
+void  initialize_shell(t_app *shell)
+{
+    shell->path = NULL;
+    shell->user = NULL;
+    shell->name = NULL;
+    shell->pwd = NULL;
+    shell->prompt = NULL;
+    shell->cmd = initialize_cmd();
 }

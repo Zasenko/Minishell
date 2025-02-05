@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 21:24:27 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/04 12:12:04 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/05 20:35:18 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,35 @@
 # include <unistd.h>
 # include <stdbool.h>
 
-typedef struct s_app
+typedef	struct 		s_cmd
 {
 	char			**args;
-	char			**path;
-	char			*user;
-	char			*name;
-	char			*pwd;
 	char			*input;
 	char			*output;
 	int				append;
-	struct s_app	*next;
-    struct s_app    *prev;
+	struct s_cmd	*next;
+    struct s_cmd    *prev;
+}					t_cmd;
+
+typedef struct s_app
+{
+	char			**path;
+	char			*user;
+	char			*name;
+	char			*prompt;
+	char			*pwd;
+	struct	s_cmd	*cmd;
 }					t_app;
 
-t_app	*initialize_shell(void);
+void	initialize_shell(t_app *shell);
 void	read_input_line(t_app *shell);
-void 	free_allocated_memory(t_app *shell);
+void 	free_allocated_memory(char **arr);
+void 	exit_with_error(t_app *shell, int status);
+void 	free_list(t_app *shell);
+bool 	get_env_info(t_app *shell);
+void	ft_lstadd_back(t_app **shell, t_app *new);
+bool 	create_prompt_path(t_app *shell);
+
+
 
 #endif

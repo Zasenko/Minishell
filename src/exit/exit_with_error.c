@@ -1,30 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_memory.c                                      :+:      :+:    :+:   */
+/*   exit_with_error.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/03 21:24:31 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/03 21:24:31 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/05 12:06:08 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/05 12:06:08 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void free_allocated_memory(char **arr)
+void 	exit_with_error(t_app *shell, int status)
 {
-    int i;
-
-    if (!arr)
-        return ;
-    i = 0;
-    while (arr[i])
-    {
-        free(arr[i]);
-        arr[i] = NULL;
-        i++;
-    }
-    free(arr);
-    arr = NULL;
+    free_list(shell);
+    exit(status);
 }
