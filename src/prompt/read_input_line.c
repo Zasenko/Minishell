@@ -1,5 +1,14 @@
 #include "../../includes/minishell.h"
 
+// A simple example of parsing cmd  
+void parse_args(t_app *shell, char *args)
+{
+    char **res = ft_split(args, ' ');
+    if (!res)
+        return ;
+    add_node_back(&shell->cmd, create_new_node(res));
+}
+
 void read_input_line(t_app *shell)
 {
     char *input;
@@ -14,10 +23,8 @@ void read_input_line(t_app *shell)
         if (*input)
         {
             add_history(input);
-            printf("%s\n", input);
-            break ;
-        // in this place you can do pars and so on!!
+            // in this place you can do a pars of comannd!!
+            parse_args(shell, input);
         }
     }
-    exit_with_error(shell, 1);
 }

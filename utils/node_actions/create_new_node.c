@@ -12,17 +12,15 @@
 
 #include "../includes/minishell.h"
 
-void	ft_lstadd_back(t_app **shell, t_app *new)
+t_cmd *create_new_node(char **args)
 {
-	t_app	*last;
-
+	t_cmd *new;
+	
+	new = malloc(sizeof(t_cmd));
 	if (!new)
-		return ;
-	if (*lst == NULL)
-	{
-		*lst = new;
-		return ;
-	}
-	last = ft_lstlast(*lst);
-	last->next = new;
+		return NULL;
+	new->args = args;
+	new->prev = NULL;
+	new->next = NULL;
+	return new;
 }

@@ -35,5 +35,5 @@ void  initialize_shell(t_app *shell)
     shell->name = NULL;
     shell->pwd = NULL;
     shell->prompt = NULL;
-    shell->cmd = initialize_cmd();
+    shell->cmd = NULL;
 }
