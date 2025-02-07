@@ -13,13 +13,15 @@ void read_input_line(t_app *shell)
 {
     char *input;
 
+    if (!shell)
+        return ;
     if (!create_prompt_path(shell))
         exit_with_error(shell, 1);
     while (1) 
     {
         input = readline(shell->prompt);
-        if (!input) 
-            break ;
+        if (!input)
+            exit_with_error(shell, 1);
         if (*input)
         {
             add_history(input);

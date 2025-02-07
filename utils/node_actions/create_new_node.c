@@ -20,6 +20,9 @@ t_cmd *create_new_node(char **args)
 	if (!new)
 		return NULL;
 	new->args = args;
+	new->fd_in = -1;
+    new->fd_out = -1;
+	new->append = false;
 	new->prev = NULL;
 	new->next = NULL;
 	return new;

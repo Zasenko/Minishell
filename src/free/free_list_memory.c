@@ -12,18 +12,19 @@
 
 #include "../../includes/minishell.h"
 
-void free_cmd_list(t_cmd *cmd)
+void free_cmd_list(t_cmd **cmd)
 {
     t_cmd *temp;
 
     if (!cmd)
         return ;
-    while (cmd != NULL)
+    while (*cmd != NULL)
     {
-        temp = cmd->next;
-        if (cmd->args)
-            free_allocated_memory(cmd->args);
-        cmd = temp;
+        temp = (*cmd)->next;
+        if ((*cmd)->args)
+            free_allocated_memory((*cmd)->args);
+        free(*cmd);
+        *cmd = temp;
     }
 
 }
@@ -54,11 +55,6 @@ void free_list(t_app *shell)
         free(shell->prompt);
         shell->prompt = NULL;
     }
-    free_cmd_list(shell->cmd);
+    free_cmd_list(&shell->cmd);
     free(shell->cmd);
 }
-
-
-// printf("%s\n",(*shell)->user);
-// printf("%s\n",(*shell)->name);
-// printf("%s\n",(*shell)->pwd);

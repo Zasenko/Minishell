@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 21:24:27 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/06 14:46:58 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/07 18:03:26 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ bool 	create_prompt_path(t_app *shell);
 void	add_node_back(t_cmd **cmd, t_cmd *new);
 t_cmd 	*create_new_node(char **args);
 t_cmd	*last_node(t_cmd *node);
+void    handle_signal(void);
 
 #endif

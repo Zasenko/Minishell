@@ -21,6 +21,7 @@ SRC = 		main.c \
 			prompt/create_prompt.c \
 			free/free_memory.c \
 			free/free_list_memory.c \
+			signals/handle_signal.c \
 			exit/exit_with_error.c \
 
 UTILS_SRC = node_actions/add_node_back.c \
