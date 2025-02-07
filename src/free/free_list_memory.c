@@ -26,7 +26,8 @@ void free_cmd_list(t_cmd **cmd)
         free(*cmd);
         *cmd = temp;
     }
-
+    free(*cmd);
+    *cmd = NULL;
 }
 
 void free_list(t_app *shell)
@@ -56,5 +57,4 @@ void free_list(t_app *shell)
         shell->prompt = NULL;
     }
     free_cmd_list(&shell->cmd);
-    free(shell->cmd);
 }

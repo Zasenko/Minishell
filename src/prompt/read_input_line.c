@@ -21,7 +21,10 @@ void read_input_line(t_app *shell)
     {
         input = readline(shell->prompt);
         if (!input)
-            exit_with_error(shell, 1);
+        {
+            break;
+            //exit_with_error(shell, 1);
+        }
         if (*input)
         {
             add_history(input);
