@@ -22,7 +22,7 @@ void free_cmd_list(t_cmd **cmd)
     {
         temp = (*cmd)->next;
         if ((*cmd)->args)
-            free_allocated_memory((*cmd)->args);
+            free_2d_array((*cmd)->args);
         free(*cmd);
         *cmd = temp;
     }
@@ -30,31 +30,38 @@ void free_cmd_list(t_cmd **cmd)
     *cmd = NULL;
 }
 
+void free_envp_list(t_envp **envp)
+{
+    t_envp *temp;
+
+    if (!envp)
+        return ;
+    while (*envp != NULL)
+    {
+        temp = (*envp)->next;
+        free((*envp)->name);
+        free((*envp)->envp);
+        free(*envp);
+        *envp = temp;
+    }
+    free(*envp);
+    *envp = NULL;
+}
+
 void free_list(t_app *shell)
 {
     if (!shell)
         return ;
     if (shell->path)
-        free_allocated_memory(shell->path);
+        free_2d_array(shell->path);
     if (shell->user)
-    {
         free(shell->user);
-        shell->user = NULL;
-    }
     if (shell->name)  
-    {   
         free(shell->name);
-        shell->name = NULL;
-    }
     if (shell->pwd)
-    {
         free(shell->pwd);
-        shell->pwd = NULL;
-    }
     if (shell->prompt)
-    {
         free(shell->prompt);
-        shell->prompt = NULL;
-    }
     free_cmd_list(&shell->cmd);
+    free_envp_list(&shell->envp);
 }

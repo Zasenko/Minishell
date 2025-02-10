@@ -1,29 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_memory.c                                      :+:      :+:    :+:   */
+/*   last_node.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/03 21:24:31 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/03 21:24:31 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/06 12:24:16 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/06 12:24:16 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
 
-void free_2d_array(char **arr)
+t_cmd *last_cmd_node(t_cmd *node)
 {
-    int i;
-
-    if (!arr)
-        return ;
-    i = 0;
-    while (arr[i])
-    {
-        free(arr[i]);
-        arr[i] = NULL;
-        i++;
-    }
-    free(arr);
+	if (node == NULL)
+		return (NULL);
+	while (node->next != NULL)
+		node = node->next;
+	return (node);
 }

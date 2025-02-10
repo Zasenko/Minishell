@@ -16,6 +16,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 SRC = 		main.c \
 			init/initialize_shell.c \
+			init/copy_env.c \
 			prompt/read_input_line.c  \
 			prompt/get_env_info.c  \
 			prompt/create_prompt.c \
@@ -24,9 +25,12 @@ SRC = 		main.c \
 			signals/handle_signal.c \
 			exit/exit_with_error.c \
 
-UTILS_SRC = node_actions/add_node_back.c \
-			node_actions/create_new_node.c \
-			node_actions/last_node.c \
+UTILS_SRC = node_actions/cmd_node/add_cmd_back.c \
+			node_actions/cmd_node/create_new_cmd.c \
+			node_actions/cmd_node/last_cmd_node.c \
+			node_actions/envp_node/add_envp_back.c \
+			node_actions/envp_node/last_envp_node.c \
+			node_actions/envp_node/create_new_envp.c \
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC))
 UTILS_SRC := $(addprefix $(UTILS_DIR)/, $(UTILS_SRC))

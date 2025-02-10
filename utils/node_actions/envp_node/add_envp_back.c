@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_memory.c                                      :+:      :+:    :+:   */
+/*   add_node_back.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/03 21:24:31 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/03 21:24:31 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/06 12:24:27 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/06 12:24:27 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
 
-void free_2d_array(char **arr)
+void	add_envp_back(t_envp **envp, t_envp *new)
 {
-    int i;
+	t_envp	*last;
 
-    if (!arr)
-        return ;
-    i = 0;
-    while (arr[i])
-    {
-        free(arr[i]);
-        arr[i] = NULL;
-        i++;
-    }
-    free(arr);
+	if (!new)
+		return ;
+	if (*envp == NULL)
+	{
+		*envp = new;
+		return ;
+	}
+	last = last_envp_node(*envp);
+	last->next = new;
+	new->prev = last;
 }

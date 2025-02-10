@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 11:16:23 by ibondarc          #+#    #+#             */
-/*   Updated: 2025/02/05 20:17:46 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/10 17:17:14 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define LIBFT_H
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdbool.h>
 
 int					ft_isalnum(int c);
 int					ft_isalpha(int c);
@@ -36,7 +37,7 @@ void				*ft_memmove(void *dest, const void *src, size_t n);
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));
 void				*ft_memchr(const void *s, int c, size_t n);
 void				*ft_calloc(size_t nmemb, size_t size);
-char				*ft_strchr(const char *s, int c);
+char				*ft_strchr(const char *s, int c, bool flag);
 char				*ft_strrchr(const char *s, int c);
 char				*ft_strnstr(const char *big, const char *little,
 						size_t len);

@@ -13,6 +13,14 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
+typedef struct s_envp
+{
+    char            *envp;          //envp variable 
+    char            *name;          // envp name
+    struct s_envp    *next;          // Next command in pipeline
+    struct s_envp    *prev;          // Previous command (doubly linked list)          // First command in pipeline
+} t_envp;
+
 typedef struct s_cmd
 {
     char            **args;     // Command arguments
@@ -32,8 +40,8 @@ typedef struct s_app
     char            *name;          // Shell name
     char            *prompt;        // Shell prompt
     char            *pwd;           // Current working directory
-    char            **envp;         // Environment variables
     int             last_exit_code; // Stores `$?` value
+    struct s_envp   *envp;          // Environment variables
     struct s_cmd    *cmd;           // First command in pipeline
 } t_app;
 

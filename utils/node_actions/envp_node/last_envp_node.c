@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-t_cmd *last_node(t_cmd *node)
+t_envp *last_envp_node(t_envp *node)
 {
 	if (node == NULL)
 		return (NULL);

@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   add_node_back.c                                    :+:      :+:    :+:   */
+/*   create_list.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/06 12:24:27 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/06 12:24:27 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/05 19:36:07 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/05 19:36:07 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	add_node_back(t_cmd **cmd, t_cmd *new)
+t_cmd *create_new_cmd(char **args)
 {
-	t_cmd	*last;
-
+	t_cmd *new;
+	
+	new = malloc(sizeof(t_cmd));
 	if (!new)
-		return ;
-	if (*cmd == NULL)
-	{
-		*cmd = new;
-		return ;
-	}
-	last = last_node(*cmd);
-	last->next = new;
-	new->prev = last;
+		return NULL;
+	new->args = args;
+	new->fd_in = -1;
+    new->fd_out = -1;
+	new->append = false;
+	new->prev = NULL;
+	new->next = NULL;
+	return new;
 }

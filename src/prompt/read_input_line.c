@@ -6,7 +6,7 @@ void parse_args(t_app *shell, char *args)
     char **res = ft_split(args, ' ');
     if (!res)
         return ;
-    add_node_back(&shell->cmd, create_new_node(res));
+    add_cmd_back(&shell->cmd, create_new_cmd(res));
 }
 
 void read_input_line(t_app *shell)
@@ -21,10 +21,7 @@ void read_input_line(t_app *shell)
     {
         input = readline(shell->prompt);
         if (!input)
-        {
-            break;
-            //exit_with_error(shell, 1);
-        }
+            exit_with_error(shell, 1);
         if (*input)
         {
             add_history(input);
