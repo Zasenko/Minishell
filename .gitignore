@@ -20,6 +20,7 @@
 *.lib
 *.a
 utils/libft/*.a
+obj/
 *.la
 *.lo
 
