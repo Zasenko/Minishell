@@ -21,5 +21,7 @@ int main(int argc, char **argv, char **envp)
     initialize_shell(&shell, envp);
     handle_signal();
     read_input_line(&shell);
+    ft_execute(&shell);
+    // todo: free schall + close all fds
     return 0;
 }

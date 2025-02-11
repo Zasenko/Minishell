@@ -31,6 +31,7 @@ typedef struct s_cmd
     int             fd_out;     // Output file descriptor
     struct s_cmd    *next;      // Next command in pipeline
     struct s_cmd    *prev;      // Previous command (doubly linked list)
+    pid_t pid;          // fork pid id
 } t_cmd;
 
 typedef struct s_app
@@ -43,6 +44,7 @@ typedef struct s_app
     int             last_exit_code; // Stores `$?` value
     struct s_envp   *envp;          // Environment variables
     struct s_cmd    *cmd;           // First command in pipeline
+    struct s_cmd *cmd;   // First command in pipeline
 } t_app;
 
 #endif
