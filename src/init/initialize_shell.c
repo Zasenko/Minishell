@@ -15,6 +15,7 @@
 void  initialize_shell(t_app *shell, char **envp)
 {
     shell->path = NULL;
+    shell->env_var = NULL;
     shell->user = NULL;
     shell->name = NULL;
     shell->pwd = NULL;

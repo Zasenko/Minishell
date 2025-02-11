@@ -12,7 +12,29 @@
 
 #include "../../includes/minishell.h"
 
+char **copy_env_into_2d_arr(char **envp)
+{
+    int i;
+    int j;
+    char **env_var;
 
+    i = 0;
+    while (envp[i] != NULL)
+        i++;
+    env_var = (char **)malloc((i + 1) * sizeof(char *));
+    if (!env_var)
+        return NULL;
+    j = 0;
+    env_var[i] = NULL;
+    while (envp[j] != NULL)
+    {
+        env_var[j] = ft_strdup(envp[j]);
+        if (!env_var[j])
+            return NULL;
+        j++;
+    }
+    return (env_var);
+}
 void copy_env(t_app *shell, char **envp)
 {
     int     i;
@@ -40,5 +62,8 @@ void copy_env(t_app *shell, char **envp)
             add_envp_back(&shell->envp, create_new_envp(env_var, name));
             i++;
         }
+        shell->env_var = copy_env_into_2d_arr(envp);
+        if (!shell->env_var)
+            exit_with_error(shell, 1);
     }
 }
