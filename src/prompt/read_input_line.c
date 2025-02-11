@@ -16,7 +16,9 @@ void read_input_line(t_app *shell)
     if (!shell)
         return ;
     if (!create_prompt_path(shell))
+    {
         exit_with_error(shell, 1);
+    }
 	while (1)
     {
         input = readline(shell->prompt);

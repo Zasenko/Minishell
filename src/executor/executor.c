@@ -106,7 +106,7 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 	return (1);
 }
 
-int	ft_wait_child(t_app *shell, t_cmd *cmd)
+int	ft_wait_child(t_cmd *cmd)
 {
 	int		status;
 	pid_t	child_pid;
@@ -131,7 +131,7 @@ int ft_wait_children(t_app *shell)
 	{
 		if (cmd->pid != -1)
 		{
-			ft_wait_child(shell, cmd);
+			ft_wait_child(cmd);
 		}
 		cmd = cmd->next;
 	}
