@@ -6,7 +6,7 @@
 /*   By: dmitryzasenko <dmitryzasenko@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/02/11 16:53:39 by dmitryzasen      ###   ########.fr       */
+/*   Updated: 2025/02/11 17:41:02 by dmitryzasen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ int	ft_execute(t_app *shell)
 	int		prev_pipe;
 
 	cmd = shell->cmd;
-	cmd_count = cmds_len(cmd);
+	cmd_count = cmd_len(cmd);
 	prev_pipe = -1;
 	if (!cmd_count)
 		return (0);
