@@ -29,6 +29,7 @@ SRC = 		main.c \
 UTILS_SRC = node_actions/cmd_node/add_cmd_back.c \
 			node_actions/cmd_node/create_new_cmd.c \
 			node_actions/cmd_node/last_cmd_node.c \
+			node_actions/cmd_node/cmd_len.c \
 			node_actions/envp_node/add_envp_back.c \
 			node_actions/envp_node/last_envp_node.c \
 			node_actions/envp_node/create_new_envp.c \
