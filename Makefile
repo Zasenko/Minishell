@@ -1,5 +1,12 @@
-GREEN = \e[0;32m
-RESET = \033[0m
+SYSTEM := $(shell uname -s)
+
+ifeq ($(SYSTEM), Darwin)
+    GREEN = \033[0;32m
+	RESET = \033[0m
+else
+    GREEN = \e[0;32m
+	RESET = \033[0m
+endif
 
 NAME = minishell
 
@@ -39,8 +46,14 @@ UTILS_SRC := $(addprefix $(UTILS_DIR)/, $(UTILS_SRC))
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 UTILS_OBJ = $(UTILS_SRC:$(UTILS_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-INCLUDES = -I includes/
-LIBS = -lreadline
+ifeq ($(SYSTEM), Darwin)
+    READLINE_DIR = /opt/homebrew/opt/readline
+    INCLUDES = -I$(READLINE_DIR)/include -I includes/
+    LIBS = -L$(READLINE_DIR)/lib -lreadline
+else
+    INCLUDES = -I includes/
+    LIBS = -lreadline
+endif
 
 all: $(OBJ_DIR) $(NAME)
 $(NAME): $(OBJ) $(UTILS_OBJ) 
