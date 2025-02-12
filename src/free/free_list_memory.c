@@ -54,6 +54,8 @@ void free_list(t_app *shell)
         return ;
     if (shell->path)
         free_2d_array(shell->path);
+    if (shell->env_var)
+        free_2d_array(shell->env_var);
     if (shell->user)
         free(shell->user);
     if (shell->name)  
