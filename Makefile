@@ -32,6 +32,7 @@ SRC = 		main.c \
 			signals/handle_signal.c \
 			exit/exit_with_error.c \
 			executor/executor.c \
+			builtins/pwd.c \
 
 UTILS_SRC = node_actions/cmd_node/add_cmd_back.c \
 			node_actions/cmd_node/create_new_cmd.c \

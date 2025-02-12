@@ -36,16 +36,15 @@ typedef struct s_cmd
 
 typedef struct s_app
 {
-    char            **path;         // PATH directories
-    char            **env_var;          // envp variable as 2d array
-    char            *user;          // User name
-    char            *name;          // Shell name
+    char **path;         // PATH directories
+    char **env_var;      // envp variable as 2d array
+    char *user;          // User name
+    char *name;          // Shell name
     char            *prompt;        // Shell prompt
-    char            *pwd;           // Current working directory
-    int             last_exit_code; // Stores `$?` value
-    struct s_envp   *envp;          // Environment variables
-    struct s_cmd    *cmd;           // First command in pipeline
-    char            **env;          // env for executor
+    char *pwd;           // Current working directory
+    int last_exit_code;  // Stores `$?` value
+    struct s_envp *envp; // Environment variables
+    struct s_cmd *cmd;   // First command in pipeline
 } t_app;
 
 #endif
