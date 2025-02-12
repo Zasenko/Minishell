@@ -16,17 +16,19 @@ void read_input_line(t_app *shell)
     if (!shell)
         return ;
     if (!create_prompt_path(shell))
+    {
         exit_with_error(shell, 1);
-    while (1) 
+    }
+	while (1)
     {
         input = readline(shell->prompt);
         if (!input)
-            exit_with_error(shell, 1);
-        if (*input)
-        {
-            add_history(input);
-            // in this place you can do a pars of comannd!!
-            parse_args(shell, input);
-        }
-    }
+		{
+			exit_with_error(shell, 1);
+		}
+		add_history(input);
+		// in this place you can do a pars of comannd!!
+		parse_args(shell, input);
+		ft_execute(shell);
+	}
 }

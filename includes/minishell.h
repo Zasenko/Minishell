@@ -33,5 +33,7 @@ void	add_envp_back(t_envp **envp, t_envp *new);
 t_envp 	*create_new_envp(char *envp, char *name);
 t_envp	*last_envp_node(t_envp *node);
 void    handle_signal(void);
+int     ft_execute(t_app *app);
+int	    cmd_len(t_cmd *cmd);
 
 #endif

@@ -1,26 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   cmd_len.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dmitryzasenko <dmitryzasenko@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/03 21:24:41 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/10 18:02:51 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/11 16:48:41 by dmitryzasen       #+#    #+#             */
+/*   Updated: 2025/02/11 16:49:25 by dmitryzasen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int main(int argc, char **argv, char **envp)
+int	cmd_len(t_cmd *cmd)
 {
-    t_app   shell;
-    
-    (void)argc;
-    (void)argv;
-    initialize_shell(&shell, envp);
-    handle_signal();
-    read_input_line(&shell);
-    // todo: free schall + close all fds
-    return 0;
+	t_cmd	*temp;
+	int		i;
+
+	i = 0;
+	temp = cmd;
+	if (!temp)
+		return (i);
+	while (temp != NULL)
+	{
+		i++;
+		temp = temp->next;
+	}
+	return (i);
 }
