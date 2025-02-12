@@ -6,7 +6,7 @@
 /*   By: dmitryzasenko <dmitryzasenko@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 21:24:27 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/12 16:00:54 by dmitryzasen      ###   ########.fr       */
+/*   Updated: 2025/02/12 16:25:30 by dmitryzasen      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ t_envp	*last_envp_node(t_envp *node);
 void    handle_signal(void);
 int     ft_execute(t_app *app);
 int	    cmd_len(t_cmd *cmd);
+int     is_builtin_func(char *cmd);
+int     exec_buildin(t_cmd *cmd);
 int     ft_pwd();
 
 #endif
