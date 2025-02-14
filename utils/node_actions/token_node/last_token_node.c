@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   last_token_node.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/03 21:24:41 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/10 18:02:51 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/12 17:55:02 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/12 17:55:02 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int main(int argc, char **argv, char **envp)
+t_token *last_token_node(t_token *node)
 {
-    t_app   shell;
-    
-    (void)argc;
-    (void)argv;
-    initialize_shell(&shell, envp);
-    handle_signal();
-    read_input_line(&shell);
-    // todo: free schall + close all fds
-    return 0;
+	if (node == NULL)
+		return (NULL);
+	while (node->next != NULL)
+		node = node->next;
+	return (node);
 }

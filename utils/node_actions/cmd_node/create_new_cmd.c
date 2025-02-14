@@ -12,14 +12,15 @@
 
 #include "../includes/minishell.h"
 
-t_cmd *create_new_cmd(char **args)
+t_cmd *create_new_cmd(void)
 {
 	t_cmd *new;
 	
 	new = malloc(sizeof(t_cmd));
 	if (!new)
 		return NULL;
-	new->args = args;
+	new->cmd = NULL;
+	new->args = NULL;;
 	new->fd_in = -1;
     new->fd_out = -1;
 	new->append = false;

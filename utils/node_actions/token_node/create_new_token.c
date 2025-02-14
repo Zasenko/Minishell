@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   create_new_token.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/03 21:24:41 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/10 18:02:51 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/12 17:55:11 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/12 17:55:11 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int main(int argc, char **argv, char **envp)
+t_token *create_new_token(char *value, t_type type)
 {
-    t_app   shell;
-    
-    (void)argc;
-    (void)argv;
-    initialize_shell(&shell, envp);
-    handle_signal();
-    read_input_line(&shell);
-    // todo: free schall + close all fds
-    return 0;
+	t_token *new;
+	
+	new = malloc(sizeof(t_token));
+	if (!new)
+		return NULL;
+	new->value = value;
+	new->type = type;
+	new->prev = NULL;
+	new->next = NULL;
+	return new;
 }
