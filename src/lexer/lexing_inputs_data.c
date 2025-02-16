@@ -18,8 +18,6 @@ void skip_spases(char *input, int *i)
         (*i)++;
 }
 
-
-
 bool define_valid_string(char *input)
 {
     char    quote;
@@ -48,6 +46,8 @@ char *extract_string(char *input, int *i)
     int     start;
     char    *res;
 
+    if (!input[*i])
+        return NULL;
     quote = input[*i];
     start = ++(*i);
     while (input[*i] && input[*i] != quote)
@@ -86,8 +86,6 @@ char *extract_duble_string(char *input)
     return res;
 }
 
-
-
 t_type define_operator(char *input, int *i)
 {
     if (input[*i] == '|')
@@ -124,20 +122,32 @@ char *extract_word(char *input, int *i)
     return res;
 }
 
-bool lexing_inputs_data(t_app *shell, char *input)
+bool lexing_inputs_data(t_app *shell, char *str)
 {
-    int i;
+    int i = 0;;
     char    *value;
     t_type  type;
     bool    redir = false;
     bool    cmd_exist = true;
+    char    *input;
 
-    if (!input)
+    if (!str)
         return false;
-    if (!define_valid_string(input))
+    if (!define_valid_string(str))
         return false;
-    if (ft_strchr(input, '\"', false))
-        input = extract_duble_string(input);
+    if (ft_strchr(str, '\"', false))
+    {
+        input = extract_duble_string(str);
+        if (!input)
+            return NULL;
+    }
+    else
+    {
+        input = ft_strdup(str);
+        if (!input)
+            return NULL;
+    }
+    free(str);
     while (input[i])
     {
         skip_spases(input, &i);
@@ -145,12 +155,10 @@ bool lexing_inputs_data(t_app *shell, char *input)
             break;
         if (input[i] == '\'')
         {
-           
             type = QUOTE;
             value = extract_string(input, &i);
             if (!value)
                 return false;
-            
         }
         else if (ft_strchr("|<>", input[i], false))
         {
@@ -175,7 +183,7 @@ bool lexing_inputs_data(t_app *shell, char *input)
             if (!value)
                 return false;
             skip_spases(input, &i);
-            if (input[i] == '<' || input[i + 1] == '<')
+            if (input[i] == '<')
                 type = IN_FILE;
             else if (redir)
                 type = OUT_FILE;
@@ -191,6 +199,7 @@ bool lexing_inputs_data(t_app *shell, char *input)
             }
         }
         add_token_back(&shell->tokens, create_new_token(value, type));
-    }    
+    }
+    free(input);
     return true;    
 }

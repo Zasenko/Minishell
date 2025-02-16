@@ -41,5 +41,10 @@ int     ft_execute(t_app *app);
 int	    cmd_len(t_cmd *cmd);
 bool    lexing_inputs_data(t_app *shell, char *input);
 bool    parse_tokens(t_app *shell);
+char    *parse_command(t_app *shell, char *value);
+int     count_types(t_token *token, t_type type);
+void    free_cmd_list(t_cmd **cmd);
+void    free_token_list(t_token **tokens);
+void    free_envp_list(t_envp **envp);
 
 #endif

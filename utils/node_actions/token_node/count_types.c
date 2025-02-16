@@ -1,32 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_list.c                                      :+:      :+:    :+:   */
+/*   count_types.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/05 19:36:07 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/05 19:36:07 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/14 15:10:25 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/14 15:10:25 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_cmd *create_new_cmd(void)
+int	count_types(t_token *token, t_type type)
 {
-	t_cmd *new;
-	
-	new = malloc(sizeof(t_cmd));
-	if (!new)
-		return NULL;
-	new->cmd = NULL;
-	new->args = NULL;
-	new->input = NULL;
-    new->output = NULL;
-	new->fd_in = -1;
-    new->fd_out = -1;
-	new->append = false;
-	new->prev = NULL;
-	new->next = NULL;
-	return new;
+	t_token	*temp;
+	int		i;
+
+	i = 0;
+	temp = token;
+	if (!temp)
+		return (i);
+	while (temp && temp->type == type)
+	{
+        i++;
+		temp = temp->next;
+	}
+	return (i);
 }

@@ -22,6 +22,24 @@ void print_tokens(t_token *head)
     }
 }
 
+void print_cmd(t_cmd *head)
+{
+    int i = 0;
+    while (head != NULL)
+    {
+        printf("cmd: [%d] %s\n",i, head->cmd);
+        int j = 0;
+        while (head->args[j])
+        {
+            printf("j: arg: [%d] %s\n", j, head->args[j]);
+            j++;
+        }
+        printf("input: [%d] %s\n",i, head->input);
+        printf("output: [%d] %s\n",i, head->output);
+        i++;
+        head = head->next;
+    }
+}
 
 void read_input_line(t_app *shell)
 {
@@ -39,10 +57,12 @@ void read_input_line(t_app *shell)
         if (!input)
 			exit_with_error(shell, 1);
 		add_history(input);
-		lexing_inputs_data(shell, input);
+        if (!lexing_inputs_data(shell, input))
+            exit_with_error(shell, 1);
         parse_tokens(shell);
-        // print_tokens(shell->tokens);
 		ft_execute(shell);
-        // free_list(shell);
+        // print_cmd(shell->cmd);
+        free_token_list(&shell->tokens);
+        free_cmd_list(&shell->cmd);
 	}
 }
