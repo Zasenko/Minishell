@@ -66,7 +66,7 @@ int	redirect(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 {
 	redirect(shell, cmd, prev_pipe, pipe_fd);
-	if (execve(cmd->args[0], cmd->args, shell->env) != 0)
+	if (execve(cmd->cmd, cmd->args, shell->env) != 0)
 	{
 		perror("execve");
 		exit(EXIT_FAILURE);

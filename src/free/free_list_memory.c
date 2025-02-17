@@ -23,11 +23,29 @@ void free_cmd_list(t_cmd **cmd)
         temp = (*cmd)->next;
         if ((*cmd)->args)
             free_2d_array((*cmd)->args);
+        free((*cmd)->cmd);
         free(*cmd);
         *cmd = temp;
     }
     free(*cmd);
     *cmd = NULL;
+}
+
+void free_token_list(t_token **tokens)
+{
+    t_token *temp;
+
+    if (!tokens)
+        return ;
+    while (*tokens != NULL)
+    {
+        temp = (*tokens)->next;
+        free((*tokens)->value);
+        free(*tokens);
+        *tokens = temp;
+    }
+    free(*tokens);
+    *tokens = NULL;
 }
 
 void free_envp_list(t_envp **envp)
@@ -66,4 +84,5 @@ void free_list(t_app *shell)
         free(shell->prompt);
     free_cmd_list(&shell->cmd);
     free_envp_list(&shell->envp);
+    free_token_list(&shell->tokens); 
 }
