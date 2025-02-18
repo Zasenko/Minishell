@@ -58,11 +58,11 @@ void read_input_line(t_app *shell)
 			exit_with_error(shell, 1);
 		add_history(input);
         lexing_inputs_data(shell, input);
-        // parse_tokens(shell);
-		// ft_execute(shell);
-        print_tokens(shell->tokens);
+        parse_tokens(shell);
+		ft_execute(shell);
+        // print_tokens(shell->tokens);
         // print_cmd(shell->cmd);
         free_token_list(&shell->tokens);
-        // free_cmd_list(&shell->cmd);
+        free_cmd_list(&shell->cmd);
 	}
 }
