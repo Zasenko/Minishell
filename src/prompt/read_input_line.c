@@ -57,10 +57,10 @@ void read_input_line(t_app *shell)
         if (!input)
 			exit_with_error(shell, 1);
 		add_history(input);
-        if (!lexing_inputs_data(shell, input))
-            exit_with_error(shell, 1);
+        lexing_inputs_data(shell, input);
         parse_tokens(shell);
 		ft_execute(shell);
+        // print_tokens(shell->tokens);
         // print_cmd(shell->cmd);
         free_token_list(&shell->tokens);
         free_cmd_list(&shell->cmd);

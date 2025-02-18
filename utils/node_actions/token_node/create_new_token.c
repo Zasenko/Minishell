@@ -12,15 +12,15 @@
 
 #include "../includes/minishell.h"
 
-t_token *create_new_token(char *value, t_type type)
+t_token *create_new_token(void)
 {
 	t_token *new;
 	
 	new = malloc(sizeof(t_token));
 	if (!new)
 		return NULL;
-	new->value = value;
-	new->type = type;
+	new->value = NULL;
+	new->type = -1;
 	new->prev = NULL;
 	new->next = NULL;
 	return new;
