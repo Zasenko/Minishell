@@ -1,9 +1,0 @@
-total 88
--rw-r--r--  1 igoryan igoryan  2512 Feb 15 15:52 Makefile
--rw-r--r--  1 igoryan igoryan    82 Jan 30 11:04 README.md
-drwxr-xr-x  2 igoryan igoryan  4096 Feb 12 12:21 includes
--rwxr-xr-x  1 igoryan igoryan 64360 Feb 16 11:12 minishell
-drwxr-xr-x 11 igoryan igoryan  4096 Feb 16 11:12 obj
--rw-r--r--  1 igoryan igoryan     0 Feb 16 11:12 out
-drwxr-xr-x 10 igoryan igoryan  4096 Feb 13 09:57 src
-drwxr-xr-x  4 igoryan igoryan  4096 Feb 11 12:49 utils

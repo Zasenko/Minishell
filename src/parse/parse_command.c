@@ -74,6 +74,8 @@ char *parse_command(t_app *shell, char *value)
     char    *env_path;
     char    **paths;
 
+
+	result = NULL;
     if (ft_strchr(value, '/', false))
     {
         result = ft_strdup(value);

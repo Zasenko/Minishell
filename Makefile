@@ -35,6 +35,8 @@ SRC = 		main.c \
 			lexer/lexing_inputs_data.c \
 			parse/parse_tokens.c \
 			parse/parse_command.c \
+			builtins/utils.c \
+			builtins/pwd.c \
 
 UTILS_SRC = node_actions/cmd_node/add_cmd_back.c \
 			node_actions/cmd_node/create_new_cmd.c \
