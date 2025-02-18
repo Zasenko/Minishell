@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/02/18 12:05:35 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/18 14:56:34 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ int	redirect(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 		dup2(cmd->fd_in, 0);
 		close(cmd->fd_in);
 	}
+	if (cmd->next != NULL)
+	{
+		dup2(pipe_fd[1], 1);
+	}
 	if (cmd->fd_out != -1)
 	{
 		dup2(cmd->fd_out, 1);
 		close(cmd->fd_out);
-	}
-	if (cmd->next != NULL)
-	{
-		dup2(pipe_fd[1], 1);
 	}
 	if (pipe_fd[0] != -1)
 		close(pipe_fd[0]);
@@ -109,6 +109,11 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 	// child
 	if (cmd->pid == 0)
 		child_process(shell, cmd, *prev_pipe, pipe_fd);
+	
+	if (cmd->fd_in != -1)
+		close(cmd->fd_in);
+	if (cmd->fd_out != -1)
+		close(cmd->fd_out);
 
 	if (*prev_pipe != -1)
 		close(*prev_pipe);
@@ -161,6 +166,37 @@ int	ft_execute(t_app *shell)
 	prev_pipe = -1;
 	if (!cmd_count)
 		return (0);
+		
+	while (cmd != NULL)
+	{
+		if (cmd->input != NULL)
+		{
+			int fd_in = open(cmd->input, O_RDONLY);
+			if (fd_in < 0)
+			{
+				perror("open");
+			}
+			else
+			{
+				cmd->fd_in = fd_in;
+			}
+		}
+		if (cmd->output != NULL)
+		{
+			int fd_out = open(cmd->output, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
+			if (fd_out < 0)
+			{
+				perror("open");
+			}
+			else
+			{
+				cmd->fd_out = fd_out;
+			}
+		}
+		cmd = cmd->next;
+	}
+
+	cmd = shell->cmd;
 	while (cmd != NULL)
 	{
 		ft_execute_command(shell, cmd, &prev_pipe);
