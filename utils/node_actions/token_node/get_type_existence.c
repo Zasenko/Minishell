@@ -1,22 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   last_token_node.c                                  :+:      :+:    :+:   */
+/*   get_token_type.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/12 17:55:02 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/12 17:55:02 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/17 16:50:34 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/17 16:50:34 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_token *last_token_node(t_token *node)
+bool    get_type_existence(t_token *token, t_type type)
 {
-	if (!node)
-		return (NULL);
-	while (node->next != NULL)
-		node = node->next;
-	return (node);
+	t_token	*temp;
+
+	temp = token;
+	if (!temp)
+		return false;
+	while (temp)
+	{
+        if (temp->type == type)
+            return true;
+		temp = temp->next;
+	}
+	return false;
 }
