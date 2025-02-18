@@ -33,6 +33,13 @@ SRC = 		main.c \
 			exit/exit_with_error.c \
 			executor/executor.c \
 			lexer/lexing_inputs_data.c \
+			lexer/handle_command.c \
+			lexer/handle_duble_quotes.c \
+			lexer/handle_operators.c \
+			lexer/handle_single_quote.c \
+			lexer/handle_variable.c \
+			lexer/lexing_utils.c \
+			lexer/lexing_checker.c \
 			parse/parse_tokens.c \
 			parse/parse_command.c \
 
@@ -48,6 +55,7 @@ UTILS_SRC = node_actions/cmd_node/add_cmd_back.c \
 			node_actions/token_node/last_token_node.c \
 			node_actions/token_node/token_len.c \
 			node_actions/token_node/count_types.c \
+			node_actions/token_node/get_type_existence.c \
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC))
 UTILS_SRC := $(addprefix $(UTILS_DIR)/, $(UTILS_SRC))
