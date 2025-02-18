@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 21:24:27 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/10 16:09:25 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/18 11:37:29 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ int     count_types(t_token *token, t_type type);
 void    free_cmd_list(t_cmd **cmd);
 void    free_token_list(t_token **tokens);
 void    free_envp_list(t_envp **envp);
+int     is_builtin_func(char *cmd);
+int     exec_buildin(t_cmd *cmd);
+int     ft_pwd();
 void    lexing_checker(t_app *shell);
 bool    handle_command(t_token *token, t_token *prev, char *input, int *i);
 bool    handle_operators(t_token *token, char *input, int *i);

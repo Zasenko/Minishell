@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmitryzasenko <dmitryzasenko@student.42    +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/02/11 17:41:02 by dmitryzasen      ###   ########.fr       */
+/*   Updated: 2025/02/18 12:05:35 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,20 @@ int	redirect(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 {
 	redirect(shell, cmd, prev_pipe, pipe_fd);
-	if (execve(cmd->cmd, cmd->args, shell->env) != 0)
+	if (is_builtin_func(cmd->cmd))
 	{
-		perror("execve");
-		exit(EXIT_FAILURE);
+		if (!exec_buildin(cmd))
+			exit(EXIT_FAILURE);
+		else
+			exit(EXIT_SUCCESS);
+	}
+	else
+	{
+		if (execve(cmd->cmd, cmd->args, shell->env_var) != 0)
+		{
+			perror("execve");
+			exit(EXIT_FAILURE);
+		}
 	}
 }
 
@@ -94,6 +104,8 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 		perror("fork");
 		return (0); // todo? break and waitpid?
 	}
+
+	
 	// child
 	if (cmd->pid == 0)
 		child_process(shell, cmd, *prev_pipe, pipe_fd);
