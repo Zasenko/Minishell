@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   add_token_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/03 21:24:41 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/10 18:02:51 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/12 17:55:21 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/12 17:55:21 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int main(int argc, char **argv, char **envp)
+void	add_token_back(t_token **token, t_token *new)
 {
-    t_app   shell;
-    
-    (void)argc;
-    (void)argv;
-    initialize_shell(&shell, envp);
-    handle_signal();
-    read_input_line(&shell);
-    // todo: free schall + close all fds
-    return 0;
+	t_token	*last;
+
+	if (!new)
+		return ;
+	if (*token == NULL)
+	{
+		*token = new;
+		return ;
+	}
+	last = last_token_node(*token);
+	last->next = new;
+	new->prev = last;
 }

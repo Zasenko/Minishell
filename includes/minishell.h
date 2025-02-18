@@ -27,16 +27,24 @@ bool 	get_env_info(t_app *shell);
 void	ft_lstadd_back(t_app **shell, t_app *new);
 bool 	create_prompt_path(t_app *shell);
 void	add_cmd_back(t_cmd **cmd, t_cmd *new);
-t_cmd 	*create_new_cmd(char **args);
+t_cmd 	*create_new_cmd(void);
 t_cmd	*last_cmd_node(t_cmd *node);
 void	add_envp_back(t_envp **envp, t_envp *new);
 t_envp 	*create_new_envp(char *envp, char *name);
 t_envp	*last_envp_node(t_envp *node);
+void	add_token_back(t_token **token, t_token *new);
+t_token *create_new_token(char *value, t_type type);
+int	    token_len(t_token *token);
+t_token *last_token_node(t_token *node);
 void    handle_signal(void);
 int     ft_execute(t_app *app);
 int	    cmd_len(t_cmd *cmd);
-int     is_builtin_func(char *cmd);
-int     exec_buildin(t_cmd *cmd);
-int     ft_pwd();
+bool    lexing_inputs_data(t_app *shell, char *input);
+bool    parse_tokens(t_app *shell);
+char    *parse_command(t_app *shell, char *value);
+int     count_types(t_token *token, t_type type);
+void    free_cmd_list(t_cmd **cmd);
+void    free_token_list(t_token **tokens);
+void    free_envp_list(t_envp **envp);
 
 #endif
