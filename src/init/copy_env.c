@@ -12,25 +12,28 @@
 
 #include "../../includes/minishell.h"
 
-char **copy_env_into_2d_arr(char **envp)
+char **build_env_into_2d_arr(t_envp *envp)
 {
-    int i;
-    int j;
-    char **env_var;
+    int     j;
+    int     env_len;
+    char    **env_var;
+    char    *temp;
 
-    i = 0;
-    while (envp[i] != NULL)
-        i++;
-    env_var = (char **)malloc((i + 1) * sizeof(char *));
+    env_len = get_envp_len(envp);
+    env_var = (char **)malloc((env_len + 1) * sizeof(char *));
     if (!env_var)
         return NULL;
     j = 0;
-    env_var[i] = NULL;
-    while (envp[j] != NULL)
+    env_var[env_len] = NULL;
+    while (envp != NULL)
     {
-        env_var[j] = ft_strdup(envp[j]);
+        temp = ft_strjoin(envp->name, "=");
+        if (!temp)
+            return NULL;
+        env_var[j] = ft_strjoin(temp, envp->envp);
         if (!env_var[j])
             return NULL;
+        envp = envp->next;
         j++;
     }
     return (env_var);
@@ -62,7 +65,7 @@ void copy_env(t_app *shell, char **envp)
             add_envp_back(&shell->envp, create_new_envp(env_var, name));
             i++;
         }
-        shell->env_var = copy_env_into_2d_arr(envp);
+        shell->env_var = build_env_into_2d_arr(shell->envp);
         if (!shell->env_var)
             exit_with_error(shell, 1);
     }
