@@ -71,7 +71,6 @@ typedef struct s_app
     struct s_envp   *envp;          // Environment variables
     struct s_cmd    *cmd;           // First command in pipeline
     struct s_token  *tokens;
-    char            **env;          // env for executor
 } t_app;
 
 #endif

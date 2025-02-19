@@ -59,5 +59,7 @@ bool    handle_duble_quotes(char **des, char *input);
 char    *extract_word(char *input, int *i);
 void    skip_spases(char *input, int *i);
 bool    get_type_existence(t_token *token, t_type type);
+int	    get_envp_len(t_envp *envp);
+char    **build_env_into_2d_arr(t_envp *envp);
 
 #endif
