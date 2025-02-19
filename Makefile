@@ -44,6 +44,7 @@ SRC = 		main.c \
 			parse/parse_command.c \
 			builtins/utils.c \
 			builtins/pwd.c \
+			builtins/env.c \
 
 UTILS_SRC = node_actions/cmd_node/add_cmd_back.c \
 			node_actions/cmd_node/create_new_cmd.c \
