@@ -46,7 +46,7 @@ int     count_types(t_token *token, t_type type);
 void    free_cmd_list(t_cmd **cmd);
 void    free_token_list(t_token **tokens);
 void    free_envp_list(t_envp **envp);
-int     is_builtin_func(char *cmd);
+bool	is_builtin_func(char *cmd);
 int     exec_buildin(t_cmd *cmd, t_app *shell);
 int     ft_pwd();
 void    lexing_checker(t_app *shell);
@@ -64,5 +64,6 @@ char    **build_env_into_2d_arr(t_envp *envp);
 int     ft_env(char **env);
 int     ft_echo(char **args);
 int     ft_cd(t_cmd *cmd, char **env);
+bool	ft_strstr(char *str, char *to_find);
 
 #endif

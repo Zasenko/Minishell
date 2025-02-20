@@ -53,17 +53,6 @@ void read_input_line(t_app *shell)
     }
     while (1)
     {
-
-        char buf[MAXPATHLEN];
-        char *dir;
-
-        dir = NULL;
-        dir = getcwd(buf, MAXPATHLEN);
-        if (!dir)
-            return (perror("getcwd"));
-
-        printf("----- %s\n", dir);
-
         input = readline(shell->prompt);
         if (!input)
 			exit_with_error(shell, 1);
