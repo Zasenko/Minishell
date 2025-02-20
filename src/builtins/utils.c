@@ -18,6 +18,8 @@ int	is_builtin_func(char *cmd)
 		return (1);
 	else if (!ft_strncmp("env", cmd, ft_strlen(cmd)))
 		return (1);
+	else if (!ft_strncmp("echo", cmd, ft_strlen(cmd)))
+		return (1);
 	else
 		return (0);
 }
@@ -28,5 +30,7 @@ int	exec_buildin(t_cmd *cmd, t_app *shell)
 		return (ft_pwd());
 	if (!ft_strncmp("env", cmd->cmd, ft_strlen(cmd->cmd)))
 		return (ft_env(shell->env_var));
+	if (!ft_strncmp("echo", cmd->cmd, ft_strlen(cmd->cmd)))
+		return (ft_echo(cmd->args));
 	return (0);
 }
