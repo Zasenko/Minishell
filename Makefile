@@ -31,6 +31,7 @@ SRC = 		main.c \
 			free/free_list_memory.c \
 			signals/handle_signal.c \
 			exit/exit_with_error.c \
+			exit/print_message.c \
 			executor/executor.c \
 			lexer/lexing_inputs_data.c \
 			lexer/handle_command.c \
@@ -42,6 +43,7 @@ SRC = 		main.c \
 			lexer/lexing_checker.c \
 			parse/parse_tokens.c \
 			parse/parse_command.c \
+			builtins/unset.c \
 			builtins/utils.c \
 			builtins/pwd.c \
 

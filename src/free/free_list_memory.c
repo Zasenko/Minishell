@@ -24,6 +24,8 @@ void free_cmd_list(t_cmd **cmd)
         if ((*cmd)->args)
             free_2d_array((*cmd)->args);
         free((*cmd)->cmd);
+        free((*cmd)->input);
+        free((*cmd)->output);
         free(*cmd);
         *cmd = temp;
     }
@@ -70,19 +72,30 @@ void free_list(t_app *shell)
 {
     if (!shell)
         return ;
-    if (shell->path)
-        free_2d_array(shell->path);
+    // if (shell->path)
+    //     free_2d_array(shell->path);
     if (shell->env_var)
-        free_2d_array(shell->env_var);
+            free_2d_array(shell->env_var);
     if (shell->user)
+    {
         free(shell->user);
-    if (shell->name)  
+        shell->user = NULL;
+    }
+    if (shell->name) 
+    {
         free(shell->name);
+        shell->name = NULL;
+    }
     if (shell->pwd)
+    {
         free(shell->pwd);
+        shell->pwd = NULL;
+    }
     if (shell->prompt)
+    {
         free(shell->prompt);
+        shell->prompt = NULL;
+    }
     free_cmd_list(&shell->cmd);
-    free_envp_list(&shell->envp);
     free_token_list(&shell->tokens); 
 }

@@ -12,9 +12,9 @@
 
 #include "../../includes/minishell.h"
 
-void print_tokens(t_token *head)
+void print_tokens(t_app *shell)
 {
-    t_token *current = head;
+    t_token *current = shell->tokens;
     while (current)
     {
         printf("Type: %d, Value: %s\n", current->type, current->value);
@@ -22,9 +22,22 @@ void print_tokens(t_token *head)
     }
 }
 
-void print_cmd(t_cmd *head)
+void print_envp(t_envp *head)
+{
+    t_envp *current = head;
+    while (current)
+    {
+        printf("%s%s%s\n", current->name, "=", current->envp);
+        current = current->next;
+    }
+}
+
+void print_cmd(t_app **shell)
 {
     int i = 0;
+    t_cmd *head;
+
+    head = (*shell)->cmd;
     while (head != NULL)
     {
         printf("cmd: [%d] %s\n",i, head->cmd);
@@ -43,26 +56,28 @@ void print_cmd(t_cmd *head)
 
 void read_input_line(t_app *shell)
 {
-    char *input;
+    char    *input;
 
     if (!shell)
         return ;
-    if (!create_prompt_path(shell))
-    {
-        exit_with_error(shell, 1);
-    }
     while (1)
     {
+        build_env_into_2d_arr(shell);
+        create_prompt_path(shell);
         input = readline(shell->prompt);
-        if (!input)
-			exit_with_error(shell, 1);
-		add_history(input);
-        lexing_inputs_data(shell, input);
-        parse_tokens(shell);
-		ft_execute(shell);
-        // print_tokens(shell->tokens);
-        // print_cmd(shell->cmd);
-        free_token_list(&shell->tokens);
-        free_cmd_list(&shell->cmd);
+        if (input)
+        {
+            add_history(input);
+            lexing_inputs_data(shell, input);
+            parse_tokens(shell);
+            ft_execute(shell);
+            // print_tokens(shell);
+            // print_cmd(&shell);
+            // print_envp(shell->envp);
+            free_list(shell);
+        }
+        else 
+            break;
 	}
+	exit_with_error(shell, 1, NULL);
 }
