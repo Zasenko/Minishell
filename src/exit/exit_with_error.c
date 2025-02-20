@@ -12,8 +12,13 @@
 
 #include "../../includes/minishell.h"
 
-void 	exit_with_error(t_app *shell, int status)
+
+
+void 	exit_with_error(t_app *shell, int status, char *message)
 {
+    if (message)
+        print_message(message, false);
+    free_envp_list(&shell->envp);
     free_list(shell);
     exit(status);
 }

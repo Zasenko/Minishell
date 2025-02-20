@@ -14,26 +14,41 @@
 
 bool get_env_info(t_app *shell)
 {
-    if (!shell)
+    t_envp *envp;
+    char buf[MAXPATHLEN];
+
+    if (!shell || !shell->envp)
         return false;
-    shell->path = ft_split(getenv("PATH"), ':');
-    if (!shell->path)
-        return false;
-    shell->user = ft_strdup(getenv("USER"));
-    if (!shell->user)
+    envp = shell->envp;
+    while (envp != NULL)
     {
-        shell->user = ft_strdup("unknown");
-        if (!shell->user)
-            return false;
+        if (ft_strncmp(envp->name, "USER", 4) == 0)
+        {
+            shell->user = ft_strdup(envp->envp);
+            if (!shell->user)
+                return false;
+        }
+        else if (ft_strncmp(envp->name, "NAME", 4) == 0)
+        {
+            shell->name = ft_strdup(envp->envp);
+            if (!shell->name)
+                return false;
+        }
+        envp = envp->next;
     }
-    shell->name = ft_strdup(getenv("NAME"));
     if (!shell->name)
     {
         shell->name = ft_strdup("shell-root");
         if (!shell->name)
             return false;
     }
-    shell->pwd = ft_strdup(getenv("PWD"));
+    if (!shell->user) 
+    {
+        shell->user = ft_strdup("unknown-user");
+        if (!shell->user)
+            return false;
+    }
+    shell->pwd = ft_strdup(getcwd(buf, MAXPATHLEN));
     if (!shell->pwd)
     {
         shell->pwd = ft_strdup("");

@@ -12,3 +12,10 @@
 
 #include "../../includes/minishell.h"
 
+void print_message(char *message, bool is_green)
+{
+    if (is_green)
+        printf("%s%s %s\n", GREEN, message, RESET);
+    else 
+        printf("%s%s %s\n", RED, message, RESET);
+}
