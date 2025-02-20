@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/02/18 14:56:34 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/20 11:56:07 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	redirect(shell, cmd, prev_pipe, pipe_fd);
 	if (is_builtin_func(cmd->cmd))
 	{
-		if (!exec_buildin(cmd))
+		if (!exec_buildin(cmd, shell))
 			exit(EXIT_FAILURE);
 		else
 			exit(EXIT_SUCCESS);
@@ -162,11 +162,10 @@ int	ft_execute(t_app *shell)
 	int		prev_pipe;
 
 	cmd = shell->cmd;
-	cmd_count = cmd_len(cmd);
+	cmd_count = cmd_len(shell->cmd);
 	prev_pipe = -1;
 	if (!cmd_count)
 		return (0);
-		
 	while (cmd != NULL)
 	{
 		if (cmd->input != NULL)
@@ -195,11 +194,20 @@ int	ft_execute(t_app *shell)
 		}
 		cmd = cmd->next;
 	}
-
 	cmd = shell->cmd;
 	while (cmd != NULL)
 	{
-		ft_execute_command(shell, cmd, &prev_pipe);
+		if (cmd->next == NULL && !ft_strncmp(cmd->cmd, "cd", 2))
+		{
+			// todo: make new env if changed
+			ft_cd(cmd, shell->env_var);
+			//pwd
+			// update list env shell
+		}
+		else
+		{
+			ft_execute_command(shell, cmd, &prev_pipe);
+		}
 		cmd = cmd->next;
 	}
 	ft_wait_children(shell);

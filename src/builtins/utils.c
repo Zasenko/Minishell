@@ -12,17 +12,53 @@
 
 #include "../../includes/minishell.h"
 
-int	is_builtin_func(char *cmd)
+bool	is_builtin_func(char *cmd)
 {
-	if (!ft_strncmp("pwd", cmd, ft_strlen(cmd)))
-		return (1);
+
+	if (ft_strstr(cmd, "pwd"))
+		return (true);
+	if (ft_strstr(cmd, "env"))
+		return (true);
+	if (ft_strstr(cmd, "echo"))
+		return (true);
+	if (ft_strstr(cmd, "cd"))
+		return (true);
 	else
-		return (0);
+		return (false);
 }
 
-int	exec_buildin(t_cmd *cmd)
+int	exec_buildin(t_cmd *cmd, t_app *shell)
 {
-	if (!ft_strncmp("pwd", cmd->args[0], ft_strlen(cmd->args[0])))
+	if (ft_strstr(cmd->cmd, "pwd"))
 		return (ft_pwd());
+	if (ft_strstr(cmd->cmd, "env"))
+		return (ft_env(shell->env_var));
+	if (ft_strstr(cmd->cmd, "echo"))
+		return (ft_echo(cmd->args));
+	if (ft_strstr(cmd->cmd, "cd"))
+		return (ft_echo(cmd->args));
 	return (0);
+}
+
+
+bool	ft_strstr(char *str, char *to_find)
+{
+	int	i;
+	int	f;
+
+	if (to_find[0] == '\0')
+		return (true);
+	i = 0;
+	while (str[i] != '\0')
+	{
+		f = 0;
+		while (str[i + f] != '\0' && str[i + f] == to_find[f])
+		{
+			f++;
+			if (to_find[f] == '\0')
+				return (true);
+		}
+		i++;
+	}
+	return (false);
 }

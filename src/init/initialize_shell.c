@@ -21,6 +21,7 @@ void  initialize_shell(t_app *shell, char **envp)
     shell->pwd = NULL;
     shell->prompt = NULL;
     shell->envp = NULL;
+    shell->is_envp_list_changed = false;
     shell->cmd = NULL;
     shell->tokens = NULL;
     copy_env(shell, envp);

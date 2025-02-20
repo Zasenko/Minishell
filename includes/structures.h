@@ -69,6 +69,7 @@ typedef struct s_app
     char            *pwd;           // Current working directory
     int             last_exit_code; // Stores `$?` value
     struct s_envp   *envp;          // Environment variables
+    bool            is_envp_list_changed; //FLAG if we need to make new char** env_var
     struct s_cmd    *cmd;           // First command in pipeline
     struct s_token  *tokens;
 } t_app;

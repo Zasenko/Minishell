@@ -74,7 +74,7 @@ char *parse_command(t_app *shell, char *value)
     char    *env_path;
     char    **paths;
 
-
+env_path = NULL;
 	result = NULL;
     if (ft_strchr(value, '/', false))
     {
@@ -89,12 +89,25 @@ char *parse_command(t_app *shell, char *value)
         {
             paths = ft_split(env_path, ':');
             if (!paths)
-                return false;
+                return (NULL);
             result = extract_full_path(paths, value);
             free_2d_array(paths);
-            if (!result)
-                return (NULL);
+			if (!result)
+			{
+				if (is_builtin_func(value))
+            	{
+					char *build_in_res = NULL;
+					build_in_res = ft_strdup(value);
+					if (build_in_res)
+						return build_in_res;
+				}
+				return (NULL);
+			}
         }
+		else 
+		{
+			return (NULL);
+		}
     }
     return result;
 }

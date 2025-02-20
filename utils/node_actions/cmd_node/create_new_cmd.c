@@ -28,5 +28,6 @@ t_cmd *create_new_cmd(void)
 	new->append = false;
 	new->prev = NULL;
 	new->next = NULL;
+	new->pid = -1;
 	return new;
 }
