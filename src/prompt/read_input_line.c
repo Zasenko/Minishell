@@ -53,15 +53,27 @@ void read_input_line(t_app *shell)
     }
     while (1)
     {
+
+        char buf[MAXPATHLEN];
+        char *dir;
+
+        dir = NULL;
+        dir = getcwd(buf, MAXPATHLEN);
+        if (!dir)
+            return (perror("getcwd"));
+
+        printf("----- %s\n", dir);
+
         input = readline(shell->prompt);
         if (!input)
 			exit_with_error(shell, 1);
 		add_history(input);
         lexing_inputs_data(shell, input);
-        parse_tokens(shell);
-		ft_execute(shell);
+        parse_tokens(shell);        
         // print_tokens(shell->tokens);
         // print_cmd(shell->cmd);
+        // printf("\n----------------\n");
+        ft_execute(shell);
         free_token_list(&shell->tokens);
         free_cmd_list(&shell->cmd);
 	}

@@ -62,5 +62,7 @@ bool    get_type_existence(t_token *token, t_type type);
 int	    get_envp_len(t_envp *envp);
 char    **build_env_into_2d_arr(t_envp *envp);
 int     ft_env(char **env);
+int     ft_echo(char **args);
+int     ft_cd(t_cmd *cmd, char **env);
 
 #endif

@@ -92,7 +92,15 @@ char *parse_command(t_app *shell, char *value)
                 return false;
             result = extract_full_path(paths, value);
             free_2d_array(paths);
-            if (!result)
+            if (!result && is_builtin_func(value) == 1)
+            {
+				char *build_in_res = ft_strdup(value);
+				if (build_in_res == NULL)
+					return (NULL);
+				else
+					return build_in_res;
+			}
+			else if (!result)
                 return (NULL);
         }
     }
