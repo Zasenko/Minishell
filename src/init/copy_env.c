@@ -12,31 +12,35 @@
 
 #include "../../includes/minishell.h"
 
-char **build_env_into_2d_arr(t_envp *envp)
+void build_env_into_2d_arr(t_app *shell)
 {
-    int     j;
-    int     env_len;
+    int     i;
     char    **env_var;
     char    *temp;
+    t_envp  *envp;
 
-    env_len = get_envp_len(envp);
-    env_var = (char **)malloc((env_len + 1) * sizeof(char *));
+    if (!shell || !shell->envp)
+        return ;
+    envp = shell->envp;
+    i = get_envp_len(envp);
+    env_var = (char **)malloc((i + 1) * sizeof(char *));
     if (!env_var)
-        return NULL;
-    j = 0;
-    env_var[env_len] = NULL;
+        return ;
+    env_var[i] = NULL;
+    i = 0;
     while (envp != NULL)
     {
         temp = ft_strjoin(envp->name, "=");
         if (!temp)
-            return NULL;
-        env_var[j] = ft_strjoin(temp, envp->envp);
-        if (!env_var[j])
-            return NULL;
+            return ;
+        env_var[i] = ft_strjoin(temp, envp->envp);
+        free(temp);
+        if (!env_var[i])
+            return ;
         envp = envp->next;
-        j++;
+        i++;
     }
-    return (env_var);
+    shell->env_var = env_var;
 }
 void copy_env(t_app *shell, char **envp)
 {
@@ -58,15 +62,12 @@ void copy_env(t_app *shell, char **envp)
                 j++;
             env_var = ft_strdup(ft_strchr(envp[i], '=', true));
             if (!env_var)
-                exit_with_error(shell, 1);
+                break ;
             name = ft_substr(s, 0, j);
             if (!name)
-                exit_with_error(shell, 1);
+                break;
             add_envp_back(&shell->envp, create_new_envp(env_var, name));
             i++;
         }
-        shell->env_var = build_env_into_2d_arr(shell->envp);
-        if (!shell->env_var)
-            exit_with_error(shell, 1);
     }
 }

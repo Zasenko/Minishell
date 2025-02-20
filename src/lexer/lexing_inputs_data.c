@@ -61,5 +61,6 @@ void lexing_inputs_data(t_app *shell, char *str)
         return;
     free(input);
     shell->tokens = head;
-    lexing_checker(shell);
+    if (!lexing_checker(shell))
+        return;
 }

@@ -16,12 +16,14 @@
 # include "libft.h"
 # include "colors.h"
 # include "structures.h"
+# include "messages.h"
+# include "exit_status.h"
 				
 void	initialize_shell(t_app *shell, char **envp);
 void    copy_env(t_app *shell, char **envp);
 void	read_input_line(t_app *shell);
 void 	free_2d_array(char **arr);
-void 	exit_with_error(t_app *shell, int status);
+void 	exit_with_error(t_app *shell, int status, char *message);
 void 	free_list(t_app *shell);
 bool 	get_env_info(t_app *shell);
 void	ft_lstadd_back(t_app **shell, t_app *new);
@@ -49,7 +51,7 @@ void    free_envp_list(t_envp **envp);
 int     is_builtin_func(char *cmd);
 int     exec_buildin(t_cmd *cmd);
 int     ft_pwd();
-void    lexing_checker(t_app *shell);
+bool    lexing_checker(t_app *shell);
 bool    handle_command(t_token *token, t_token *prev, char *input, int *i);
 bool    handle_operators(t_token *token, char *input, int *i);
 bool    handle_single_quote(t_token *token, char *input, int *i);
@@ -60,6 +62,8 @@ char    *extract_word(char *input, int *i);
 void    skip_spases(char *input, int *i);
 bool    get_type_existence(t_token *token, t_type type);
 int	    get_envp_len(t_envp *envp);
-char    **build_env_into_2d_arr(t_envp *envp);
+void    build_env_into_2d_arr(t_app *shell);
+void    print_message(char *message, bool flag);
+void    unset_env_values(t_app *shell, t_envp **envp);
 
 #endif

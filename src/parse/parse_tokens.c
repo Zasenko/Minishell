@@ -61,7 +61,7 @@ bool parse_tokens(t_app *shell)
         {
             cmd->cmd = parse_command(shell, token->value);
             if (!cmd->cmd)
-                return false;
+                return (free(cmd), false);
             if ((!token->next || token->next->type != ARG))
             {
                 cmd->args = extract_arguments(token, token->value);

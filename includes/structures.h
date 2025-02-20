@@ -61,7 +61,7 @@ typedef struct s_cmd
 
 typedef struct s_app
 {
-    char            **path;         // PATH directories
+    // char            **path;         // PATH directories
     char            **env_var;      // envp variable as 2d array
     char            *user;          // User name
     char            *name;          // Shell name

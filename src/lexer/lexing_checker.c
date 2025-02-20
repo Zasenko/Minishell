@@ -46,26 +46,26 @@ bool check_rederections(t_token *token)
     return true;
 }
 
-void lexing_checker(t_app *shell)
+bool lexing_checker(t_app *shell)
 {
     t_token *token;
 
     if (!shell)
-        exit_with_error(shell, 1);
+        return false;;
     token = shell->tokens;
     while (token != NULL)
     {
         if (!check_pipe(token))
 		{
-            printf("%s %s %s\n", RED, "There is an error of count '|' value!", RESET);
-            // exit_with_error(shell, 1);
+            print_message(PIPE_ERROR, false);
+            return false;
         }
         if (!check_rederections(token))
 		{
-            printf("%s %s %c%s%c %s %s\n", RED, "There is an error of count", '\'',
-                token->value,'\'', "value!", RESET);
-            // exit_with_error(shell, 1);
+            print_message(REDIR_ERROR, false);
+            return false;
         }
         token = token->next;
     }
+    return true;
 }
