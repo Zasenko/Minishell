@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/02/20 11:56:07 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/21 13:18:43 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,21 +195,23 @@ int	ft_execute(t_app *shell)
 		cmd = cmd->next;
 	}
 	cmd = shell->cmd;
-	while (cmd != NULL)
+	
+	if (cmd->next == NULL && !ft_strncmp(cmd->cmd, "cd", 2))
 	{
-		if (cmd->next == NULL && !ft_strncmp(cmd->cmd, "cd", 2))
-		{
-			// todo: make new env if changed
-			ft_cd(cmd, shell->env_var);
-			//pwd
-			// update list env shell
-		}
-		else
+		// todo: make new env if changed
+		ft_cd(cmd, shell->env_var);
+		//pwd
+		// update list env shell
+	}
+	else {
+		while (cmd != NULL)
 		{
 			ft_execute_command(shell, cmd, &prev_pipe);
+			cmd = cmd->next;
 		}
-		cmd = cmd->next;
 	}
+	
+
 	ft_wait_children(shell);
 	close_all_cmnds_fds(shell->cmd);
 	if (prev_pipe != -1)

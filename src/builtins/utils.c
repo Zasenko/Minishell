@@ -36,7 +36,7 @@ int	exec_buildin(t_cmd *cmd, t_app *shell)
 	if (ft_strstr(cmd->cmd, "echo"))
 		return (ft_echo(cmd->args));
 	if (ft_strstr(cmd->cmd, "cd"))
-		return (ft_echo(cmd->args));
+		return (ft_cd(cmd, shell->env_var));
 	return (0);
 }
 

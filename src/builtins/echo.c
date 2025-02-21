@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 09:49:08 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/02/20 15:15:38 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/21 13:08:23 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int ft_echo(char **args)
     with_new_line = true;
     if (!args || !*args)
     {
-        ft_putstr_fd("\n", 1);
+        printf("\n");
         return (1);
     }
     
@@ -38,16 +38,14 @@ int ft_echo(char **args)
     }
     while (args[i])
     {
-        ft_putstr_fd(args[i], 1);
+        printf("%s", args[i]);
         if (args[i + 1] != NULL)
-            ft_putstr_fd(" ", 1);
+            printf(" ");
         i++;   
     }
-    if (with_new_line == false)
+    if (with_new_line == true)
     {
-        char c = 37;
-        write(1, &c, 1);
+        printf("\n");
     }
-    ft_putstr_fd("\n", 1);
     return (1);
 }
