@@ -69,5 +69,6 @@ int     ft_env(char **env);
 int     ft_echo(char **args);
 int     ft_cd(t_cmd *cmd, char **env);
 bool	ft_strstr(char *str, char *to_find);
-
+int     ft_exit(t_cmd *cmd, t_app *shell, int is_parent);
+int	    close_all_cmnds_fds(t_cmd *cmd);
 #endif

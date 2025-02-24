@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/02/20 11:56:07 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:10:23 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,21 +65,18 @@ int	redirect(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 
 void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 {
+	int exit_status;
+
 	redirect(shell, cmd, prev_pipe, pipe_fd);
 	if (is_builtin_func(cmd->cmd))
 	{
-		if (!exec_buildin(cmd, shell))
-			exit(EXIT_FAILURE);
-		else
-			exit(EXIT_SUCCESS);
+		exit_status = exec_buildin(cmd, shell);
+		exit(exit_status);
 	}
 	else
 	{
-		if (execve(cmd->cmd, cmd->args, shell->env_var) != 0)
-		{
-			perror("execve");
-			exit(EXIT_FAILURE);
-		}
+		execve(cmd->cmd, cmd->args, shell->env_var);
+		exit_with_error(shell, errno, "hello error!");
 	}
 }
 
@@ -123,20 +120,22 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 	return (1);
 }
 
-int	ft_wait_child(t_cmd *cmd)
+int	ft_wait_child(t_cmd *cmd, t_app *shell)
 {
 	int		status;
 	pid_t	child_pid;
 
 	child_pid = waitpid(cmd->pid, &status, 0);
 	if (child_pid == -1)
-		return (perror("waitpid"), 0);
+	{
+		return (perror("waitpid"), errno);
+	}
 	if (WIFEXITED(status))
 	{
-		if (WEXITSTATUS(status) == EXIT_FAILURE)
-			return (0);
+		shell->last_exit_code = WEXITSTATUS(status);
+		return (SUCCESS);
 	}
-	return (1);
+	return (SUCCESS);
 }
 
 int ft_wait_children(t_app *shell)
@@ -148,7 +147,7 @@ int ft_wait_children(t_app *shell)
 	{
 		if (cmd->pid != -1)
 		{
-			ft_wait_child(cmd);
+			ft_wait_child(cmd, shell);
 		}
 		cmd = cmd->next;
 	}
@@ -195,21 +194,23 @@ int	ft_execute(t_app *shell)
 		cmd = cmd->next;
 	}
 	cmd = shell->cmd;
-	while (cmd != NULL)
+	
+	if (cmd->next == NULL && ft_strstr(cmd->cmd, "cd"))
 	{
-		if (cmd->next == NULL && !ft_strncmp(cmd->cmd, "cd", 2))
-		{
-			// todo: make new env if changed
-			ft_cd(cmd, shell->env_var);
-			//pwd
-			// update list env shell
-		}
-		else
+		shell->last_exit_code = ft_cd(cmd, shell->env_var);
+	}
+	else if (cmd->next == NULL && ft_strstr(cmd->cmd, "exit"))
+	{
+		ft_exit(cmd, shell, 1);
+	}
+	else {
+		while (cmd != NULL)
 		{
 			ft_execute_command(shell, cmd, &prev_pipe);
+			cmd = cmd->next;
 		}
-		cmd = cmd->next;
 	}
+
 	ft_wait_children(shell);
 	close_all_cmnds_fds(shell->cmd);
 	if (prev_pipe != -1)
