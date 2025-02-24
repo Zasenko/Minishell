@@ -43,6 +43,9 @@ SRC = 		main.c \
 			lexer/lexing_checker.c \
 			parse/parse_tokens.c \
 			parse/parse_command.c \
+			parse/parse_arguments.c \
+			parse/parse_subcommand.c \
+			parse/parse_utils.c \
 			builtins/unset.c \
 			builtins/utils.c \
 			builtins/pwd.c \
