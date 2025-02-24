@@ -1,36 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/20 09:57:45 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/02/24 13:11:32 by dzasenko         ###   ########.fr       */
+/*   Created: 2025/02/24 09:59:49 by dzasenko          #+#    #+#             */
+/*   Updated: 2025/02/24 11:47:17 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int ft_cd(t_cmd *cmd, char **env)
+int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
 {
-    char buf[MAXPATHLEN];
-    char *current_dir;
-    int result;
-    
-    if (!cmd)
-        return (EXIT_FAILURE);
-    (void)env;
+    int exit_code;
 
-    current_dir = NULL;
-    current_dir = getcwd(buf, MAXPATHLEN);
-    if (!current_dir)
-        return (perror("getcwd"), errno);
+    exit_code = 0;
+    
     if (cmd->args[1] != NULL)
     {
-        result =chdir(cmd->args[1]);
-        if (result == -1)
-            return (perror("chdir"), errno);
+        // todo check numbers and +- only
+        exit_code = ft_atoi(cmd->args[1]);
     }
-    return (SUCCESS);
+
+    if (is_parent)
+    {
+        free_envp_list(&shell->envp);
+        free_list(shell);
+        printf("exit\n");
+        exit(exit_code);
+    }
+    else
+        exit(exit_code);
 }

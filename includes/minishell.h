@@ -74,5 +74,7 @@ char    **extract_arguments(t_token *token, char *cmd);
 char    *execut_subcommand(t_app *shell, char *value);
 bool    is_valid_brackets(char *str, char c);
 char    *extract_subcommand(const char *str);
+int     ft_exit(t_cmd *cmd, t_app *shell, int is_parent);
+int	    close_all_cmnds_fds(t_cmd *cmd);
 
 #endif

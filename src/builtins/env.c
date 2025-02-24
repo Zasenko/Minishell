@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:02:48 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/02/19 13:10:01 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/24 12:59:47 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ int ft_env(char **env)
     int i;
 
     if (!env)
-        return (0);
+        return (EXIT_FAILURE);
     i = 0;
     while (env[i])
     {
         printf("%s\n", env[i]);
         i++;
     }
-    return (1);
+    return (EXIT_SUCCESS);
 }
