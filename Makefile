@@ -49,6 +49,7 @@ SRC = 		main.c \
 			builtins/env.c \
 			builtins/echo.c \
 			builtins/cd.c \
+			builtins/exit.c \
 
 UTILS_SRC = node_actions/cmd_node/add_cmd_back.c \
 			node_actions/cmd_node/create_new_cmd.c \
