@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:59:49 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/02/24 11:03:46 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:47:17 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
 
     if (is_parent)
     {
+        free_envp_list(&shell->envp);
         free_list(shell);
         printf("exit\n");
         exit(exit_code);

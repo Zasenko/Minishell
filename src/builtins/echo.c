@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 09:49:08 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/02/21 13:08:23 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:00:15 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int ft_echo(char **args)
     if (!args || !*args)
     {
         printf("\n");
-        return (1);
+        return (EXIT_SUCCESS);
     }
     
     i = 1;
@@ -47,5 +47,5 @@ int ft_echo(char **args)
     {
         printf("\n");
     }
-    return (1);
+    return (EXIT_SUCCESS);
 }

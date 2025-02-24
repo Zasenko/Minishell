@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 09:57:45 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/02/21 13:38:58 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:11:32 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,18 @@ int ft_cd(t_cmd *cmd, char **env)
     int result;
     
     if (!cmd)
-        return ( 0);
+        return (EXIT_FAILURE);
     (void)env;
 
     current_dir = NULL;
     current_dir = getcwd(buf, MAXPATHLEN);
     if (!current_dir)
-        return (perror("getcwd"), 0);
+        return (perror("getcwd"), errno);
     if (cmd->args[1] != NULL)
     {
-        result = chdir(cmd->args[1]);
-        if (!result)
-            return (0);
-        else if (result == -1)
-            return perror("chdir"), 0;
+        result =chdir(cmd->args[1]);
+        if (result == -1)
+            return (perror("chdir"), errno);
     }
-    return 1;
+    return (SUCCESS);
 }
-

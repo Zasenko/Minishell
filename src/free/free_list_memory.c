@@ -75,7 +75,10 @@ void free_list(t_app *shell)
     // if (shell->path)
     //     free_2d_array(shell->path);
     if (shell->env_var)
-            free_2d_array(shell->env_var);
+    {
+        free_2d_array(shell->env_var);
+        shell->env_var = NULL;
+    }
     if (shell->user)
     {
         free(shell->user);
@@ -96,6 +99,7 @@ void free_list(t_app *shell)
         free(shell->prompt);
         shell->prompt = NULL;
     }
+    close_all_cmnds_fds(shell->cmd);
     free_cmd_list(&shell->cmd);
     free_token_list(&shell->tokens); 
 }

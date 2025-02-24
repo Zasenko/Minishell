@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/02/24 11:18:19 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/24 13:10:23 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,8 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	}
 	else
 	{
-		if (execve(cmd->cmd, cmd->args, shell->env_var) != 0)
-		{
-			perror("execve");
-			exit(EXIT_FAILURE);
-		}
+		execve(cmd->cmd, cmd->args, shell->env_var);
+		exit_with_error(shell, errno, "hello error!");
 	}
 }
 
@@ -131,14 +128,14 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell)
 	child_pid = waitpid(cmd->pid, &status, 0);
 	if (child_pid == -1)
 	{
-		return (perror("waitpid"), 0);
+		return (perror("waitpid"), errno);
 	}
 	if (WIFEXITED(status))
 	{
 		shell->last_exit_code = WEXITSTATUS(status);
-		return (1);
+		return (SUCCESS);
 	}
-	return (1);
+	return (SUCCESS);
 }
 
 int ft_wait_children(t_app *shell)
@@ -200,7 +197,7 @@ int	ft_execute(t_app *shell)
 	
 	if (cmd->next == NULL && ft_strstr(cmd->cmd, "cd"))
 	{
-		ft_cd(cmd, shell->env_var);
+		shell->last_exit_code = ft_cd(cmd, shell->env_var);
 	}
 	else if (cmd->next == NULL && ft_strstr(cmd->cmd, "exit"))
 	{
@@ -213,7 +210,6 @@ int	ft_execute(t_app *shell)
 			cmd = cmd->next;
 		}
 	}
-	
 
 	ft_wait_children(shell);
 	close_all_cmnds_fds(shell->cmd);
