@@ -12,38 +12,10 @@
 
 #include "../../includes/minishell.h"
 
-char **extract_arguments(t_token *token, char *cmd)
-{
-    char    **result;
-    int     args_count;
-    int     i = 0;
-    
-    args_count = count_types(token, ARG) + 2;
-    result = (char**)malloc(args_count * sizeof(char*));
-    if (!result)
-        return NULL;
-    while (token && i < args_count - 1)
-    {
-        if (i == 0 && token->type == ARG)
-        {
-            result[i] = ft_strdup(cmd);
-            if (!result[i])
-                return NULL;
-            i++;
-        }
-        result[i] = ft_strdup(token->value);
-        if (!result[i])
-            return NULL;
-        token = token->next;
-        i++;
-    }
-    result[i] = NULL;
-    return result;
-}
-
 bool parse_tokens(t_app *shell)
 {
     t_token *token;
+    char    *temp;
     bool    iswriten;
     t_cmd    *head = NULL;
     t_cmd    *cmd = NULL;
@@ -95,6 +67,28 @@ bool parse_tokens(t_app *shell)
             if (!cmd->output)
                 return false;
             token = token->next;
+        }
+        else if (token->type == VAR)
+        {
+            if (!is_valid_brackets(token->value, '('))
+            {
+                temp = getenv(ft_strchr(token->value, '$', true));
+                cmd->args = create_expanded_args(cmd->cmd, temp, 2);
+                if (!cmd->args)
+                    return false;
+            }
+            else if (is_valid_brackets(token->value, '(') && is_valid_brackets(token->value, ')'))
+            {
+                temp = extract_subcommand(token->value);
+                char *executed_var = execut_subcommand(shell, temp);
+                cmd->args = create_expanded_args(cmd->cmd, executed_var, 2);
+                if (!cmd->args)
+                    return false;
+            }
+        }
+        else if (token->type == APPEND)
+        {
+
         }
         else if (token->type == QUOTE)
             printf("QUOTE: %s\n",token->value);

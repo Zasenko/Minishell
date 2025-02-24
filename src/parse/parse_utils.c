@@ -1,22 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_variable.c                                  :+:      :+:    :+:   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/17 15:41:07 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/17 15:41:07 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/23 16:51:46 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/23 16:51:46 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-bool handle_variable(t_token *token, char *input, int *i)
+bool is_valid_brackets(char *str, char c)
 {
-    token->type = VAR;
-    token->value = extract_word(input, i);
-    if (!token->value)
+    if (!ft_strchr(str, c, false))
         return false;
     return true;
+}
+
+char *extract_subcommand(const char *str) 
+{
+    char *result;
+    int start;
+    int length;
+
+    start = 0;
+    while (str[start] && str[start] != '(')
+        start++;
+    start++;
+    length = ft_strlen(str) - start;
+    result = ft_substr(str, start, length - 1);
+    if (!result)
+        return NULL;
+    return result;
 }

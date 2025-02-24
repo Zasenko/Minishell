@@ -69,5 +69,10 @@ int     ft_env(char **env);
 int     ft_echo(char **args);
 int     ft_cd(t_cmd *cmd, char **env);
 bool	ft_strstr(char *str, char *to_find);
+char    **create_expanded_args(char *cmd, char *args, int len);
+char    **extract_arguments(t_token *token, char *cmd);
+char    *execut_subcommand(t_app *shell, char *value);
+bool    is_valid_brackets(char *str, char c);
+char    *extract_subcommand(const char *str);
 
 #endif
