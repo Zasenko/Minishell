@@ -25,6 +25,8 @@ bool	is_builtin_func(char *cmd)
 		return (true);
 	if (ft_strstr(cmd, "exit"))
 		return (true);
+	if (ft_strstr(cmd, "export"))
+		return (true);
 	else
 		return (false);
 }
@@ -41,6 +43,8 @@ int	exec_buildin(t_cmd *cmd, t_app *shell)
 		return (ft_cd(cmd, shell->env_var));
 	if (ft_strstr(cmd->cmd, "exit"))
 		return (ft_exit(cmd, shell, 0));
+	if (ft_strstr(cmd->cmd, "export"))
+		return (ft_export(cmd, shell));
 	return (0);
 }
 
