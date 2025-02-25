@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/02/25 12:15:28 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/25 14:39:30 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,7 @@ int	ft_execute(t_app *shell)
 	}
 	else if (cmd->next == NULL && ft_strstr(cmd->cmd, "export"))
 	{
-		shell->last_exit_code = ft_export(cmd, shell);
+		shell->last_exit_code = ft_export(cmd, shell, false);
 	}
 	else {
 		while (cmd != NULL)

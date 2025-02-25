@@ -44,7 +44,7 @@ int	exec_buildin(t_cmd *cmd, t_app *shell)
 	if (ft_strstr(cmd->cmd, "exit"))
 		return (ft_exit(cmd, shell, 0));
 	if (ft_strstr(cmd->cmd, "export"))
-		return (ft_export(cmd, shell));
+		return (ft_export(cmd, shell, true));
 	return (0);
 }
 
