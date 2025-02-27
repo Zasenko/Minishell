@@ -44,30 +44,6 @@ bool is_there_quote(char *str)
     return false;
 }
 
-int get_var_len(const char *str)
-{
-    int i = 0;
-    int len = 0;
-
-    while (str[i] && str[i] != ' ' && str[i] != '\t' 
-        && str[i] != '\'' && str[i] != '\"' && str[i] != ')')
-    {
-        if (str[i] != '(')
-            len++;
-        i++;
-    }
-    return i;
-}
-
-int get_len_befor_chr(char *str, char c)
-{
-    int i = 0;
-
-    while (str[i] && str[i] != c)
-        i++;
-    return i;
-}
-
 char	*var_extractor(const char *input, int *i)
 {
     int start = *i;
@@ -96,7 +72,7 @@ char *extract_word_from_quotes(char *input)
 
     i = 0;
     len = ft_strlen(input);
-    res = (char *)malloc((len - 1) * sizeof(char));
+    res = (char *)malloc((len + 1) * sizeof(char));
     if (!res)
         return NULL;
     while (*input)
@@ -115,6 +91,7 @@ char *extract_word_from_quotes(char *input)
     res[i] = '\0';
     return res;
 }
+
 char *get_status_var(int status)
 {
     char *result;
@@ -163,7 +140,6 @@ int get_general_length(t_app *shell, char *input)
 
     if (!shell || !input)
         return 0;
-
     while (input[i])
     {
         if (!quote && input[i] == '\"')
@@ -179,7 +155,6 @@ int get_general_length(t_app *shell, char *input)
             if (input[i + 1] == '\0')
                 break;
             i++;
-
             if (input[i] != '(' && input[i] != '?')
             {
                 var = var_extractor(input, &i);
@@ -189,9 +164,9 @@ int get_general_length(t_app *shell, char *input)
                     if (res_val)
                     {
                         length += ft_strlen(res_val);
-                        free(var);
                         free(res_val);
                     }
+                    free(var);
                 }
             }
             else if (input[i] == '(')
@@ -203,9 +178,10 @@ int get_general_length(t_app *shell, char *input)
                     if (res_val)
                     {
                         length += ft_strlen(res_val);
-                        free(var);
                         free(res_val);
+                        i++;
                     }
+                    free(var);
                 }
             }
             else if (input[i] == '?')
@@ -221,7 +197,6 @@ int get_general_length(t_app *shell, char *input)
         }
         else
             i++;
-   
     }
     return length;
 }
@@ -275,9 +250,9 @@ char *parse_words(t_app *shell, char *input)
                     if (res_val)
                     {
                         write_str_without_end(result, res_val, &len);
-                        free(var);
                         free(res_val);
                     }
+                    free(var);
                 }
             }
             else if (input[i] == '(')
@@ -289,9 +264,10 @@ char *parse_words(t_app *shell, char *input)
                     if (res_val)
                     {
                         write_str_without_end(result, res_val, &len);
-                        free(var);
                         free(res_val);
+                        i++;
                     }
+                    free(var);
                 }
             }
             else if (input[i] == '?')
@@ -434,7 +410,6 @@ bool parse_tokens(t_app *shell)
         {
 
         }
- 
         token = token->next;
     }
     add_cmd_back(&head, cmd);
