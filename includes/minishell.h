@@ -77,5 +77,6 @@ char    *extract_subcommand(const char *str);
 int     ft_exit(t_cmd *cmd, t_app *shell, int is_parent);
 int	    close_all_cmnds_fds(t_cmd *cmd);
 bool    define_valid_string(char *input);
+int     ft_export(t_cmd *cmd, t_app *shell, bool is_child);
 
 #endif

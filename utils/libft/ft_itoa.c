@@ -6,12 +6,11 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 13:40:40 by ibondarc          #+#    #+#             */
-/*   Updated: 2025/02/24 15:08:25 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/04 12:25:19 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/libft.h"
-#include <stdio.h>
 
 static int	get_num_len(int n)
 {

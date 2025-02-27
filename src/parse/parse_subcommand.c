@@ -56,6 +56,7 @@ char    *execut_subcommand(t_app *shell, char *value)
     pid_t   pid;
     int     fd[2];
 
+    res = NULL;
     pipe(fd); 
     pid = fork();
     if (pid == -1)
@@ -64,5 +65,7 @@ char    *execut_subcommand(t_app *shell, char *value)
         child_subprocess(shell, fd, value);
     else
         res = parent_subprocess(shell, pid, fd);
+    if (!res)
+        return NULL;
     return  (res);
 }
