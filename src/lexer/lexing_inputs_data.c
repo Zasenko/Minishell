@@ -21,10 +21,12 @@ bool handle_inputs(t_token **head, t_token **token, char *input, int *i)
             return false;
         skip_spases(input, i);
         if (input[*i] == '\0')
-        return false;
-        if (input[*i] == '\'')
+            return false;
+        if (input[*i] == '\'' || input[*i] == '\"')
         {
-            if (!handle_single_quote(*token, input, i))
+            if (!define_valid_string(input))
+                return (print_message(QUOTE_ERR, false), false);
+            if (!handle_quotes(*token, input, i))
                 return false;
         }
         else if (ft_strchr("|<>", input[*i], false))
@@ -45,18 +47,15 @@ bool handle_inputs(t_token **head, t_token **token, char *input, int *i)
     return true;
 }
 
-void lexing_inputs_data(t_app *shell, char *str)
+void lexing_inputs_data(t_app *shell, char *input)
 {
     int i;
-    char    *input;
     t_token *head = NULL;
     t_token *token = NULL;
 
-    if (!shell || !str)
+    if (!shell)
         return;
     i = 0;
-    if (!handle_duble_quotes(&input, str))
-        return;
     if (!handle_inputs(&head, &token, input, &i))
         return;
     free(input);

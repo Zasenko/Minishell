@@ -15,6 +15,7 @@
 void print_tokens(t_app *shell)
 {
     t_token *current = shell->tokens;
+    printf("\n================= print_tokens ======================\n");
     while (current)
     {
         printf("Type: %d, Value: %s\n", current->type, current->value);
@@ -25,6 +26,7 @@ void print_tokens(t_app *shell)
 void print_envp(t_envp *head)
 {
     t_envp *current = head;
+    printf("\n================= print_envp ======================\n");
     while (current)
     {
         printf("%s%s%s\n", current->name, "=", current->envp);
@@ -38,6 +40,7 @@ void print_cmd(t_app **shell)
     t_cmd *head;
 
     head = (*shell)->cmd;
+    printf("\n================= print_cmd ======================\n");
     while (head != NULL)
     {
         printf("cmd: [%d] %s\n",i, head->cmd);
@@ -71,8 +74,8 @@ void read_input_line(t_app *shell)
             lexing_inputs_data(shell, input);
             parse_tokens(shell);
             ft_execute(shell);
-            print_tokens(shell);
-            print_cmd(&shell);
+            // print_tokens(shell);
+            // print_cmd(&shell);
             // print_envp(shell->envp);
             free_list(shell);
         }

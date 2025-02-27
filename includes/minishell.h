@@ -57,7 +57,7 @@ bool    handle_operators(t_token *token, char *input, int *i);
 bool    handle_single_quote(t_token *token, char *input, int *i);
 bool    handle_variable(t_token *token, char *input, int *i);
 char    *extract_duble_string(char *input);
-bool    handle_duble_quotes(char **des, char *input);
+bool    handle_quotes(t_token *token, char *input, int *i);
 char    *extract_word(char *input, int *i);
 void    skip_spases(char *input, int *i);
 bool    get_type_existence(t_token *token, t_type type);
@@ -76,5 +76,6 @@ bool    is_valid_brackets(char *str, char c);
 char    *extract_subcommand(const char *str);
 int     ft_exit(t_cmd *cmd, t_app *shell, int is_parent);
 int	    close_all_cmnds_fds(t_cmd *cmd);
+bool    define_valid_string(char *input);
 
 #endif

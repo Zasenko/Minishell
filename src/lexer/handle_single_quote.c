@@ -34,7 +34,7 @@ char *extract_string(char *input, int *i)
 
 bool handle_single_quote(t_token *token, char *input, int *i)
 {
-    token->type = QUOTE;
+    token->type = ARG;
     token->value = extract_string(input, i);
     if (!token->value)
         return NULL;
