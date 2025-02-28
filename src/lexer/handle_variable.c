@@ -14,7 +14,7 @@
 
 bool handle_variable(t_token *token, char *input, int *i)
 {
-    token->type = VAR;
+    token->type = ARG;
     token->value = extract_word(input, i);
     if (!token->value)
         return false;

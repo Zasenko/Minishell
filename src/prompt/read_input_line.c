@@ -15,6 +15,7 @@
 void print_tokens(t_app *shell)
 {
     t_token *current = shell->tokens;
+    printf("\n================= print_tokens ======================\n");
     while (current)
     {
         printf("Type: %d, Value: %s\n", current->type, current->value);
@@ -25,6 +26,7 @@ void print_tokens(t_app *shell)
 void print_envp(t_envp *head)
 {
     t_envp *current = head;
+    printf("\n================= print_envp ======================\n");
     while (current)
     {
         printf("%s%s%s\n", current->name, "=", current->envp);
@@ -38,6 +40,7 @@ void print_cmd(t_app **shell)
     t_cmd *head;
 
     head = (*shell)->cmd;
+    printf("\n================= print_cmd ======================\n");
     while (head != NULL)
     {
         printf("cmd: [%d] %s\n",i, head->cmd);
@@ -62,42 +65,19 @@ void read_input_line(t_app *shell)
         return ;
     while (1)
     {
-        // printf("00000000000000000000000000000000000000000000000000\n\n\n");
-        print_envp(shell->envp);
-
         build_env_into_2d_arr(shell);
-        // printf("11111111111111111111111111111111\n\n\n");
-        print_envp(shell->envp);
         create_prompt_path(shell);
-
-        // printf("2222222222222222222222222222222222\n\n\n");
-        print_envp(shell->envp);
-
         input = readline(shell->prompt);
         if (input)
         {
             add_history(input);
             lexing_inputs_data(shell, input);
-
-            // printf("3333333333333333333333333333333333\n\n\n");
-        print_envp(shell->envp);
-
             parse_tokens(shell);
-
-            // printf("44444444444444444444444444\n\n\n");
-        print_envp(shell->envp);
-
-
             ft_execute(shell);
             // print_tokens(shell);
             // print_cmd(&shell);
-            // printf("5555555555555555555555555555555555555555555\n\n\n");
-            print_envp(shell->envp);
+            // print_envp(shell->envp);
             free_list(shell);
-
-
-            // printf("6666666666666666666666666666666666666666666666\n\n\n");
-            print_envp(shell->envp);
         }
         else 
             break;

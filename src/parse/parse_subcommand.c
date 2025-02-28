@@ -52,7 +52,7 @@ void child_subprocess(t_app *shell, int *fd, char *value)
 }
 char    *execut_subcommand(t_app *shell, char *value)
 {
-    char    *res;
+    char    *res = NULL;
     pid_t   pid;
     int     fd[2];
 
@@ -65,7 +65,6 @@ char    *execut_subcommand(t_app *shell, char *value)
         child_subprocess(shell, fd, value);
     else
         res = parent_subprocess(shell, pid, fd);
-    free(value);
     if (!res)
         return NULL;
     return  (res);
