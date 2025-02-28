@@ -12,6 +12,60 @@
 
 #include "../../includes/minishell.h"
 
+int ft_unset(t_cmd *cmd, t_app *shell, bool is_child)
+{
+    struct s_envp *envp = shell->envp;
+    int i = 1;
+
+    if (is_child)
+        return (SUCCESS);
+
+    if (cmd->args[i] == NULL)
+    {
+        return (SUCCESS);
+    }
+    else
+    {
+        while (cmd->args[i])
+        {
+            t_envp  *node = find_envp_node(envp, cmd->args[i]);
+            if (node)
+            {
+                struct s_envp    *prev = node->prev;
+                struct s_envp    *next = node->next;
+                if (next)
+                {
+                    if (prev)
+                    {
+                        prev->next = next;
+                    }
+                }
+                else
+                {
+                    if (prev)
+                    {
+                        prev->next = NULL;
+                    }
+                }
+                //delete node
+                if (node->envp)
+                {
+                    free(node->envp);
+                }
+                if (node->name)
+                {
+                    free(node->name);
+                }
+                free(node);
+                shell->is_envp_list_changed = true;
+            }
+            i++;
+        }
+
+    }
+    return (SUCCESS);
+}
+
 void unset_env_values(t_app *shell, t_envp **envp)
 {
     t_envp   *curr;

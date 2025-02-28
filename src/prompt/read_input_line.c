@@ -62,19 +62,42 @@ void read_input_line(t_app *shell)
         return ;
     while (1)
     {
+        // printf("00000000000000000000000000000000000000000000000000\n\n\n");
+        print_envp(shell->envp);
+
         build_env_into_2d_arr(shell);
+        // printf("11111111111111111111111111111111\n\n\n");
+        print_envp(shell->envp);
         create_prompt_path(shell);
+
+        // printf("2222222222222222222222222222222222\n\n\n");
+        print_envp(shell->envp);
+
         input = readline(shell->prompt);
         if (input)
         {
             add_history(input);
             lexing_inputs_data(shell, input);
+
+            // printf("3333333333333333333333333333333333\n\n\n");
+        print_envp(shell->envp);
+
             parse_tokens(shell);
+
+            // printf("44444444444444444444444444\n\n\n");
+        print_envp(shell->envp);
+
+
             ft_execute(shell);
-            print_tokens(shell);
-            print_cmd(&shell);
-            // print_envp(shell->envp);
+            // print_tokens(shell);
+            // print_cmd(&shell);
+            // printf("5555555555555555555555555555555555555555555\n\n\n");
+            print_envp(shell->envp);
             free_list(shell);
+
+
+            // printf("6666666666666666666666666666666666666666666666\n\n\n");
+            print_envp(shell->envp);
         }
         else 
             break;
