@@ -55,8 +55,8 @@ void build_env_into_2d_arr(t_app *shell)
                 free_2d_array(env_var);
                 return ;
             }
-            envp = envp->next;
         }
+        envp = envp->next;
         i++;
     }
     shell->env_var = env_var;

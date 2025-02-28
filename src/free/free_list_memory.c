@@ -26,12 +26,19 @@ void free_cmd_list(t_cmd **cmd)
             free_2d_array((*cmd)->args);
             (*cmd)->args = NULL;
         }
+        if ((*cmd)->cmd) {
         free((*cmd)->cmd);
         (*cmd)->cmd = NULL;
+        }
+       if ((*cmd)->input) {
         free((*cmd)->input);
         (*cmd)->input = NULL;
+       }
+        if ((*cmd)->output) {
         free((*cmd)->output);
         (*cmd)->output = NULL;
+        }
+
         free(*cmd);
         *cmd = temp;
     }
@@ -48,7 +55,11 @@ void free_token_list(t_token **tokens)
     while (*tokens != NULL)
     {
         temp = (*tokens)->next;
-        free((*tokens)->value);
+        if ((*tokens)->value)
+        {
+            free((*tokens)->value);
+            (*tokens)->value = NULL;
+        }
         free(*tokens);
         *tokens = temp;
     }
