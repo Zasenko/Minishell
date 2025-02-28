@@ -102,18 +102,18 @@ char *get_status_var(int status)
     return result;
 }
 
-char *get_env_var(char *var)
+char *get_env_var(t_envp *envp, char *var)
 {
     char *result;
-    char *var_val;
+    t_envp *var_val;
 
     if (!var)
         return NULL;
 
-    var_val = getenv(var);
+    var_val = find_envp_node(envp, var);
     if (!var_val)
         return NULL;
-    result = extract_word_from_quotes(var_val);
+    result = extract_word_from_quotes(var_val->envp);
     if (!result)
         return NULL;
     return result;
@@ -160,7 +160,7 @@ int get_general_length(t_app *shell, char *input)
                 var = var_extractor(input, &i);
                 if (var)
                 {
-                    res_val = get_env_var(var);
+                    res_val = get_env_var(shell->envp, var);
                     if (res_val)
                     {
                         length += ft_strlen(res_val);
@@ -246,7 +246,7 @@ char *parse_words(t_app *shell, char *input)
                 var = var_extractor(input, &i);
                 if (var)
                 {
-                    res_val = get_env_var(var);
+                    res_val = get_env_var(shell->envp, var);
                     if (res_val)
                     {
                         write_str_without_end(result, res_val, &len);
