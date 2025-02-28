@@ -310,6 +310,8 @@ char **extract_args(t_app *shell, t_token *token, char *cmd)
 
     while (token)
     {
+        if (token->type == PIPE)
+            break;
         if (token->type == ARG)
         {
             if (is_there_quote(token->value))
