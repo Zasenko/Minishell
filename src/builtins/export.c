@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 09:54:19 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/02/27 17:05:52 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/28 10:09:05 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,13 @@ typedef struct s_lib
 } t_lib;
 
 
-void print_envp2(t_envp *head)
-{
-    t_envp *current = head;
-    while (current)
-    {
-        printf("%s%s%s\n", current->name, "=", current->envp);
-        current = current->next;
-    }
-}
-
 int check_export_key(char *str)
 {
     int i = 0;
     int len = ft_strlen(str);
     if (len == 0 || (len == 1 && !ft_isalpha(str[i])))
     {
-        printf("0 not a valid identifier\n");
+        printf("not a valid identifier\n");
         return (0);
     }
     else {
@@ -43,17 +33,17 @@ int check_export_key(char *str)
         {
             if (!ft_isprint(str[i]))
             {
-                printf("1 not a valid identifier\n");
+                printf("not a valid identifier\n");
                 return (0);
             }
             else if (i == 0 && (!ft_isalpha(str[i]) && str[i] != '_'))
             {
-                printf("2 not a valid identifier\n");
+                printf("not a valid identifier\n");
                 return (0);
             }
             else if (!ft_isalnum(str[i]) && str[i] != '_')
             {
-                printf("3 not a valid identifier\n");
+                printf("not a valid identifier\n");
                 return (0);
             }
             i++;
@@ -123,11 +113,11 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
         {
             printf("declare -x ");
             printf("%s", envp->name);
-            // if (envp->envp)
-            // {
-            //     printf("=\"");
-            //     printf("%s\"", envp->envp);
-            // }
+            if (envp->envp)
+            {
+                printf("=\"");
+                printf("%s\"", envp->envp);
+            }
             printf("\n");
             envp = envp->next;
         }
@@ -154,8 +144,8 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
                 continue;                
             }
 
-            printf("key---- %s\n", lib->key);
-            printf("value---- %s\n", lib->value);
+            // printf("key---- %s\n", lib->key);
+            // printf("value---- %s\n", lib->value);
             
             t_envp *node = find_envp_node(shell->envp, lib->key);
             if (!node)
@@ -172,17 +162,17 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
                 }
                 free(lib);
                 add_envp_back(&shell->envp, new);
-                printf("new1---- %s\n", new->name);
-                printf("new2---- %s\n", new->envp);
-                printf("------------------------------------------\n");
-                print_envp2(shell->envp);
-                printf("------------------------------------------\n");
+                // printf("new1---- %s\n", new->name);
+                // printf("new2---- %s\n", new->envp);
+                // printf("------------------------------------------\n");
+                // print_envp2(shell->envp);
+                // printf("------------------------------------------\n");
 
             }
             else
             {
-                printf("node->envp: %s\n", node->envp);
-                printf("node->name: %s\n", node->name);
+                // printf("node->envp: %s\n", node->envp);
+                // printf("node->name: %s\n", node->name);
                 if (node->envp != NULL)
                 {
                     free(node->envp);
