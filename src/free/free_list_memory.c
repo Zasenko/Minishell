@@ -22,10 +22,16 @@ void free_cmd_list(t_cmd **cmd)
     {
         temp = (*cmd)->next;
         if ((*cmd)->args)
+        {
             free_2d_array((*cmd)->args);
+            (*cmd)->args = NULL;
+        }
         free((*cmd)->cmd);
+        (*cmd)->cmd = NULL;
         free((*cmd)->input);
+        (*cmd)->input = NULL;
         free((*cmd)->output);
+        (*cmd)->output = NULL;
         free(*cmd);
         *cmd = temp;
     }

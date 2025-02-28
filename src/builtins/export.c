@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 09:54:19 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/02/28 10:09:05 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/02/28 13:21:58 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ t_lib *check_export_arg(char *str)
         return (NULL);
     }
     ft_strlcpy(key, str, i + 1);
+    printf("EXPORT key: %s\n", key);
     if (!check_export_key(key))
     {
         free(key);
@@ -83,12 +84,28 @@ t_lib *check_export_arg(char *str)
     }
     
     char *arg_value = ft_strchr(str, '=', true);
-    char *value = ft_strdup(arg_value);
-    if (!value)
+    char *value = NULL;
+    if (!arg_value)
     {
-        free(key);
+        value = ft_strdup("");
+        if (!value)
+        {
+            free(key);
+        printf("ft_strdup error\n");
+        return (NULL); 
+        }
+        // free(key);
+        // printf("ft_strdup error\n");
+        // return (NULL);
+    }
+    else {
+        value = ft_strdup(arg_value);
+        if (!value)
+        {
+             free(key);
         printf("ft_strdup error\n");
         return (NULL);
+        }
     }
     t_lib *lib = ft_calloc(sizeof(t_lib), 1);
     if (!lib)

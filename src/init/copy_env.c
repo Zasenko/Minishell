@@ -30,14 +30,33 @@ void build_env_into_2d_arr(t_app *shell)
     i = 0;
     while (envp != NULL)
     {
-        temp = ft_strjoin(envp->name, "=");
-        if (!temp)
-            return ;
-        env_var[i] = ft_strjoin(temp, envp->envp);
-        free(temp);
-        if (!env_var[i])
-            return ;
-        envp = envp->next;
+        if (!envp->envp && envp->name)
+        {
+            env_var[i] = strdup(envp->name);
+            if (!env_var[i])
+            {
+                free_2d_array(env_var);
+                return ;
+            }
+        }
+        else
+        {
+            temp = ft_strjoin(envp->name, "=");
+            if (!temp)
+            {
+                free_2d_array(env_var);
+                return ;
+            }
+            env_var[i] = ft_strjoin(temp, envp->envp);
+            free(temp);
+            temp = NULL;
+            if (!env_var[i])
+            {
+                free_2d_array(env_var);
+                return ;
+            }
+            envp = envp->next;
+        }
         i++;
     }
     shell->env_var = env_var;
