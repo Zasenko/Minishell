@@ -63,6 +63,7 @@ UTILS_SRC = node_actions/cmd_node/add_cmd_back.c \
 			node_actions/envp_node/last_envp_node.c \
 			node_actions/envp_node/create_new_envp.c \
 			node_actions/envp_node/get_envp_len.c \
+			node_actions/envp_node/find_envp_node.c \
 			node_actions/token_node/add_token_back.c \
 			node_actions/token_node/create_new_token.c \
 			node_actions/token_node/last_token_node.c \

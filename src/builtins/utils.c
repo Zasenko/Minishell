@@ -27,6 +27,8 @@ bool	is_builtin_func(char *cmd)
 		return (true);
 	if (ft_strstr(cmd, "export"))
 		return (true);
+	if (ft_strstr(cmd, "unset"))
+		return (true);
 	else
 		return (false);
 }
@@ -45,6 +47,8 @@ int	exec_buildin(t_cmd *cmd, t_app *shell)
 		return (ft_exit(cmd, shell, 0));
 	if (ft_strstr(cmd->cmd, "export"))
 		return (ft_export(cmd, shell, true));
+	if (ft_strstr(cmd->cmd, "unsex"))
+		return (ft_unset(cmd, shell, true));
 	return (0);
 }
 
