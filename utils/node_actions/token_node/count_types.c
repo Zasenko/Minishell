@@ -21,7 +21,7 @@ int	count_types(t_token *token, t_type type)
 	temp = token;
 	if (!temp)
 		return (i);
-	while (temp && temp->type == type)
+	while (temp && temp->type == type && temp->type != PIPE)
 	{
         i++;
 		temp = temp->next;

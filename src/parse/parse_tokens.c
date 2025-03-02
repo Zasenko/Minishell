@@ -44,18 +44,29 @@ bool is_there_quote(char *str)
     return false;
 }
 
-char	*var_extractor(const char *input, int *i)
+char	*var_extractor(char *input, int *i)
 {
     int start = *i;
+    int is_quote = false;
+    char *result;
 
     if (input[*i] == '(')
     {
         (*i)++;
+        skip_spases(input, i);
         start = *i;
+        is_quote = true;
     }
     while (input[*i])
 	{
-        if (input[*i] == ' ' || input[*i] == '\"' || input[*i] == ')' 
+        if (is_quote && input[*i] == ' ')
+        {
+            result = ft_substr(input ,start, *i - start);
+            skip_spases(input, i);
+            if (input[*i] == ')')
+                return result;
+        }
+        else if (input[*i] == ' ' || input[*i] == '\"' || input[*i] == ')' 
             || input[*i] == '$')
             break;
 		(*i)++;
@@ -310,7 +321,7 @@ char **extract_args(t_app *shell, t_token *token, char *cmd)
 
     while (token)
     {
-        if (token->type == PIPE)
+        if (token->type == PIPE || token->type == REDIR_IN || token->type == REDIR_OUT)
             break;
         if (token->type == ARG)
         {
@@ -359,6 +370,7 @@ bool parse_tokens(t_app *shell)
 {
     t_token *token;
     bool    iswriten;
+    char    *temp = NULL;
     t_cmd    *head = NULL;
     t_cmd    *cmd = NULL;
 
@@ -373,14 +385,37 @@ bool parse_tokens(t_app *shell)
     {
         if (token->type == CMD)
         {
-            cmd->cmd = parse_command(shell, token->value);
-            if (!cmd->cmd)
-                return (free(cmd), false);
-            if ((!token->next || token->next->type != ARG))
+            if (ft_strchr(token->value, '$', false))
             {
-                cmd->args = extract_arguments(token, token->value);
-                if (!cmd->args)
-                    return NULL;
+                if (is_there_quote(token->value))
+                {
+                    cmd->cmd = parse_words(shell, extract_word_from_quotes(token->value));
+                    if (!cmd->cmd)
+                        return (free(cmd), false);
+                }
+                cmd->cmd = parse_words(shell, token->value);
+                if (!cmd->cmd)
+                    return (free(cmd), false);
+                if ((!token->next || token->next->type != ARG))
+                {
+                    cmd->args = (char**)malloc(2);
+                    if (!cmd->args)
+                        return NULL;
+                    cmd->args[0] = ft_strdup(cmd->cmd);
+                    cmd->args[1] = NULL;
+                }
+            }
+            else
+            {
+                cmd->cmd = parse_command(shell, token->value);
+                if (!cmd->cmd)
+                    return (free(cmd), false);
+                if ((!token->next || token->next->type != ARG))
+                {
+                    cmd->args = extract_arguments(token, token->value);
+                    if (!cmd->args)
+                        return NULL;
+                }
             }
         }
         else if (token->type == ARG && iswriten)
@@ -396,21 +431,43 @@ bool parse_tokens(t_app *shell)
         }
         else if (token->type == REDIR_IN && token->next)
         {
-            cmd->input = ft_strdup(token->next->value);
-            if (!cmd->input)
-                return false;
+            if (is_there_quote(token->next->value))
+            {
+                temp = extract_word_from_quotes(token->next->value);
+                cmd->input = ft_strdup(temp);
+                free(temp);
+                if (!cmd->input)
+                    return false;
+            }
+            else
+            {
+                cmd->input = ft_strdup(token->next->value);
+                if (!cmd->input)
+                    return false;
+            }
             token = token->next;
         }
         else if (token->type == REDIR_OUT && token->next)
         {
-            cmd->output = ft_strdup(token->next->value);
-            if (!cmd->output)
-                return false;
+            if (is_there_quote(token->next->value))
+            {
+                temp = extract_word_from_quotes(token->next->value);
+                cmd->output = ft_strdup(temp);
+                free(temp);
+                if (!cmd->output)
+                    return false;
+            }
+            else
+            {
+                cmd->output = ft_strdup(token->next->value);
+                if (!cmd->output)
+                    return false;
+            }
             token = token->next;
         }
         else if (token->type == APPEND)
         {
-
+            cmd->append = true;
         }
         token = token->next;
     }

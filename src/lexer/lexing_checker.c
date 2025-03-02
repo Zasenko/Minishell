@@ -28,19 +28,19 @@ bool check_rederections(t_token *token)
     if (token->type == REDIR_IN)
     {
         if (token->next == NULL || token->value == token->next->value
-            || token->next->type != IN_FILE )
+            || token->next->type != ARG )
             return false;
     }
     else if (token->type == REDIR_OUT)
     {
         if (token->next == NULL || token->value == token->next->value
-            || token->next->type != OUT_FILE)
+            || token->next->type != ARG)
             return false;
     }
     else if (token->type == APPEND)
     {
         if (token->next == NULL || token->value == token->next->value
-            || token->next->type != OUT_FILE )
+            || token->next->type != ARG )
             return false;
     }
     return true;
