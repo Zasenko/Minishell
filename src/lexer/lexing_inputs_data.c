@@ -14,6 +14,8 @@
 
 bool handle_inputs(t_token **head, t_token **token, char *input, int *i)
 {
+    t_token *last;
+
     while (input[*i])
     {
         *token = create_new_token();
@@ -24,9 +26,10 @@ bool handle_inputs(t_token **head, t_token **token, char *input, int *i)
             return false;
         if (input[*i] == '\'' || input[*i] == '\"')
         {
+            last = last_token_node(*head);
             if (!define_valid_string(input))
                 return (print_message(QUOTE_ERR, false), false);
-            if (!handle_quotes(*token, input, i))
+            if (!handle_quotes(*token, last, input, i))
                 return false;
         }
         else if (ft_strchr("|<>", input[*i], false))
@@ -36,12 +39,16 @@ bool handle_inputs(t_token **head, t_token **token, char *input, int *i)
         }
         else if (input[*i] == '$')
         {
-            if (!handle_variable(*token, input, i))
+            last = last_token_node(*head);
+            if (!handle_variable(*token, last, input, i))
                 return false;
         }
         else 
-            if (!handle_command(*token, last_token_node(*head), input, i))
+        {
+            last = last_token_node(*head);
+            if (!handle_command(*token, last, input, i))
                 return false;
+        }
         add_token_back(head, *token);
     }
     return true;

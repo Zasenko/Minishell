@@ -19,9 +19,9 @@ bool handle_command(t_token *token, t_token *prev, char *input, int *i)
         return false;
     skip_spases(input, i);
     if ((prev && prev->type == REDIR_IN) || (prev && prev->type == HEREDOC))
-        token->type = IN_FILE;
+        token->type = ARG;
     else if ((prev && prev->type == REDIR_OUT) || (prev && prev->type == APPEND))
-        token->type = OUT_FILE;
+        token->type = ARG;
     else 
     { 
         if (prev && prev->type != CMD && prev->type != ARG)

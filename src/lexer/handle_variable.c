@@ -12,9 +12,12 @@
 
 #include "../../includes/minishell.h"
 
-bool handle_variable(t_token *token, char *input, int *i)
+bool handle_variable(t_token *token, t_token *prev, char *input, int *i)
 {
-    token->type = ARG;
+    if (!prev)
+        token->type = CMD;
+    else
+        token->type = ARG;
     token->value = extract_word(input, i);
     if (!token->value)
         return false;

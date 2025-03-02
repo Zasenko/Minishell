@@ -9,5 +9,6 @@
 # define PIPE_ERROR "pipe failed"
 # define NOT_EXIST "does not exist."
 # define QUOTE_ERR "error: there is no right count of quotes"
+# define PR  "permission denied"
 
 #endif

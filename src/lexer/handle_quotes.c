@@ -39,7 +39,7 @@
 // }
 
 
-bool handle_quotes(t_token *token, char *input, int *i)
+bool handle_quotes(t_token *token, t_token *prev, char *input, int *i)
 {
     char quote;
     int start;
@@ -47,10 +47,12 @@ bool handle_quotes(t_token *token, char *input, int *i)
     start = *i;
     quote = input[*i];
     (*i)++;
-    while (input[*i] && input[*i] != quote)
+    while (input[*i] && !(input[*i] == quote && input[*i + 1] == ' '))
         (*i)++;
-    (*i)++;
-    token->type = ARG;
+    if (!prev)
+        token->type = CMD;
+    else
+        token->type = ARG;
     token->value = ft_substr(input, start, (*i - start));
     if (!token->value)
         return false;
