@@ -12,15 +12,15 @@
 
 #include "../includes/minishell.h"
 
-t_redir *create_new_redir(char *value, t_type type)
+t_redir *create_new_redir(void)
 {
 	t_redir *new;
 	
 	new = malloc(sizeof(t_redir));
 	if (!new)
 		return NULL;
-	new->value = value;
-	new->type = type;
+	new->value = NULL;
+	new->type = -1;
 	new->fd = -1;
 	new->next = NULL;
 	return new;

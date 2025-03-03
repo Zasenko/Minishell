@@ -52,13 +52,13 @@ void print_cmd(t_app **shell)
             j++;
         }
         redir = head->redirs;
-        while (redir)
+        while (redir != NULL)
         {
-            printf("redir name: %s\n", redir->value);
+            printf("file: %s\n", redir->value);
             redir = redir->next;
         }
-        printf("input: [%d] %s\n",i, head->input);
-        printf("output: [%d] %s\n",i, head->output);
+        // printf("input: [%d] %s\n",i, head->input);
+        // printf("output: [%d] %s\n",i, head->output);
         i++;
         head = head->next;
     }
