@@ -1,34 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_list.c                                      :+:      :+:    :+:   */
+/*   create_new_redir.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/05 19:36:07 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/05 19:36:07 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/12 17:55:11 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/12 17:55:11 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_cmd *create_new_cmd(void)
+t_redir *create_new_redir(char *value, t_type type)
 {
-	t_cmd *new;
+	t_redir *new;
 	
-	new = malloc(sizeof(t_cmd));
+	new = malloc(sizeof(t_redir));
 	if (!new)
 		return NULL;
-	new->cmd = NULL;
-	new->args = NULL;
-	new->input = NULL;
-    new->output = NULL;
-	new->fd_in = -1;
-    new->fd_out = -1;
-	new->append = false;
-	new->redirs = NULL;
-	new->prev = NULL;
+	new->value = value;
+	new->type = type;
+	new->fd = -1;
 	new->next = NULL;
-	new->pid = -1;
 	return new;
 }

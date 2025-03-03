@@ -38,6 +38,7 @@ void print_cmd(t_app **shell)
 {
     int i = 0;
     t_cmd *head;
+    t_redir *redir;
 
     head = (*shell)->cmd;
     printf("\n================= print_cmd ======================\n");
@@ -49,6 +50,12 @@ void print_cmd(t_app **shell)
         {
             printf("j: arg: [%d] %s\n", j, head->args[j]);
             j++;
+        }
+        redir = head->redirs;
+        while (redir)
+        {
+            printf("redir name: %s\n", redir->value);
+            redir = redir->next;
         }
         printf("input: [%d] %s\n",i, head->input);
         printf("output: [%d] %s\n",i, head->output);
@@ -74,8 +81,8 @@ void read_input_line(t_app *shell)
             lexing_inputs_data(shell, input);
             parse_tokens(shell);
             ft_execute(shell);
-            // print_tokens(shell);
-            // print_cmd(&shell);
+            print_tokens(shell);
+            print_cmd(&shell);
             // print_envp(shell->envp);
             free_list(shell);
         }

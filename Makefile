@@ -70,6 +70,10 @@ UTILS_SRC = node_actions/cmd_node/add_cmd_back.c \
 			node_actions/token_node/token_len.c \
 			node_actions/token_node/count_types.c \
 			node_actions/token_node/get_type_existence.c \
+			node_actions/redir_node/add_redir_back.c \
+			node_actions/redir_node/create_new_redir.c \
+			node_actions/redir_node/last_redir_node.c \
+			node_actions/redir_node/count_redir.c \
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC))
 UTILS_SRC := $(addprefix $(UTILS_DIR)/, $(UTILS_SRC))

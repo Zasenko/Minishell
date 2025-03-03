@@ -321,10 +321,16 @@ char **extract_args(t_app *shell, t_token *token, char *cmd)
 
     while (token)
     {
-        if (token->type == PIPE || token->type == REDIR_IN || token->type == REDIR_OUT)
+        if (token->type == PIPE)
             break;
-        if (token->type == ARG)
+        else if (token->type == REDIR_IN || token->type == REDIR_OUT)
         {
+            if (token->next && token->next->next)
+                token = token->next;
+        }
+        else if (token->type == ARG)
+        {
+            // printf("arg: %s\n", token->value);
             if (is_there_quote(token->value))
             {
                 if (is_there_valid_var(token->value) && ft_strchr(token->value, '\"', false))
@@ -373,6 +379,7 @@ bool parse_tokens(t_app *shell)
     char    *temp = NULL;
     t_cmd    *head = NULL;
     t_cmd    *cmd = NULL;
+    t_redir  *redir = NULL;
 
     if (!shell || !shell->tokens)
         return false;
@@ -434,16 +441,12 @@ bool parse_tokens(t_app *shell)
             if (is_there_quote(token->next->value))
             {
                 temp = extract_word_from_quotes(token->next->value);
-                cmd->input = ft_strdup(temp);
+                add_redir_back(&redir, create_new_redir(temp, IN_FILE));
                 free(temp);
-                if (!cmd->input)
-                    return false;
             }
             else
             {
-                cmd->input = ft_strdup(token->next->value);
-                if (!cmd->input)
-                    return false;
+                add_redir_back(&redir, create_new_redir(token->next->value, IN_FILE));
             }
             token = token->next;
         }
@@ -452,23 +455,21 @@ bool parse_tokens(t_app *shell)
             if (is_there_quote(token->next->value))
             {
                 temp = extract_word_from_quotes(token->next->value);
-                cmd->output = ft_strdup(temp);
+                add_redir_back(&redir, create_new_redir(temp, OUT_FILE));
                 free(temp);
-                if (!cmd->output)
-                    return false;
             }
             else
             {
-                cmd->output = ft_strdup(token->next->value);
-                if (!cmd->output)
-                    return false;
+                add_redir_back(&redir, create_new_redir(token->next->value, OUT_FILE));
             }
             token = token->next;
         }
         else if (token->type == APPEND)
         {
+            add_redir_back(&redir, create_new_redir(token->next->value, OUT_FILE));
             cmd->append = true;
         }
+        cmd->redirs = redir;
         token = token->next;
     }
     add_cmd_back(&head, cmd);

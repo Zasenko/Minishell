@@ -1,34 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_list.c                                      :+:      :+:    :+:   */
+/*   last_token_node.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/05 19:36:07 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/05 19:36:07 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/12 17:55:02 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/12 17:55:02 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_cmd *create_new_cmd(void)
+t_redir *last_redir_node(t_redir *node)
 {
-	t_cmd *new;
-	
-	new = malloc(sizeof(t_cmd));
-	if (!new)
-		return NULL;
-	new->cmd = NULL;
-	new->args = NULL;
-	new->input = NULL;
-    new->output = NULL;
-	new->fd_in = -1;
-    new->fd_out = -1;
-	new->append = false;
-	new->redirs = NULL;
-	new->prev = NULL;
-	new->next = NULL;
-	new->pid = -1;
-	return new;
+	if (!node)
+		return (NULL);
+	while (node->next != NULL)
+		node = node->next;
+	return (node);
 }

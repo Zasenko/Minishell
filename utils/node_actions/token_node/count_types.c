@@ -21,9 +21,15 @@ int	count_types(t_token *token, t_type type)
 	temp = token;
 	if (!temp)
 		return (i);
-	while (temp && temp->type == type && temp->type != PIPE)
+	while (temp && temp->type != PIPE)
 	{
-        i++;
+		if (temp->type == REDIR_IN || temp->type == REDIR_OUT)
+		{
+			 if (token->next && token->next->next)
+                token = token->next->next;
+		}
+		if (temp->type == type)
+        	i++;
 		temp = temp->next;
 	}
 	return (i);

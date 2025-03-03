@@ -1,34 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_list.c                                      :+:      :+:    :+:   */
+/*   count_redir.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/05 19:36:07 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/05 19:36:07 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/14 15:10:25 by marvin            #+#    #+#             */
+/*   Updated: 2025/02/14 15:10:25 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_cmd *create_new_cmd(void)
+int	count_redir(t_redir *redir)
 {
-	t_cmd *new;
-	
-	new = malloc(sizeof(t_cmd));
-	if (!new)
-		return NULL;
-	new->cmd = NULL;
-	new->args = NULL;
-	new->input = NULL;
-    new->output = NULL;
-	new->fd_in = -1;
-    new->fd_out = -1;
-	new->append = false;
-	new->redirs = NULL;
-	new->prev = NULL;
-	new->next = NULL;
-	new->pid = -1;
-	return new;
+	t_redir	*temp;
+	int		i;
+
+	i = 0;
+	temp = redir;
+	if (!temp)
+		return (i);
+	while (temp && temp->type != PIPE)
+	{
+		if (temp->type == REDIR_IN || temp->type == REDIR_OUT)
+        	i++;
+		temp = temp->next;
+	}
+	return (i);
 }

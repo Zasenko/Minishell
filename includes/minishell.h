@@ -80,4 +80,9 @@ bool    define_valid_string(char *input);
 int     ft_export(t_cmd *cmd, t_app *shell, bool is_child);
 t_envp  *find_envp_node(t_envp *envp, char *key);
 int     ft_unset(t_cmd *cmd, t_app *shell, bool is_child);
+t_redir *create_new_redir(char *value, t_type type);
+t_redir	*last_redir_node(t_redir *node);
+void	add_redir_back(t_redir **redir, t_redir *new);
+int	    count_redir(t_redir *redir);
+
 #endif

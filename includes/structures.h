@@ -37,6 +37,14 @@ typedef struct s_token
     struct s_token  *next;
 } t_token;
 
+typedef struct s_redir 
+{
+    t_type          type;
+    char            *value;
+    int             fd;
+    struct s_redir  *next;
+} t_redir;
+
 typedef struct s_envp
 {
     char            *envp;          //envp variable 
@@ -54,6 +62,7 @@ typedef struct s_cmd
     bool            append;     // Append mode for output redirection (`>>`)
     int             fd_in;      // Input file descriptor
     int             fd_out;     // Output file descriptor
+    struct s_redir  *redirs;
     struct s_cmd    *next;      // Next command in pipeline
     struct s_cmd    *prev;      // Previous command (doubly linked list)
     pid_t           pid;        // fork pid id
