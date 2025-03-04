@@ -6,7 +6,7 @@
 /*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/03/03 11:52:40 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/03/04 11:49:01 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,13 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	if (is_builtin_func(cmd->cmd))
 	{
 		exit_status = exec_buildin(cmd, shell);
+		free_list(shell);
 		exit(exit_status);
 	}
 	else
 	{
 		execve(cmd->cmd, cmd->args, shell->env_var);
-		exit_with_error(shell, errno, "hello error!");
+		exit_with_error(shell, errno, strerror(errno));
 	}
 }
 
@@ -128,11 +129,13 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell)
 	child_pid = waitpid(cmd->pid, &status, 0);
 	if (child_pid == -1)
 	{
-		return (perror("waitpid"), errno);
+		shell->last_exit_code = WEXITSTATUS(status);
+		return (strerror(errno), errno);
 	}
 	if (WIFEXITED(status))
 	{
 		shell->last_exit_code = WEXITSTATUS(status);
+		// printf ("\n\n-------- %d\n\n", shell->last_exit_code);
 		return (SUCCESS);
 	}
 	return (SUCCESS);
