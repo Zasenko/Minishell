@@ -81,13 +81,13 @@ void read_input_line(t_app *shell)
             lexing_inputs_data(shell, input);
             parse_tokens(shell);
             ft_execute(shell);
-            print_tokens(shell);
-            print_cmd(&shell);
+            // print_tokens(shell);
+            // print_cmd(&shell);
             // print_envp(shell->envp);
             free_list(shell);
         }
         else 
             break;
 	}
-	exit_with_error(shell, 1, NULL);
+	exit_with_error(shell, shell->last_exit_code, NULL);
 }

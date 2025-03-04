@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/03/04 11:49:01 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/03/04 13:10:49 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	else
 	{
 		execve(cmd->cmd, cmd->args, shell->env_var);
+		// printf ("\n\n----ERROR!!!!!!!!!!!!!!!!!---- %d\n\n", errno);
 		exit_with_error(shell, errno, strerror(errno));
 	}
 }
@@ -129,8 +130,10 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell)
 	child_pid = waitpid(cmd->pid, &status, 0);
 	if (child_pid == -1)
 	{
-		shell->last_exit_code = WEXITSTATUS(status);
+		shell->last_exit_code = errno;
 		return (strerror(errno), errno);
+		// printf ("\n\n----ERROR---- %d\n\n", shell->last_exit_code);
+
 	}
 	if (WIFEXITED(status))
 	{

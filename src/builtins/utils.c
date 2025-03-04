@@ -15,23 +15,44 @@
 bool	is_builtin_func(char *cmd)
 {
 
-	if (ft_strncmp("pwd", cmd, sizeof(cmd)))
+	if (ft_strstr(cmd, "pwd"))
 		return (true);
-	if (ft_strncmp("env", cmd, sizeof(cmd)))
+	if (ft_strstr(cmd, "env"))
 		return (true);
-	if (ft_strncmp("echo", cmd, sizeof(cmd)))
+	if (ft_strstr(cmd, "echo"))
 		return (true);
-	if (ft_strncmp("cd", cmd, sizeof(cmd)))
+	if (ft_strstr(cmd, "cd"))
 		return (true);
-	if (ft_strncmp("exit", cmd, sizeof(cmd)))
+	if (ft_strstr(cmd, "exit"))
 		return (true);
-	if (ft_strncmp("export", cmd, sizeof(cmd)))
+	if (ft_strstr(cmd, "export"))
 		return (true);
-	if (ft_strncmp("unset", cmd, sizeof(cmd)))
+	if (ft_strstr(cmd, "unset"))
 		return (true);
 	else
 		return (false);
 }
+
+// bool	is_builtin_func(char *cmd)
+// {
+
+// 	if (ft_strncmp("pwd", cmd, sizeof(cmd)))
+// 		return (true);
+// 	if (ft_strncmp("env", cmd, sizeof(cmd)))
+// 		return (true);
+// 	if (ft_strncmp("echo", cmd, sizeof(cmd)))
+// 		return (true);
+// 	if (ft_strncmp("cd", cmd, sizeof(cmd)))
+// 		return (true);
+// 	if (ft_strncmp("exit", cmd, sizeof(cmd)))
+// 		return (true);
+// 	if (ft_strncmp("export", cmd, sizeof(cmd)))
+// 		return (true);
+// 	if (ft_strncmp("unset", cmd, sizeof(cmd)))
+// 		return (true);
+// 	else
+// 		return (false);
+// }
 
 int	exec_buildin(t_cmd *cmd, t_app *shell)
 {

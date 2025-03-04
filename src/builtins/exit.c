@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:59:49 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/03/04 10:10:53 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/04 12:24:01 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,63 +22,6 @@ int arr2d_len(char **arr)
     return (i);
 }
 
-// int check_exit_arg(char *arg)
-// {
-//     int i;
-//     char *trimmed;
-    
-//     i = 0;
-//     trimmed = ft_strtrim(arg, " \t");
-//     if (!trimmed)
-//         return (1);
-            
-//     if (trimmed[i] == '+' || trimmed[i] == '-')
-//          i++;
-//     if (ft_strlen(&trimmed[i]) < 1)
-//     {
-//         ft_putstr_fd("exit: ", 2);
-//         ft_putstr_fd(arg, 2);
-//         ft_putstr_fd(": numeric argument required\n", 2);
-//         free(trimmed);
-//         return (2);
-//     }
-//     while (trimmed[i])
-//     {
-//         if (!ft_isdigit(trimmed[i]))
-//         {
-//             ft_putstr_fd("exit: ", 2);
-//             ft_putstr_fd(arg, 2);
-//             ft_putstr_fd(": numeric argument required\n", 2);
-//             free(trimmed);
-//             return (2);
-//         }
-//         i++;
-//     }
-//     free(trimmed);
-//     return (0);
-// }
-
-// int check_exit_args(char **args, t_app *shell)
-// {
-//     int i;
-
-//     i = 1;
-//     while (args[i])
-//     {
-//         int result = check_exit_arg(args[i]);
-//         if (result != 0)
-//         {
-//             if (result == 1)
-//             {
-//                 free_list(shell);
-//                 exit(1);
-//             }
-//             shell->last_exit_code = result;
-//             return 1;
-//         }
-//         i++;        
-//     }
-// }
 int	my_whitespace(const char *str, int *idx)
 {
 	int	i;
@@ -226,11 +169,11 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
         ft_putstr_fd("exit: too many arguments\n", 2);
         if (is_parent)
         {
-            shell->last_exit_code = 130;
-            return 130;
+            shell->last_exit_code = 1;
+            return 1;
         }
         else
-            exit(130);
+            exit(1);
     }
 
     printf("exit\n");
