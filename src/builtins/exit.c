@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:59:49 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/03/03 15:47:39 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/04 10:10:53 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,13 +147,11 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
         int i = 0;
         if (trimmed[i] == '+' || trimmed[i] == '-')
             i++;
-        if (ft_strlen(&trimmed[i]) < 1 || ft_strlen(&trimmed[i]) > 20)
+        if (ft_strlen(&trimmed[i]) < 1)
         {
             ft_putstr_fd("exit: ", 2);
             ft_putstr_fd(cmd->args[f], 2);
             ft_putstr_fd(": numeric argument required\n", 2);
-            // printf("exit\n");
-            // printf("bash: exit: %s: numeric argument required\n", trimmed);
             free(trimmed);
             if (is_parent)
             {
@@ -168,9 +166,9 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
         {
             if (!ft_isdigit(trimmed[i]))
             {
-            ft_putstr_fd("exit: ", 2);
-            ft_putstr_fd(cmd->args[f], 2);
-            ft_putstr_fd(": numeric argument required\n", 2);
+                ft_putstr_fd("exit: ", 2);
+                ft_putstr_fd(cmd->args[f], 2);
+                ft_putstr_fd(": numeric argument required\n", 2);
                 free(trimmed);
                 if (is_parent)
                 {
@@ -179,30 +177,46 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
                 }
                 else
                     exit(2);
-                }
+            }
             i++;
         }
-
+        free(trimmed);
         f++;
     }
 
     f = 1;
+    long long exit_code = 0;
     while (cmd->args[f])
     {
-        long long exit_code = ft_my_atoi(cmd->args[f]);
-        if (exit_code > LLONG_MAX || exit_code < LLONG_MIN) //20
-        {
-            ft_putstr_fd("exit: ", 2);
-            ft_putstr_fd(cmd->args[1], 2);
-            ft_putstr_fd(": numeric argument required\n", 2);
-            if (is_parent)
+
+        int	i;
+	    int	sign;
+	    size_t result;
+        char    *arg;
+        
+        arg = cmd->args[f];
+	    result = 0;
+        exit_code = 0;
+	    sign = my_whitespace(arg, &i);
+	    while (arg[i] >= 48 && arg[i] <= 57)
+	    {
+	    	result = result * 10 + (arg[i] - 48);
+            if ((sign > 0 && result > LLONG_MAX) || (sign < 0 && result > (size_t)(-LLONG_MIN)))
             {
-                free_list(shell);
-                exit(2);
+                ft_putstr_fd("exit: ", 2);
+                ft_putstr_fd(cmd->args[1], 2);
+                ft_putstr_fd(": numeric argument required\n", 2);
+                if (is_parent)
+                {
+                    free_list(shell);
+                    exit(2);
+                }
+                else
+                    exit(2);
             }
-            else
-                exit(2);
-        }
+	    	i++;
+	    }
+        exit_code = (long long)result * sign;
         f++;
     }
      
@@ -219,67 +233,12 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
             exit(130);
     }
 
-
-        // char *trimmed = ft_strtrim(cmd->args[1], " \t");  
-        // if (!trimmed)
-        // {
-        //     if (is_parent)
-        //     {
-        //         // free_envp_list(&shell->envp);
-        //         free_list(shell);
-        //         exit(1);
-        //     }
-        //     else
-        //         exit(1);
-        // }
-        // int i = 0;
-        // if (trimmed[i] == '+' || trimmed[i] == '-')
-        //     i++;
-        // if (ft_strlen(&trimmed[i]) < 1)
-        // {
-        //     ft_putstr_fd("exit: ", 2);
-        //     ft_putstr_fd(cmd->args[1], 2);
-        //     ft_putstr_fd(": numeric argument required\n", 2);
-        //     // printf("exit\n");
-        //     // printf("bash: exit: %s: numeric argument required\n", trimmed);
-        //     free(trimmed);
-        //     if (is_parent)
-        //     {
-        //         free_list(shell);
-        //         exit(2);
-        //     }
-        //     else
-        //         exit(2);
-        // }
-
-        // while (trimmed[i])
-        // {
-        //     if (!ft_isdigit(trimmed[i]))
-        //     {
-        //     ft_putstr_fd("exit: ", 2);
-        //     ft_putstr_fd(cmd->args[1], 2);
-        //     ft_putstr_fd(": numeric argument required\n", 2);
-        //         free(trimmed);
-        //         if (is_parent)
-        //         {
-        //             free_list(shell);
-        //             exit(2);
-        //         }
-        //         else
-        //             exit(2);
-        //         }
-        //     i++;
-        // }
-        long long exit_code = ft_my_atoi(cmd->args[1]);
-
-        // free(trimmed);
-        printf("exit\n");
-        if (is_parent)
-        {
-            free_list(shell);
-            exit(exit_code);
-        }
-        else
-            exit(exit_code);
-    
+    printf("exit\n");
+    if (is_parent)
+    {
+        free_list(shell);
+        exit(exit_code);
+    }
+    else
+        exit(exit_code);
 }
