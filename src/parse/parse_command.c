@@ -101,6 +101,9 @@ env_path = NULL;
 					if (build_in_res)
 						return build_in_res;
 				}
+				ft_putstr_fd(value, 2);
+				ft_putstr_fd(": command not found\n", 2);
+				shell->last_exit_code = 127;
 				return (NULL);
 			}
         }
