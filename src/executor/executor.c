@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/03/03 11:21:16 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/04 11:43:33 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	if (is_builtin_func(cmd->cmd))
 	{
 		exit_status = exec_buildin(cmd, shell);
+		free_list(shell);
 		exit(exit_status);
 	}
 	else
@@ -134,6 +135,7 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell)
 	if (WIFEXITED(status))
 	{
 		shell->last_exit_code = WEXITSTATUS(status);
+		// printf ("\n\n-------- %d\n\n", shell->last_exit_code);
 		return (SUCCESS);
 	}
 	return (SUCCESS);
