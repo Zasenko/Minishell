@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 09:54:19 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/02/28 14:49:09 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/04 15:31:21 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int check_export_key(char *str)
     int len = ft_strlen(str);
     if (len == 0 || (len == 1 && !ft_isalpha(str[i])))
     {
-        printf("not a valid identifier\n");
         return (0);
     }
     else {
@@ -33,17 +32,14 @@ int check_export_key(char *str)
         {
             if (!ft_isprint(str[i]))
             {
-                printf("not a valid identifier\n");
                 return (0);
             }
             else if (i == 0 && (!ft_isalpha(str[i]) && str[i] != '_'))
             {
-                printf("not a valid identifier\n");
                 return (0);
             }
             else if (!ft_isalnum(str[i]) && str[i] != '_')
             {
-                printf("not a valid identifier\n");
                 return (0);
             }
             i++;
@@ -52,12 +48,21 @@ int check_export_key(char *str)
     return (1);
 }
 
-t_lib *check_export_arg(char *str)
+t_lib *check_export_arg(char *str, int *exit_code)
 {
-    if (!ft_strchr(str, '=', false))
+    char *temp = str;
+
+    if (ft_strchr(temp, '=', false) == NULL)
     {
         if (!check_export_key(str))
+        {
+            ft_putstr_fd("export: `", 2);
+            ft_putstr_fd(str, 2);
+            ft_putstr_fd("': not a valid identifier\n", 2);
+            *exit_code = 1;
             return (NULL);
+        }
+
         t_lib *lib = ft_calloc(sizeof(t_lib), 1);
         if (!lib)
             return (NULL);
@@ -85,10 +90,13 @@ t_lib *check_export_arg(char *str)
     ft_strlcpy(key, str, i + 1);
     if (!check_export_key(key))
     {
+        ft_putstr_fd("export: `", 2);
+        ft_putstr_fd(str, 2);
+        ft_putstr_fd("': not a valid identifier\n", 2);
+        *exit_code = 1;
         free(key);
         return NULL;
     }
-    
     char *arg_value = ft_strchr(str, '=', true);
     char *value = NULL;
     if (!arg_value)
@@ -127,6 +135,9 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
 {
     struct s_envp *envp = shell->envp;
     int n = 1;
+
+    int exit_code = 0;
+    
     if (cmd->args[n] == NULL)
     {
         while (envp != NULL)
@@ -146,10 +157,11 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
     {
         while (cmd->args[n] != NULL)
         {
-            t_lib *lib = check_export_arg(cmd->args[n]);
+            t_lib *lib = check_export_arg(cmd->args[n], &exit_code);
             if (!lib)
             {
-                shell->last_exit_code = 1;
+                
+                shell->last_exit_code = exit_code;
                 n++;
                 continue;                
             }
@@ -197,5 +209,12 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
             n++;
         }
     }
-    return (SUCCESS);
+    if (is_child)
+    {
+        exit(exit_code);
+    }
+    else
+    {
+        return(exit_code);
+    }
 }
