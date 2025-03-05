@@ -42,7 +42,7 @@ int	exec_buildin(t_cmd *cmd, t_app *shell)
 	if (ft_strstr(cmd->args[0], "echo"))
 		return (ft_echo(cmd->args));
 	if (ft_strstr(cmd->args[0], "cd"))
-		return (ft_cd(cmd, shell->env_var));
+		return (ft_cd(cmd, shell, true));
 	if (ft_strstr(cmd->args[0], "exit"))
 		return (ft_exit(cmd, shell, 0));
 	if (ft_strstr(cmd->args[0], "export"))
