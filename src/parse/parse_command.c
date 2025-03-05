@@ -74,7 +74,7 @@ char *parse_command(t_app *shell, char *value)
     char    *env_path;
     char    **paths;
 
-env_path = NULL;
+	env_path = NULL;
 	result = NULL;
     if (ft_strchr(value, '/', false))
     {
@@ -84,32 +84,27 @@ env_path = NULL;
     }
     else
     {
-        env_path = find_path(shell);
-        if (env_path)
-        {
-            paths = ft_split(env_path, ':');
-            if (!paths)
-                return (NULL);
-            result = extract_full_path(paths, value);
-            free_2d_array(paths);
-			if (!result)
-			{
-				if (is_builtin_func(value))
-            	{
-					char *build_in_res = NULL;
-					build_in_res = ft_strdup(value);
-					if (build_in_res)
-						return build_in_res;
-				}
-				ft_putstr_fd(value, 2);
-				ft_putstr_fd(": command not found\n", 2);
-				shell->last_exit_code = 127;
-				return (NULL);
-			}
-        }
-		else 
+		if (is_builtin_func(value) == true)
 		{
-			return (NULL);
+			result = ft_strdup(value);
+        	if (!result)
+            	return NULL;
+		}
+		else
+		{
+        	env_path = find_path(shell);
+        	if (env_path)
+        	{
+        	    paths = ft_split(env_path, ':');
+        	    if (!paths)
+        	        return (NULL);
+        	    result = extract_full_path(paths, value);
+        	    free_2d_array(paths);
+				if (!result)
+					return (NULL);
+        	}
+			else 
+				return (NULL);
 		}
     }
     return result;

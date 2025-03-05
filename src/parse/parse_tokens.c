@@ -375,9 +375,10 @@ bool parse_tokens(t_app *shell)
 {
     t_token *token;
     bool    iswriten;
-    t_cmd    *head = NULL;
-    t_cmd    *cmd = NULL;
-    t_redir  *redir = NULL;
+    t_cmd   *head = NULL;
+    t_cmd   *cmd = NULL;
+    t_redir *redir = NULL;
+    char    *temp;
 
     if (!shell || !shell->tokens)
         return false;
@@ -394,38 +395,65 @@ bool parse_tokens(t_app *shell)
             {
                 if (is_there_quote(token->value))
                 {
-                    cmd->cmd = parse_words(shell, extract_word_from_quotes(token->value));
-                    if (!cmd->cmd)
-                        return (free(cmd), false);
+                    temp = parse_words(shell, extract_word_from_quotes(token->value));
+                    if (!temp)
+                        return false;
                 }
-                cmd->cmd = parse_words(shell, token->value);
-                if (!cmd->cmd)
-                    return (free(cmd), false);
-                if ((!token->next || token->next->type != ARG))
+                else
                 {
-                    cmd->args = (char**)malloc(2);
-                    if (!cmd->args)
-                        return NULL;
-                    cmd->args[0] = ft_strdup(cmd->cmd);
-                    cmd->args[1] = NULL;
+                    temp = parse_words(shell, token->value);
+                    if (!temp)
+                        return false;
                 }
             }
             else
             {
-                cmd->cmd = parse_command(shell, token->value);
-                if (!cmd->cmd)
-                    return (free(cmd), false);
-                if ((!token->next || token->next->type != ARG))
-                {
-                    cmd->args = extract_arguments(token, token->value);
-                    if (!cmd->args)
-                        return NULL;
-                }
+                temp = parse_command(shell, token->value);
+                if (!temp)
+                    return false;
             }
+            if ((!token->next || token->next->type != ARG))
+            {
+                cmd->args = extract_args(shell, token, temp);
+                if (!cmd->args)
+                    return false;
+            }
+            // if (ft_strchr(token->value, '$', false))
+            // {
+            //     if (is_there_quote(token->value))
+            //     {
+            //         cmd->cmd = parse_words(shell, extract_word_from_quotes(token->value));
+            //         if (!cmd->cmd)
+            //             return (free(cmd), false);
+            //     }
+            //     cmd->cmd = parse_words(shell, token->value);
+            //     if (!cmd->cmd)
+            //         return (free(cmd), false);
+            //     if ((!token->next || token->next->type != ARG))
+            //     {
+            //         cmd->args = (char**)malloc(2);
+            //         if (!cmd->args)
+            //             return NULL;
+            //         cmd->args[0] = ft_strdup(cmd->cmd);
+            //         cmd->args[1] = NULL;
+            //     }
+            // }
+            // else
+            // {
+            //     cmd->cmd = parse_command(shell, token->value);
+            //     if (!cmd->cmd)
+            //         return (free(cmd), false);
+            //     if ((!token->next || token->next->type != ARG))
+            //     {
+            //         cmd->args = extract_arguments(token, token->value);
+            //         if (!cmd->args)
+            //             return NULL;
+            //     }
+            // }
         }
         else if (token->type == ARG && iswriten)
         {
-            cmd->args = extract_args(shell, token, cmd->cmd);
+            cmd->args = extract_args(shell, token, temp);
             iswriten = false;
         }
         else if (token->type == PIPE && token->next)
