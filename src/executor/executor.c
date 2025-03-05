@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/03/05 12:06:55 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/05 12:11:28 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,12 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	redirect(shell, cmd, prev_pipe, pipe_fd);
 	if (is_builtin_func(cmd->args[0]))
 	{
-				printf("00000");
-
 		exit_status = exec_buildin(cmd, shell);
 		free_list(shell);
 		exit(exit_status);
 	}
 	else
 	{
-		printf("11111");
 		execve(cmd->args[0], cmd->args, shell->env_var);
 		exit_with_error(shell, errno, strerror(errno));
 	}

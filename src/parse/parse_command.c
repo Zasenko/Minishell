@@ -97,14 +97,27 @@ char *parse_command(t_app *shell, char *value)
         	{
         	    paths = ft_split(env_path, ':');
         	    if (!paths)
-        	        return (NULL);
+        		{
+				shell->last_exit_code = 1;
+				return (NULL);
+				}
         	    result = extract_full_path(paths, value);
         	    free_2d_array(paths);
 				if (!result)
+				{
+					ft_putstr_fd(value, 2);
+					ft_putstr_fd(": command not found\n", 2);
+					shell->last_exit_code = 127;
 					return (NULL);
+				}
         	}
-			else 
+			else
+			{
+				ft_putstr_fd(value, 2);
+				ft_putstr_fd(": command not found\n", 2);
+				shell->last_exit_code = 127;
 				return (NULL);
+			}
 		}
     }
     return result;
