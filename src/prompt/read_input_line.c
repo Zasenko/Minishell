@@ -44,7 +44,7 @@ void print_cmd(t_app **shell)
     printf("\n================= print_cmd ======================\n");
     while (head != NULL)
     {
-        printf("cmd: [%d] %s\n",i, head->cmd);
+        // printf("cmd: [%d] %s\n",i, head->cmd);
         int j = 0;
         while (head->args[j])
         {

@@ -6,7 +6,7 @@
 /*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/03/04 11:49:01 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/03/05 11:56:04 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,18 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	int exit_status;
 
 	redirect(shell, cmd, prev_pipe, pipe_fd);
-	if (is_builtin_func(cmd->cmd))
+	if (is_builtin_func(cmd->args[0]))
 	{
+				printf("00000");
+
 		exit_status = exec_buildin(cmd, shell);
 		free_list(shell);
 		exit(exit_status);
 	}
 	else
 	{
-		execve(cmd->cmd, cmd->args, shell->env_var);
+		printf("11111");
+		execve(cmd->args[0], cmd->args, shell->env_var);
 		exit_with_error(shell, errno, strerror(errno));
 	}
 }
@@ -198,19 +201,19 @@ int	ft_execute(t_app *shell)
 	}
 	cmd = shell->cmd;
 	
-	if (cmd->next == NULL && ft_strstr(cmd->cmd, "cd"))
+	if (cmd->next == NULL && !ft_strncmp("pwd", cmd->args[0], sizeof(cmd->args[0])))
 	{
 		shell->last_exit_code = ft_cd(cmd, shell->env_var);
 	}
-	else if (cmd->next == NULL && ft_strstr(cmd->cmd, "exit"))
+	else if (cmd->next == NULL &&  !ft_strncmp("exit", cmd->args[0], sizeof(cmd->args[0])))
 	{
 		ft_exit(cmd, shell, 1);
 	}
-	else if (cmd->next == NULL && ft_strstr(cmd->cmd, "export"))
+	else if (cmd->next == NULL && !ft_strncmp("export", cmd->args[0], sizeof(cmd->args[0])))
 	{
 		shell->last_exit_code = ft_export(cmd, shell, false);
 	}
-	else if (cmd->next == NULL && ft_strstr(cmd->cmd, "unset"))
+	else if (cmd->next == NULL && !ft_strncmp("unset", cmd->args[0], sizeof(cmd->args[0])))
 	{
 		shell->last_exit_code = ft_unset(cmd, shell, false);
 	}

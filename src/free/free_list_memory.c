@@ -26,10 +26,10 @@ void free_cmd_list(t_cmd **cmd)
             free_2d_array((*cmd)->args);
             (*cmd)->args = NULL;
         }
-        if ((*cmd)->cmd) {
-        free((*cmd)->cmd);
-        (*cmd)->cmd = NULL;
-        }
+        // if ((*cmd)->cmd) {
+        // free((*cmd)->cmd);
+        // (*cmd)->cmd = NULL;
+        // }
        if ((*cmd)->input) {
         free((*cmd)->input);
         (*cmd)->input = NULL;

@@ -55,11 +55,12 @@ typedef struct s_envp
 
 typedef struct s_cmd
 {
-    char            *cmd;
+    // char            *cmd;
     char            **args;     // Command arguments
     char            *input;     // Input redirection file
     char            *output;    // Output redirection file
     bool            append;     // Append mode for output redirection (`>>`)
+    bool            is_build;
     int             fd_in;      // Input file descriptor
     int             fd_out;     // Output file descriptor
     struct s_redir  *redirs;
