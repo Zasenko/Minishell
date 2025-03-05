@@ -26,7 +26,6 @@ t_cmd *create_new_cmd(void)
 	new->fd_in = -1;
     new->fd_out = -1;
 	new->append = false;
-	new->is_build = false;
 	new->redirs = NULL;
 	new->prev = NULL;
 	new->next = NULL;
