@@ -1,9 +1,0 @@
-textibondarc
-
-================= print_tokens ======================
-Type: 0, Value: /bin/echo
-Type: 1, Value: text"$USER"
-
-================= print_cmd ======================
-j: arg: [0] /bin/echo
-j: arg: [1] textibondarc

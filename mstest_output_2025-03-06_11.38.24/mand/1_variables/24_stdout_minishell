@@ -1,9 +1,0 @@
-/home/ibondarc
-
-================= print_tokens ======================
-Type: 0, Value: /bin/echo
-Type: 1, Value: $HOME$TESTNOTFOUND
-
-================= print_cmd ======================
-j: arg: [0] /bin/echo
-j: arg: [1] /home/ibondarc

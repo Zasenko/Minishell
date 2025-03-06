@@ -1,3 +1,0 @@
-double free or corruption (out)
-double free or corruption (out)
-/home/ibondarc/42_minishell_tester/tester.sh: line 635: 1418244 Aborted                 (core dumped) LD_PRELOAD=/home/ibondarc/42_minishell_tester/utils/libintercept/libintercept.so /home/ibondarc/study_project/Minishell/minishell

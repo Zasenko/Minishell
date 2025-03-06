@@ -1,3 +1,0 @@
-/bin/cat: /bin/cat: invalid option -- 'l'
-MakefileTry '/bin/cat --help' for more information.
-: No such file or directory

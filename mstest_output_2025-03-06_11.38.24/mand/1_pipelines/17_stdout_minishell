@@ -1,8 +1,0 @@
-
-================= print_tokens ======================
-Type: 0, Value: /bin/echo
-Type: 1, Value: 1
-Type: 2, Value: |
-Type: 0, Value: kaka
-
-================= print_cmd ======================

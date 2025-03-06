@@ -1,3 +1,0 @@
-/bin/cat: Makefile: No such file or directory
-/bin/cat: invalid option -- 'l'
-Try '/bin/cat --help' for more information.

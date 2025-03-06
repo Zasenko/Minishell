@@ -1,9 +1,0 @@
-''
-
-================= print_tokens ======================
-Type: 0, Value: echo
-Type: 1, Value: "''$USER''"
-
-================= print_cmd ======================
-j: arg: [0] echo
-j: arg: [1] ''

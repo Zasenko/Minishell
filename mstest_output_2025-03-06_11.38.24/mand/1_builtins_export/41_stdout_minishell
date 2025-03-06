@@ -1,8 +1,0 @@
-
-================= print_tokens ======================
-Type: 0, Value: export
-Type: 1, Value: TES#T=123
-
-================= print_cmd ======================
-j: arg: [0] export
-j: arg: [1] TES#T=123

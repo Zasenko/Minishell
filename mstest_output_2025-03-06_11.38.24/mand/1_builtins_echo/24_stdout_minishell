@@ -1,9 +1,0 @@
-cat lol.c '|' cat > lol.c
-
-================= print_tokens ======================
-Type: 0, Value: echo
-Type: 1, Value: "cat lol.c '|' cat > lol.c"
-
-================= print_cmd ======================
-j: arg: [0] echo
-j: arg: [1] cat lol.c '|' cat > lol.c

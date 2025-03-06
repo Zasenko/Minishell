@@ -1,7 +1,0 @@
-[31mNo such file or directory [0m
-
-================= print_tokens ======================
-Type: 0, Value: "./"''"ls"
-
-================= print_cmd ======================
-j: arg: [0] "./"''"ls"
