@@ -67,7 +67,7 @@ void    print_message(char *message, bool flag);
 void    unset_env_values(t_app *shell, t_envp **envp);
 int     ft_env(char **env);
 int     ft_echo(char **args);
-int     ft_cd(t_cmd *cmd, char **env);
+int     ft_cd(t_cmd *cmd, t_app *shell, bool is_child);
 bool	ft_strstr(char *str, char *to_find);
 char    **create_expanded_args(char *cmd, char *args, int len);
 char    **extract_arguments(t_token *token, char *cmd);
@@ -84,5 +84,6 @@ t_redir *create_new_redir(void);
 t_redir	*last_redir_node(t_redir *node);
 void	add_redir_back(t_redir **redir, t_redir *new);
 int	    count_redir(t_redir *redir);
+int     arr2d_len(char **arr);
 
 #endif

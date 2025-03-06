@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/03/05 12:11:28 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/05 12:32:07 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,9 +200,9 @@ int	ft_execute(t_app *shell)
 	}
 	cmd = shell->cmd;
 	
-	if (cmd->next == NULL && !ft_strncmp("pwd", cmd->args[0], sizeof(cmd->args[0])))
+	if (cmd->next == NULL && !ft_strncmp("cd", cmd->args[0], sizeof(cmd->args[0])))
 	{
-		shell->last_exit_code = ft_cd(cmd, shell->env_var);
+		shell->last_exit_code = ft_cd(cmd, shell, false);
 	}
 	else if (cmd->next == NULL &&  !ft_strncmp("exit", cmd->args[0], sizeof(cmd->args[0])))
 	{
