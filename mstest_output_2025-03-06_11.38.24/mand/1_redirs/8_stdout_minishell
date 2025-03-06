@@ -1,0 +1,16 @@
+
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 3, Value: <
+Type: 1, Value: "./test_files/infile_big"
+Type: 2, Value: |
+Type: 0, Value: cat
+Type: 3, Value: <
+Type: 1, Value: "./test_files/infile"
+
+================= print_cmd ======================
+j: arg: [0] echo
+file: ./test_files/infile_big
+j: arg: [0] /bin/cat
+file: ./test_files/infile

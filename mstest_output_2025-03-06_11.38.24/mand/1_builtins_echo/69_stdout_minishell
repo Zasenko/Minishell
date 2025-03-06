@@ -1,0 +1,24 @@
+feel my pain
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: -n
+Type: 1, Value: -nnnnnnn
+Type: 1, Value: -n
+Type: 1, Value: -nnn
+Type: 1, Value: -nnnnn
+Type: 1, Value: -n
+Type: 1, Value: feel
+Type: 1, Value: my
+Type: 1, Value: pain
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] -n
+j: arg: [2] -nnnnnnn
+j: arg: [3] -n
+j: arg: [4] -nnn
+j: arg: [5] -nnnnn
+j: arg: [6] -n
+j: arg: [7] feel
+j: arg: [8] my
+j: arg: [9] pain

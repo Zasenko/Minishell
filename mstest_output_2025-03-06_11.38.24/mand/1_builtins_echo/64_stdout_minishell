@@ -1,0 +1,9 @@
+test1 -n test2
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: "test1 -n test2"
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] test1 -n test2

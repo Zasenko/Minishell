@@ -1,0 +1,11 @@
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 3, Value: <
+Type: 1, Value: ./test_files/infile_big
+Type: 1, Value: ./test_files/infile
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+j: arg: [1] ./test_files/infile
+file: ./test_files/infile_big

@@ -1,0 +1,18 @@
+
+================= print_tokens ======================
+Type: 0, Value: mkdir
+Type: 1, Value: " "
+
+================= print_cmd ======================
+j: arg: [0] /bin/mkdir
+j: arg: [1]  
+
+================= print_tokens ======================
+Type: 0, Value: /bin/rm
+Type: 1, Value: -rf
+Type: 1, Value: " "
+
+================= print_cmd ======================
+j: arg: [0] /bin/rm
+j: arg: [1] -rf
+j: arg: [2]  

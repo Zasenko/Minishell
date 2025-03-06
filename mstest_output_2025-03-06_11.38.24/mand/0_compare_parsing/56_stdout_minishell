@@ -1,0 +1,9 @@
+ibondarc/home/ibondarc/tmp/tmp.SGMGKSCtFF
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: $USER$TESTNOTFOUND$HOME$WTF$PWD
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] ibondarc/home/ibondarc/tmp/tmp.SGMGKSCtFF

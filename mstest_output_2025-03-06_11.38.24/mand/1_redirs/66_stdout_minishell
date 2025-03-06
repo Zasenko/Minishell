@@ -1,0 +1,103 @@
+42
+0
+1
+2
+3
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: 42
+Type: 4, Value: >
+Type: 1, Value: tmp_redir_out
+Type: 4, Value: >
+Type: 1, Value: tmp_redir_out1
+Type: 4, Value: >
+Type: 1, Value: tmp_redir_out2
+Type: 4, Value: >
+Type: 1, Value: tmp_redir_out3
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] 42
+file: tmp_redir_out
+file: tmp_redir_out1
+file: tmp_redir_out2
+file: tmp_redir_out3
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: 0
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] 0
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 1, Value: tmp_redir_out
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+j: arg: [1] tmp_redir_out
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: 1
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] 1
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 1, Value: tmp_redir_out1
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+j: arg: [1] tmp_redir_out1
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: 2
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] 2
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 1, Value: tmp_redir_out2
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+j: arg: [1] tmp_redir_out2
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: 3
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] 3
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 1, Value: tmp_redir_out3
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+j: arg: [1] tmp_redir_out3
+
+================= print_tokens ======================
+Type: 0, Value: rm
+Type: 1, Value: tmp_redir_out
+Type: 1, Value: tmp_redir_out1
+Type: 1, Value: tmp_redir_out2
+Type: 1, Value: tmp_redir_out3
+
+================= print_cmd ======================
+j: arg: [0] /bin/rm
+j: arg: [1] tmp_redir_out
+j: arg: [2] tmp_redir_out1
+j: arg: [3] tmp_redir_out2
+j: arg: [4] tmp_redir_out3

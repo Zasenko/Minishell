@@ -1,0 +1,34 @@
+[31mpipe failed [0m
+[31mpipe failed [0m
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T="
+Type: 2, Value: |
+Type: 1, Value: "
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] T=
+j: arg: [0] export
+j: arg: [1] 
+[31mNo such file or directory [0m
+[31mpipe failed [0m
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T="
+Type: 2, Value: |
+Type: 1, Value: "
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] T=
+j: arg: [0] export
+j: arg: [1] 
+
+================= print_tokens ======================
+Type: 0, Value: $T$T$T$T$T$T$T
+
+================= print_cmd ======================
+j: arg: [0] 

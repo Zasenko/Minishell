@@ -1,0 +1,12 @@
+-n-nnnnn
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: -n
+Type: 1, Value: -n
+Type: 1, Value: -n-nnnnn
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] -n
+j: arg: [2] -n
+j: arg: [3] -n-nnnnn

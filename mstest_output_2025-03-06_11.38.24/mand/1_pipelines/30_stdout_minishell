@@ -1,0 +1,130 @@
+
+================= print_tokens ======================
+Type: 0, Value: ls
+Type: 2, Value: |
+Type: 0, Value: cat
+Type: 6, Value: <<
+Type: 1, Value: stop
+Type: 2, Value: |
+Type: 0, Value: ls
+Type: 1, Value: -la
+Type: 4, Value: >
+Type: 1, Value: out0
+Type: 2, Value: |
+Type: 0, Value: cat
+Type: 6, Value: <<
+Type: 1, Value: stop1
+Type: 2, Value: |
+Type: 0, Value: ls
+Type: 2, Value: |
+Type: 0, Value: cat
+Type: 6, Value: <<
+Type: 1, Value: stop2
+Type: 2, Value: |
+Type: 0, Value: ls
+Type: 1, Value: -la
+Type: 5, Value: >>
+Type: 1, Value: out
+Type: 2, Value: |
+Type: 0, Value: cat
+Type: 6, Value: <<
+Type: 1, Value: stop3
+
+================= print_cmd ======================
+j: arg: [0] /bin/ls
+j: arg: [0] /bin/cat
+j: arg: [1] stop
+j: arg: [0] /bin/ls
+j: arg: [1] -la
+file: out0
+j: arg: [0] /bin/cat
+j: arg: [1] stop1
+j: arg: [0] /bin/ls
+j: arg: [0] /bin/cat
+j: arg: [1] stop2
+j: arg: [0] /bin/ls
+j: arg: [1] -la
+j: arg: [2] out
+file: out
+j: arg: [0] /bin/cat
+j: arg: [1] stop3
+
+================= print_tokens ======================
+Type: 0, Value: fe
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: wf
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: fwe
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: f
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: stop
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: dw
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: stop1
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: dw
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: stop2
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: e
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: wf
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: stop3
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: /bin/rm
+Type: 1, Value: -f
+Type: 1, Value: out
+
+================= print_cmd ======================
+j: arg: [0] /bin/rm
+j: arg: [1] -f
+j: arg: [2] out
+
+================= print_tokens ======================
+Type: 0, Value: /bin/rm
+Type: 1, Value: -f
+Type: 1, Value: out0
+
+================= print_cmd ======================
+j: arg: [0] /bin/rm
+j: arg: [1] -f
+j: arg: [2] out0

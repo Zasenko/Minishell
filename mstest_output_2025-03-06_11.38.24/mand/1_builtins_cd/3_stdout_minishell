@@ -1,0 +1,24 @@
+
+================= print_tokens ======================
+Type: 0, Value: cd
+Type: 1, Value: ..
+
+================= print_cmd ======================
+j: arg: [0] cd
+j: arg: [1] ..
+
+================= print_tokens ======================
+Type: 0, Value: cd
+Type: 1, Value: ..
+
+================= print_cmd ======================
+j: arg: [0] cd
+j: arg: [1] ..
+
+================= print_tokens ======================
+Type: 0, Value: cd
+Type: 1, Value: $OLDPWD
+
+================= print_cmd ======================
+j: arg: [0] cd
+j: arg: [1] /home/ibondarc/study_project/Minishell

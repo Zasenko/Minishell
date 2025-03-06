@@ -1,0 +1,29 @@
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: A="haha
+Type: 1, Value: 123"
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] A=haha
+j: arg: [2] 123
+haha
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: A="haha
+Type: 1, Value: 123"
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] A=haha
+j: arg: [2] 123
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: $A
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] haha

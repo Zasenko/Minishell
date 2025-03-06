@@ -1,0 +1,14 @@
+
+================= print_tokens ======================
+Type: 0, Value: /bin/grep
+Type: 1, Value: 1
+Type: 3, Value: <
+Type: 1, Value: inputfile
+Type: 3, Value: <
+Type: 1, Value: inputfile
+
+================= print_cmd ======================
+j: arg: [0] /bin/grep
+j: arg: [1] 1
+file: inputfile
+file: inputfile

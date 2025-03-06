@@ -1,0 +1,17 @@
+2
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: 1
+Type: 4, Value: >
+Type: 1, Value: /dev/null
+Type: 2, Value: |
+Type: 0, Value: /bin/echo
+Type: 1, Value: 2
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] 1
+file: /dev/null
+j: arg: [0] /bin/echo
+j: arg: [1] 2

@@ -1,0 +1,2 @@
+/bin/cat: tmp_redir_out: No such file or directory
+/bin/rm: cannot remove 'tmp_redir_out': No such file or directory

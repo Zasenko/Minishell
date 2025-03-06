@@ -1,0 +1,67 @@
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 6, Value: <<
+Type: 1, Value: "$US"E"R"
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+j: arg: [1] ER
+
+================= print_tokens ======================
+Type: 0, Value: because
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: we
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: love
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: bash
+
+================= print_cmd ======================
+j: arg: [0] /bin/bash
+[31mNo such file or directory [0m
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 6, Value: <<
+Type: 1, Value: "$US"E"R"
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+j: arg: [1] ER
+
+================= print_tokens ======================
+Type: 0, Value: because
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: we
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: love
+
+================= print_cmd ======================
+
+================= print_tokens ======================
+Type: 0, Value: bash
+
+================= print_cmd ======================
+j: arg: [0] /bin/bash
+
+================= print_tokens ======================
+Type: 0, Value: $USER
+
+================= print_cmd ======================
+j: arg: [0] ibondarc

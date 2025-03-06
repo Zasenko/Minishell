@@ -1,0 +1,24 @@
+smth
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: 42
+Type: 2, Value: |
+Type: 0, Value: echo
+Type: 1, Value: no
+Type: 2, Value: |
+Type: 0, Value: echo
+Type: 1, Value: smth
+Type: 2, Value: |
+Type: 0, Value: grep
+Type: 1, Value: smth
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] 42
+j: arg: [0] echo
+j: arg: [1] no
+j: arg: [0] echo
+j: arg: [1] smth
+j: arg: [0] /bin/grep
+j: arg: [1] smth

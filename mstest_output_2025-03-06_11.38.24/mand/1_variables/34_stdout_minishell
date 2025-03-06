@@ -1,0 +1,45 @@
+
+42
+42 42
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: tmp_test="/bin/echo
+Type: 1, Value: 42"
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] tmp_test=/bin/echo
+j: arg: [2] 42
+
+================= print_tokens ======================
+Type: 0, Value: $tmp_test
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+
+================= print_tokens ======================
+Type: 0, Value: $tmp_test
+Type: 1, Value: 42
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] 42
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: tmp_test="/bin/echo"
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] tmp_test=/bin/echo
+
+================= print_tokens ======================
+Type: 0, Value: $tmp_test
+Type: 1, Value: 42
+Type: 1, Value: 42
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] 42
+j: arg: [2] 42

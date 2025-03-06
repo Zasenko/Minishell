@@ -1,0 +1,20 @@
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 6, Value: <<
+Type: 1, Value: lim
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+j: arg: [1] lim
+
+================= print_tokens ======================
+Type: 0, Value: test
+
+================= print_cmd ======================
+j: arg: [0] /bin/test
+
+================= print_tokens ======================
+Type: 0, Value: lim
+
+================= print_cmd ======================

@@ -1,0 +1,29 @@
+cat this text\n
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: "cat this text\n"
+Type: 4, Value: >
+Type: 1, Value: tmp_redir_out
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] cat this text\n
+file: tmp_redir_out
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 3, Value: <
+Type: 1, Value: tmp_redir_out
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+file: tmp_redir_out
+
+================= print_tokens ======================
+Type: 0, Value: rm
+Type: 1, Value: tmp_redir_out
+
+================= print_cmd ======================
+j: arg: [0] /bin/rm
+j: arg: [1] tmp_redir_out

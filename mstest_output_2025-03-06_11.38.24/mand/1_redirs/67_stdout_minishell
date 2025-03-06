@@ -1,0 +1,48 @@
+42
+2 /dev/null tmp_redir_out
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: 42
+Type: 4, Value: >
+Type: 1, Value: /dev/null
+Type: 4, Value: >
+Type: 1, Value: tmp_redir_out
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] 42
+file: /dev/null
+file: tmp_redir_out
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: 2
+Type: 5, Value: >>
+Type: 1, Value: /dev/null
+Type: 5, Value: >>
+Type: 1, Value: tmp_redir_out
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] 2
+j: arg: [2] /dev/null
+j: arg: [3] tmp_redir_out
+file: /dev/null
+file: tmp_redir_out
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 1, Value: tmp_redir_out
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+j: arg: [1] tmp_redir_out
+
+================= print_tokens ======================
+Type: 0, Value: rm
+Type: 1, Value: tmp_redir_out
+
+================= print_cmd ======================
+j: arg: [0] /bin/rm
+j: arg: [1] tmp_redir_out

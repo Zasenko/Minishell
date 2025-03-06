@@ -1,0 +1,50 @@
+[31mpipe failed [0m
+[31mpipe failed [0m
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T=|
+Type: 2, Value: |
+Type: 1, Value: '
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] T=|
+j: arg: [0] export
+j: arg: [1] 
+ echo lala  echo  echo 1
+[31mpipe failed [0m
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T=|
+Type: 2, Value: |
+Type: 1, Value: '
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] T=|
+j: arg: [0] export
+j: arg: [1] 
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: $T
+Type: 1, Value: echo
+Type: 1, Value: lala
+Type: 1, Value: $T
+Type: 1, Value: echo
+Type: 1, Value: $T
+Type: 1, Value: echo
+Type: 1, Value: $?
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] 
+j: arg: [2] echo
+j: arg: [3] lala
+j: arg: [4] 
+j: arg: [5] echo
+j: arg: [6] 
+j: arg: [7] echo
+j: arg: [8] 1

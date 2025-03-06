@@ -1,0 +1,24 @@
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: a="asd"
+Type: 1, Value: b="de"
+Type: 1, Value: o=
+Type: 1, Value: c="hellomi"
+Type: 1, Value: X
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] a=asd
+j: arg: [2] b=de
+j: arg: [3] o=
+j: arg: [4] c=hellomi
+j: arg: [5] X
+
+================= print_tokens ======================
+Type: 0, Value: unset
+Type: 1, Value: o
+
+================= print_cmd ======================
+j: arg: [0] unset
+j: arg: [1] o

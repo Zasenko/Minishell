@@ -1,0 +1,58 @@
+
+================= print_tokens ======================
+Type: 0, Value: mkdir
+Type: 1, Value: test
+
+================= print_cmd ======================
+j: arg: [0] /bin/mkdir
+j: arg: [1] test
+
+================= print_tokens ======================
+Type: 0, Value: mkdir
+Type: 1, Value: test
+
+================= print_cmd ======================
+j: arg: [0] /bin/mkdir
+j: arg: [1] test
+
+================= print_tokens ======================
+Type: 0, Value: cd
+Type: 1, Value: $PWD/test
+
+================= print_cmd ======================
+j: arg: [0] cd
+j: arg: [1] 
+
+================= print_tokens ======================
+Type: 0, Value: mkdir
+Type: 1, Value: test
+
+================= print_cmd ======================
+j: arg: [0] /bin/mkdir
+j: arg: [1] test
+
+================= print_tokens ======================
+Type: 0, Value: cd
+Type: 1, Value: $PWD/test
+
+================= print_cmd ======================
+j: arg: [0] cd
+j: arg: [1] 
+
+================= print_tokens ======================
+Type: 0, Value: cd
+Type: 1, Value: ..
+
+================= print_cmd ======================
+j: arg: [0] cd
+j: arg: [1] ..
+
+================= print_tokens ======================
+Type: 0, Value: rm
+Type: 1, Value: -rf
+Type: 1, Value: test
+
+================= print_cmd ======================
+j: arg: [0] /bin/rm
+j: arg: [1] -rf
+j: arg: [2] test

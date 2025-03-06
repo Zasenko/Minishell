@@ -1,0 +1,15 @@
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: tmp_test="/bin/echo
+Type: 1, Value: 42"
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] tmp_test=/bin/echo
+j: arg: [2] 42
+
+================= print_tokens ======================
+Type: 0, Value: "tmp_test"
+
+================= print_cmd ======================

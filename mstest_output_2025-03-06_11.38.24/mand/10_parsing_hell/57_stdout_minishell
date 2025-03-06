@@ -1,0 +1,23 @@
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T="l"
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] T=l
+[31mNo such file or directory [0m
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T="l"
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] T=l
+
+================= print_tokens ======================
+Type: 0, Value: $Ts
+
+================= print_cmd ======================
+j: arg: [0] 

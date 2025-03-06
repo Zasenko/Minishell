@@ -1,0 +1,49 @@
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: L=amazing
+Type: 1, Value: L=ok
+Type: 1, Value: L=cool
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] L=amazing
+j: arg: [2] L=ok
+j: arg: [3] L=cool
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: L=ok
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] L=ok
+ok
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: L=amazing
+Type: 1, Value: L=ok
+Type: 1, Value: L=cool
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] L=amazing
+j: arg: [2] L=ok
+j: arg: [3] L=cool
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: L=ok
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] L=ok
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: $L
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] ok

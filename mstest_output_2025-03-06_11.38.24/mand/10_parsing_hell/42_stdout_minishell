@@ -1,0 +1,26 @@
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T=nnnnnnnn
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] T=nnnnnnnn
+-$T
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T=nnnnnnnn
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] T=nnnnnnnn
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: "-""$T"nnnnnnnnnnnnn -nnnnnnnn"$T"
+Type: 1, Value: '-''$T'
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] -nnnnnnnnnnnnnnnnnnnnn -nnnnnnnnnnnnnnnn
+j: arg: [2] -$T

@@ -118,7 +118,7 @@ bool define_valid_string(char *input)
         } 
         else if (input[i] == '\'') 
         {
-            if (double_opened)
+            if (doub_quote)
                 sing_quote = !sing_quote;
         }
         i++;

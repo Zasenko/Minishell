@@ -1,0 +1,97 @@
+hello
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: hello
+Type: 4, Value: >
+Type: 1, Value: outfile
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] hello
+file: outfile
+world outfile
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: hello
+Type: 4, Value: >
+Type: 1, Value: outfile
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] hello
+file: outfile
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: world
+Type: 5, Value: >>
+Type: 1, Value: outfile
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] world
+j: arg: [2] outfile
+file: outfile
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 1, Value: outfile
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+j: arg: [1] outfile
+buuuh
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: hello
+Type: 4, Value: >
+Type: 1, Value: outfile
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] hello
+file: outfile
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: world
+Type: 5, Value: >>
+Type: 1, Value: outfile
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] world
+j: arg: [2] outfile
+file: outfile
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 1, Value: outfile
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+j: arg: [1] outfile
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: buuuh
+Type: 3, Value: <
+Type: 1, Value: outfile
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] buuuh
+file: outfile
+
+================= print_tokens ======================
+Type: 0, Value: rm
+Type: 1, Value: -f
+Type: 1, Value: outfile
+
+================= print_cmd ======================
+j: arg: [0] /bin/rm
+j: arg: [1] -f
+j: arg: [2] outfile

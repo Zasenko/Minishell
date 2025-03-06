@@ -1,0 +1,10 @@
+
+================= print_tokens ======================
+Type: 0, Value: exit
+Type: 1, Value: 0
+Type: 1, Value: 0
+
+================= print_cmd ======================
+j: arg: [0] exit
+j: arg: [1] 0
+j: arg: [2] 0

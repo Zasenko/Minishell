@@ -1,0 +1,66 @@
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: TEST=100
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] TEST=100
+100
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: TEST=100
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] TEST=100
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: $TEST
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] 100
+
+================= print_tokens ======================
+Type: 0, Value: unset
+Type: 1, Value: TEST
+
+================= print_cmd ======================
+j: arg: [0] unset
+j: arg: [1] TEST
+
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: TEST=100
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] TEST=100
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: $TEST
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] 100
+
+================= print_tokens ======================
+Type: 0, Value: unset
+Type: 1, Value: TEST
+
+================= print_cmd ======================
+j: arg: [0] unset
+j: arg: [1] TEST
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: $TEST
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] 

@@ -1,0 +1,10 @@
+
+================= print_tokens ======================
+Type: 0, Value: ls
+Type: 5, Value: >>
+Type: 1, Value: ./outfiles/outfile01
+
+================= print_cmd ======================
+j: arg: [0] /bin/ls
+j: arg: [1] ./outfiles/outfile01
+file: ./outfiles/outfile01

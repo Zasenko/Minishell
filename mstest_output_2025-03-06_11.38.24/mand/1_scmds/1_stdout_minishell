@@ -1,0 +1,7 @@
+tmp_redir_out
+
+================= print_tokens ======================
+Type: 0, Value: ls
+
+================= print_cmd ======================
+j: arg: [0] /bin/ls

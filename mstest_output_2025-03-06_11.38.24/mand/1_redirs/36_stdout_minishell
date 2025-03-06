@@ -1,0 +1,12 @@
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 3, Value: <
+Type: 1, Value: missing
+Type: 4, Value: >
+Type: 1, Value: ./outfiles/outfile01
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+file: missing
+file: ./outfiles/outfile01

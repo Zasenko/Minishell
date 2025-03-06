@@ -1,0 +1,18 @@
+test1
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: -n
+Type: 1, Value: -n
+Type: 1, Value: -n
+Type: 1, Value: -n
+Type: 1, Value: -n
+Type: 1, Value: test1
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] -n
+j: arg: [2] -n
+j: arg: [3] -n
+j: arg: [4] -n
+j: arg: [5] -n
+j: arg: [6] test1

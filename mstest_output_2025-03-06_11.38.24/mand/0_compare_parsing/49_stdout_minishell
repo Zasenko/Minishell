@@ -1,0 +1,9 @@
+/bin/echo hallo
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: "/bin/echo hallo"
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] /bin/echo hallo

@@ -1,0 +1,27 @@
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T=ech
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] T=ech
+ 
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T=ech
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] T=ech
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: $To
+Type: 1, Value: '
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] 
+j: arg: [2] 

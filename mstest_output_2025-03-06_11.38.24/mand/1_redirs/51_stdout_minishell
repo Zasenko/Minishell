@@ -1,0 +1,17 @@
+
+================= print_tokens ======================
+Type: 0, Value: ls
+Type: 3, Value: <
+Type: 1, Value: missing
+Type: 5, Value: >>
+Type: 1, Value: ./test_files/invalid_permission
+Type: 5, Value: >>
+Type: 1, Value: ./outfiles/outfile02
+
+================= print_cmd ======================
+j: arg: [0] /bin/ls
+j: arg: [1] ./test_files/invalid_permission
+j: arg: [2] ./outfiles/outfile02
+file: missing
+file: ./test_files/invalid_permission
+file: ./outfiles/outfile02

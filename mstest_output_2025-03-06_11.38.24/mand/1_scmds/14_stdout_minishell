@@ -1,0 +1,8 @@
+
+================= print_tokens ======================
+Type: 0, Value: awk
+Type: 1, Value: '$1 ~ /^d/ {print $9}'
+
+================= print_cmd ======================
+j: arg: [0] /bin/awk
+j: arg: [1] $1 ~ /^d/ {print $9}

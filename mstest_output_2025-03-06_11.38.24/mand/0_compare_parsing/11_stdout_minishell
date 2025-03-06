@@ -1,0 +1,9 @@
+exit_code ->0 user ->ibondarc home -> /home/ibondarc
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: "exit_code ->$? user ->$USER home -> $HOME"
+
+================= print_cmd ======================
+j: arg: [0] /bin/echo
+j: arg: [1] exit_code ->0 user ->ibondarc home -> /home/ibondarc

@@ -1,0 +1,8 @@
+
+================= print_tokens ======================
+Type: 0, Value: unset
+Type: 1, Value: export
+
+================= print_cmd ======================
+j: arg: [0] unset
+j: arg: [1] export

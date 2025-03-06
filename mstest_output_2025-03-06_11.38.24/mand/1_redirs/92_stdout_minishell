@@ -1,0 +1,36 @@
+segf is this invalid
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: segf
+Type: 4, Value: >
+Type: 1, Value: echo
+Type: 1, Value: is
+Type: 1, Value: this
+Type: 1, Value: invalid
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] segf
+j: arg: [2] is
+j: arg: [3] this
+j: arg: [4] invalid
+file: echo
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 1, Value: echo
+
+================= print_cmd ======================
+j: arg: [0] /bin/cat
+j: arg: [1] echo
+
+================= print_tokens ======================
+Type: 0, Value: rm
+Type: 1, Value: -f
+Type: 1, Value: echo
+
+================= print_cmd ======================
+j: arg: [0] /bin/rm
+j: arg: [1] -f
+j: arg: [2] echo

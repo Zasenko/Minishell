@@ -1,0 +1,11 @@
+
+================= print_tokens ======================
+Type: 0, Value: cd
+Type: 1, Value: "doesntexist"
+Type: 4, Value: >
+Type: 1, Value: /dev/null
+
+================= print_cmd ======================
+j: arg: [0] cd
+j: arg: [1] doesntexist
+file: /dev/null

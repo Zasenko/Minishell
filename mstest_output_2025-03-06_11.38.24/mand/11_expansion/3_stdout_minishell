@@ -1,0 +1,11 @@
+[31mNo such file or directory [0m
+
+================= print_tokens ======================
+Type: 0, Value: $notexists
+Type: 1, Value: echo
+Type: 1, Value: "haha"
+
+================= print_cmd ======================
+j: arg: [0] 
+j: arg: [1] echo
+j: arg: [2] haha

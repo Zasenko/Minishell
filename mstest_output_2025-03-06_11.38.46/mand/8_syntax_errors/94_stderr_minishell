@@ -1,0 +1,16 @@
+/bin/cat: stop: No such file or directory
+/bin/cat: stop1: No such file or directory
+/bin/cat: stop2: No such file or directory
+/bin/cat: stop3: No such file or directory
+/bin/ls: cannot access 'out': No such file or directory
+fe: command not found
+wf: command not found
+fwe: command not found
+f: command not found
+stop: command not found
+dw: command not found
+stop1: command not found
+dwasd: command not found
+stop2: command not found
+/bin/cat: Makefile: No such file or directory
+/bin/cat: out: No such file or directory

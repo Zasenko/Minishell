@@ -1,0 +1,37 @@
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T="
+Type: 4, Value: >
+Type: 1, Value: "
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] T=
+file: 
+segfault  grep segfault
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T="
+Type: 4, Value: >
+Type: 1, Value: "
+
+================= print_cmd ======================
+j: arg: [0] export
+j: arg: [1] T=
+file: 
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: segfault
+Type: 1, Value: $T
+Type: 1, Value: grep
+Type: 1, Value: segfault
+
+================= print_cmd ======================
+j: arg: [0] echo
+j: arg: [1] segfault
+j: arg: [2] 
+j: arg: [3] grep
+j: arg: [4] segfault
