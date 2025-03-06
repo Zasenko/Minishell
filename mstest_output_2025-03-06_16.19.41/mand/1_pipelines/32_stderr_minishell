@@ -1,0 +1,4 @@
+/bin/cat: out1: No such file or directory
+/bin/wc: out1: No such file or directory
+/bin/cat: out1: No such file or directory
+/bin/wc: out1: No such file or directory
