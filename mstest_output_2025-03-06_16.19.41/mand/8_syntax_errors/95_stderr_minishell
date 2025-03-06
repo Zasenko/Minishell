@@ -1,6 +1,0 @@
-/bin/cat: Makefile: No such file or directory
-/bin/cat: out1: No such file or directory
-/bin/cat: stop: No such file or directory
-/bin/cat: file: No such file or directory
-will: command not found
-stop: command not found
