@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 09:59:49 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/03/04 12:24:01 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:29:30 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
 	    while (arg[i] >= 48 && arg[i] <= 57)
 	    {
 	    	result = result * 10 + (arg[i] - 48);
-            if ((sign > 0 && result > LLONG_MAX) || (sign < 0 && result > (size_t)(-LLONG_MIN)))
+            if ((sign > 0 && result > LLONG_MAX) || (sign < 0 && result > -(size_t)(LLONG_MIN)))
             {
                 ft_putstr_fd("exit: ", 2);
                 ft_putstr_fd(cmd->args[1], 2);

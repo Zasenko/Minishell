@@ -67,7 +67,7 @@ char	*var_extractor(char *input, int *i)
                 return result;
         }
         else if (input[*i] == ' ' || input[*i] == '\"' || input[*i] == ')' 
-            || input[*i] == '$')
+            || input[*i] == '$' || input[*i] == '\'')
             break;
 		(*i)++;
 	}
@@ -255,16 +255,20 @@ char *parse_words(t_app *shell, char *input) {
         else if (input[i] == '$' && (!is_sq_open || is_dq_open)) 
         {
             i++;
-            if (input[i] == '?') 
-            {
-                i++;
-                var = get_status_var(shell->last_exit_code);
+            if (input[i] != '(' && input[i] != '?')
+            { 
+                var = var_extractor(input, &i);
                 if (var) 
                 {
-                    write_str_without_end(result, var, &len);
+                    res_val = get_env_var(shell->envp, var);
+                    if (res_val) 
+                    {
+                        write_str_without_end(result, res_val, &len);
+                        free(res_val);
+                    }
                     free(var);
                 }
-            } 
+            }
             else if (input[i] == '(') 
             {
                 var = var_extractor(input, &i);
@@ -280,20 +284,16 @@ char *parse_words(t_app *shell, char *input) {
                     free(var);
                 }
             } 
-            else 
-            { 
-                var = var_extractor(input, &i);
+            else if (input[i] == '?') 
+            {
+                i++;
+                var = get_status_var(shell->last_exit_code);
                 if (var) 
                 {
-                    res_val = get_env_var(shell->envp, var);
-                    if (res_val) 
-                    {
-                        write_str_without_end(result, res_val, &len);
-                        free(res_val);
-                    }
+                    write_str_without_end(result, var, &len);
                     free(var);
                 }
-            }
+            } 
         } 
         else 
         {
