@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/03/07 14:13:17 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/07 15:52:31 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,28 +84,10 @@ int	redirect(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 		}
 		redir = redir->next;
 	}
-
-	// if (cmd->fd_in != -1)
-	// {
-	// 	dup2(cmd->fd_in, 0);
-	// 	close(cmd->fd_in);
-	// }
-	// if (cmd->next != NULL)
-	// {
-	// 	dup2(pipe_fd[1], 1);
-	// }
-	// if (cmd->fd_out != -1)
-	// {
-	// 	dup2(cmd->fd_out, 1);
-	// 	close(cmd->fd_out);
-	// }
-
 	if (pipe_fd[0] != -1)
 		close(pipe_fd[0]);
 	if (pipe_fd[1] != -1)
 		close(pipe_fd[1]);
-	// close_all_cmnds_fds(shell->cmd);
-	// close_all_redirs_fds(cmd->redirs);
 	return (1);
 }
 
@@ -156,13 +138,7 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 	if (cmd->pid == 0)
 		child_process(shell, cmd, *prev_pipe, pipe_fd);
 	
-	// close_all_redirs_fds(cmd->redirs);
-	close_all_cmnds_fds(cmd);
-	// if (cmd->fd_in != -1)
-	// 	close(cmd->fd_in);
-	// if (cmd->fd_out != -1)
-	// 	close(cmd->fd_out);
-
+	close_all_redirs_fds(cmd->redirs);
 	if (*prev_pipe != -1)
 		close(*prev_pipe);
 	if (pipe_fd[1] != -1)
@@ -181,13 +157,11 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell)
 	{
 		shell->last_exit_code = errno;
 		return (strerror(errno), errno);
-		// printf ("\n\n----ERROR---- %d\n\n", shell->last_exit_code);
 
 	}
 	if (WIFEXITED(status))
 	{
 		shell->last_exit_code = WEXITSTATUS(status);
-		// printf ("\n\n-------- %d\n\n", shell->last_exit_code);
 		return (SUCCESS);
 	}
 	return (SUCCESS);
@@ -222,87 +196,69 @@ int	ft_execute(t_app *shell)
 		return (0);
 	while (cmd != NULL)
 	{
-		// if (cmd->input != NULL)
-		// {
-		// 	int fd_in = open(cmd->input, O_RDONLY);
-		// 	if (fd_in < 0)
-		// 	{
-		// 		perror("open");
-		// 	}
-		// 	else
-		// 	{
-		// 		cmd->fd_in = fd_in;
-		// 	}
-		// }
-		// if (cmd->output != NULL)
-		// {
-		// 	int fd_out = open(cmd->output, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
-		// 	if (fd_out < 0)
-		// 	{
-		// 		perror("open");
-		// 	}
-		// 	else
-		// 	{
-		// 		cmd->fd_out = fd_out;
-		// 	}
-		// }
-		
 		t_redir *redir = cmd->redirs;
 		while (redir)
 		{
 			if (redir->type == REDIR_IN)
 			{
-				printf("REDIR_IN %s\n", redir->value);
 				int fd_in = open(redir->value, O_RDONLY);
 				if (fd_in < 0)
 				{
-					perror("open");
+					ft_putstr_fd(redir->value, 2);
+					ft_putstr_fd(": No such file or directory\n", 2);
+					shell->last_exit_code = 1;
+					return 0;
 				}
 				else
 				{
 					redir->fd = fd_in;
 				}
-				printf("fd_in %d\n", fd_in);
 			}
 			if (redir->type == REDIR_OUT)
 			{
-				printf("REDIR_OUT %s\n", redir->value);
 				int fd_out = open(redir->value, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
 				if (fd_out < 0)
 				{
-					perror("open");
+					ft_putstr_fd(redir->value, 2);
+					ft_putstr_fd(": No such file or directory\n", 2);
+					shell->last_exit_code = 1;
+					return 0;
+
 				}
 				else
 				{
 					redir->fd = fd_out;
 				}
-				printf("fd_out %d\n", fd_out);
 			}
 			if (redir->type == APPEND)
 			{
-				printf("APPEND %s\n", redir->value);
 				int fd_append = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
 				if (fd_append < 0)
 				{
-					perror("open");
+					ft_putstr_fd(redir->value, 2);
+					ft_putstr_fd(": No such file or directory\n", 2);
+					shell->last_exit_code = 1;
+					return 0;
+
 				}
 				else
 				{
 					redir->fd = fd_append;
 				}
-				printf("fd_append %d\n", fd_append);
 			}
 			if (redir->type == HEREDOC)
 			{
-				printf("HEREDOC %s\n", redir->value);
 				if (redir->fd < 0)
 				{
-					perror("open");
+					ft_putstr_fd(redir->value, 2);
+					ft_putstr_fd(": No such file or directory\n", 2);
+					shell->last_exit_code = 1;
+					return 0;
 				}
-				printf("HEREDOC fd %d\n", redir->fd);
 			}
 			redir = redir->next;
 		}
+
 		cmd = cmd->next;
 	}
 	cmd = shell->cmd;
