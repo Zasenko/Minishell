@@ -12,24 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-bool count_quotes(char *input)
-{
-    int i = 0;
-    int quotes = 0;
-
-    if (!input)
-        return 0;
-    while (input[i])
-    {
-        if (input[i] == '\'')
-            quotes++;
-        i++;
-    }
-    if (quotes % 2 != 0)
-        return false;
-    return true;
-}
-
 char *extract_single_string(char *input)
 {
     int     i;
@@ -72,44 +54,44 @@ char *extract_word(char *input, int *i)
 
     start = *i;
     while (input[*i] && input[*i] != ' ' && input[*i] != '|' &&
-           input[*i] != '<' && input[*i] != '>')
+           input[*i] != '<' && input[*i] != '>' && input[*i] != '\t')
         (*i)++;
-    int j = start;
-    while (j < *i)
-    {
-        if (input[j] == '\'' && count_quotes(input))
-        {
-            res = extract_single_string(&input[start]);
-            if (!res)
-                return NULL;
-            return res;
-        }
-        j++;
-    }
     res = ft_substr(input, start, *i - start);
     if (!res)
         return NULL;
     return res;
 }
-
-bool define_valid_string(char *input)
+int count_quotes(const char *input, char quote) 
 {
-    char    quote;
-    int     quote_count;
-    int     i;
-
-    i = 0;
-    quote_count = 0;
-    while (input[i] && input[i] != '\"' && input[i] != '\'')
-        i++;
-    quote = input[i];
-    while (*input)
+    int count = 0;
+    while (*input) 
     {
         if (*input == quote)
-            quote_count++;
+            count++;
         input++;
     }
-    if (quote_count % 2 != 0)
-        return false;
-    return true;
+    return count;
+}
+
+bool define_valid_string(char *input) 
+{
+    int i = 0;
+    bool sing_quote = true;
+    bool doub_quote = true;
+
+    while (input[i]) 
+    {
+        if (input[i] == '\"') 
+        {
+            if (sing_quote) 
+                doub_quote = !doub_quote;
+        } 
+        else if (input[i] == '\'') 
+        {
+            if (doub_quote)
+                sing_quote = !sing_quote;
+        }
+        i++;
+    }
+    return (sing_quote && doub_quote);
 }

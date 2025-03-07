@@ -67,7 +67,7 @@ char	*var_extractor(char *input, int *i)
                 return result;
         }
         else if (input[*i] == ' ' || input[*i] == '\"' || input[*i] == ')' 
-            || input[*i] == '$')
+            || input[*i] == '$' || input[*i] == '\'')
             break;
 		(*i)++;
 	}
@@ -225,40 +225,50 @@ int	write_str_without_end(char *dest, char *src, int *i)
 	return (len);
 }
 
-char *parse_words(t_app *shell, char *input)
+char *parse_words(t_app *shell, char *input) 
 {
-    int     i = 0;
-    int     len = 0;
-    char    quote = 0;
-    char    *result;
-    char    *res_val = NULL;
-    char    *var = NULL;
+    int i = 0, len = 0;
+    char *result;
+    char *res_val = NULL;
+    char *var = NULL;
+    bool is_dq_open = false; 
+    bool is_sq_open = false; 
 
     if (!input)
         return NULL;
-    result = (char*)malloc((get_general_length(shell, input) + 1) * sizeof(char));
+    
+    result = (char *)malloc((get_general_length(shell, input) + 1) * sizeof(char));
     if (!result)
         return NULL;
-    while (input[i])
+
+    while (input[i]) 
     {
-        if (!quote && input[i] == '\"')
-            quote = input[i];
-        if (input[i] != quote && input[i] != '$')
+        if (input[i] == '\'' && !is_dq_open) 
         {
-            result[len] = input[i];
-            len++;
+            is_sq_open = !is_sq_open; 
             i++;
-        }
-        else if(input[i] == '$')
+        } 
+        else if (input[i] == '\"' && !is_sq_open) 
         {
+            is_dq_open = !is_dq_open; 
+            i++;
+        } 
+        else if (input[i] == '$' && (!is_sq_open || is_dq_open)) 
+        {
+            if (input[i + 1] == ' ' || input[i + 1] == '\0' 
+                || input[i + 1] == '$' || input[i + 1] == '\t') 
+            {
+                result[len] = input[i];
+                len++;
+            } 
             i++;
             if (input[i] != '(' && input[i] != '?')
-            {
+            { 
                 var = var_extractor(input, &i);
-                if (var)
+                if (var) 
                 {
                     res_val = get_env_var(shell->envp, var);
-                    if (res_val)
+                    if (res_val) 
                     {
                         write_str_without_end(result, res_val, &len);
                         free(res_val);
@@ -266,13 +276,13 @@ char *parse_words(t_app *shell, char *input)
                     free(var);
                 }
             }
-            else if (input[i] == '(')
+            else if (input[i] == '(') 
             {
                 var = var_extractor(input, &i);
                 if (var)
                 {
                     res_val = get_expanded_var(shell, var);
-                    if (res_val)
+                    if (res_val) 
                     {
                         write_str_without_end(result, res_val, &len);
                         free(res_val);
@@ -280,20 +290,24 @@ char *parse_words(t_app *shell, char *input)
                     }
                     free(var);
                 }
-            }
-            else if (input[i] == '?')
+            } 
+            else if (input[i] == '?') 
             {
                 i++;
                 var = get_status_var(shell->last_exit_code);
-                if (var)
+                if (var) 
                 {
                     write_str_without_end(result, var, &len);
                     free(var);
                 }
             }
-        }
-        else
+        } 
+        else 
+        {
+            result[len] = input[i];
+            len++;
             i++;
+        }
     }
     result[len] = '\0';
     return result;
@@ -305,7 +319,6 @@ char **extract_args(t_app *shell, t_token *token, char *cmd)
     int     args_count;
     int     i = 1;
     char    **result;
-    char    *temp;
 
     if (!shell || !token || !cmd)
         return NULL;
@@ -323,45 +336,16 @@ char **extract_args(t_app *shell, t_token *token, char *cmd)
     {
         if (token->type == PIPE)
             break;
-        else if (token->type == REDIR_IN || token->type == REDIR_OUT)
+        else if (token->type == REDIR_IN || token->type == REDIR_OUT
+            || token->type == APPEND)
         {
-            if (token->next && token->next)
                 token = token->next;
         }
         else if (token->type == ARG)
         {
-            if (is_there_quote(token->value))
-            {
-                if (is_there_valid_var(token->value) && ft_strchr(token->value, '\"', false))
-                {
-                    result[i] = parse_words(shell, token->value);
-                    if (!result[i])
-                        return false;
-                }
-                else
-                {
-                    temp = extract_word_from_quotes(token->value);
-                    result[i] = ft_strdup(temp);
-                    free(temp);
-                    if (!result[i])
-                        return NULL;
-                }
-            }
-            else
-            {
-                if (is_there_valid_var(token->value))
-                {
-                    result[i] = parse_words(shell, token->value);
-                    if (!result[i])
-                        return false;
-                }
-                else
-                {
-                    result[i] = ft_strdup(token->value);
-                    if (!result[i])
-                        return NULL;
-                }
-            }
+            result[i] = parse_words(shell, token->value);
+            if (!result[i])
+                return false;
             i++;
         }
         token = token->next;
@@ -418,38 +402,6 @@ bool parse_tokens(t_app *shell)
                 if (!cmd->args)
                     return false;
             }
-            // if (ft_strchr(token->value, '$', false))
-            // {
-            //     if (is_there_quote(token->value))
-            //     {
-            //         cmd->cmd = parse_words(shell, extract_word_from_quotes(token->value));
-            //         if (!cmd->cmd)
-            //             return (free(cmd), false);
-            //     }
-            //     cmd->cmd = parse_words(shell, token->value);
-            //     if (!cmd->cmd)
-            //         return (free(cmd), false);
-            //     if ((!token->next || token->next->type != ARG))
-            //     {
-            //         cmd->args = (char**)malloc(2);
-            //         if (!cmd->args)
-            //             return NULL;
-            //         cmd->args[0] = ft_strdup(cmd->cmd);
-            //         cmd->args[1] = NULL;
-            //     }
-            // }
-            // else
-            // {
-            //     cmd->cmd = parse_command(shell, token->value);
-            //     if (!cmd->cmd)
-            //         return (free(cmd), false);
-            //     if ((!token->next || token->next->type != ARG))
-            //     {
-            //         cmd->args = extract_arguments(token, token->value);
-            //         if (!cmd->args)
-            //             return NULL;
-            //     }
-            // }
         }
         else if (token->type == ARG && iswriten)
         {
