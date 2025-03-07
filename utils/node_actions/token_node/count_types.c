@@ -23,12 +23,12 @@ int	count_types(t_token *token, t_type type)
 		return (i);
 	while (temp && temp->type != PIPE)
 	{
-		if (temp->type == REDIR_IN || temp->type == REDIR_OUT)
+		if (temp->type == REDIR_IN || temp->type == REDIR_OUT 
+			|| temp->type == APPEND)
 		{
-			 if (token->next && token->next->next)
-                token = token->next->next;
+                token = token->next;
 		}
-		if (temp->type == type)
+		else if (temp->type == type)
         	i++;
 		temp = temp->next;
 	}

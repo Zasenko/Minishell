@@ -12,24 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-// bool count_quotes(char *input)
-// {
-//     int i = 0;
-//     int quotes = 0;
-
-//     if (!input)
-//         return 0;
-//     while (input[i])
-//     {
-//         if (input[i] == '\'')
-//             quotes++;
-//         i++;
-//     }
-//     if (quotes % 2 != 0)
-//         return false;
-//     return true;
-// }
-
 char *extract_single_string(char *input)
 {
     int     i;
@@ -72,20 +54,8 @@ char *extract_word(char *input, int *i)
 
     start = *i;
     while (input[*i] && input[*i] != ' ' && input[*i] != '|' &&
-           input[*i] != '<' && input[*i] != '>')
+           input[*i] != '<' && input[*i] != '>' && input[*i] != '\t')
         (*i)++;
-    int j = start;
-    while (j < *i)
-    {
-        if (input[j] == '\'')
-        {
-            res = extract_single_string(&input[start]);
-            if (!res)
-                return NULL;
-            return res;
-        }
-        j++;
-    }
     res = ft_substr(input, start, *i - start);
     if (!res)
         return NULL;

@@ -225,7 +225,8 @@ int	write_str_without_end(char *dest, char *src, int *i)
 	return (len);
 }
 
-char *parse_words(t_app *shell, char *input) {
+char *parse_words(t_app *shell, char *input) 
+{
     int i = 0, len = 0;
     char *result;
     char *res_val = NULL;
@@ -254,6 +255,12 @@ char *parse_words(t_app *shell, char *input) {
         } 
         else if (input[i] == '$' && (!is_sq_open || is_dq_open)) 
         {
+            if (input[i + 1] == ' ' || input[i + 1] == '\0' 
+                || input[i + 1] == '$' || input[i + 1] == '\t') 
+            {
+                result[len] = input[i];
+                len++;
+            } 
             i++;
             if (input[i] != '(' && input[i] != '?')
             { 
@@ -293,7 +300,7 @@ char *parse_words(t_app *shell, char *input) {
                     write_str_without_end(result, var, &len);
                     free(var);
                 }
-            } 
+            }
         } 
         else 
         {
@@ -312,7 +319,6 @@ char **extract_args(t_app *shell, t_token *token, char *cmd)
     int     args_count;
     int     i = 1;
     char    **result;
-    char    *temp;
 
     if (!shell || !token || !cmd)
         return NULL;
@@ -330,45 +336,16 @@ char **extract_args(t_app *shell, t_token *token, char *cmd)
     {
         if (token->type == PIPE)
             break;
-        else if (token->type == REDIR_IN || token->type == REDIR_OUT)
+        else if (token->type == REDIR_IN || token->type == REDIR_OUT
+            || token->type == APPEND)
         {
-            if (token->next && token->next)
                 token = token->next;
         }
         else if (token->type == ARG)
         {
-            if (is_there_quote(token->value))
-            {
-                if (is_there_valid_var(token->value) && ft_strchr(token->value, '\"', false))
-                {
-                    result[i] = parse_words(shell, token->value);
-                    if (!result[i])
-                        return false;
-                }
-                else
-                {
-                    temp = extract_word_from_quotes(token->value);
-                    result[i] = ft_strdup(temp);
-                    free(temp);
-                    if (!result[i])
-                        return NULL;
-                }
-            }
-            else
-            {
-                if (is_there_valid_var(token->value))
-                {
-                    result[i] = parse_words(shell, token->value);
-                    if (!result[i])
-                        return false;
-                }
-                else
-                {
-                    result[i] = ft_strdup(token->value);
-                    if (!result[i])
-                        return NULL;
-                }
-            }
+            result[i] = parse_words(shell, token->value);
+            if (!result[i])
+                return false;
             i++;
         }
         token = token->next;
