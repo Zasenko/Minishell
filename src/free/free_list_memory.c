@@ -26,18 +26,19 @@ void free_cmd_list(t_cmd **cmd)
             free_2d_array((*cmd)->args);
             (*cmd)->args = NULL;
         }
+        close_all_redirs_fds((*cmd)->redirs);
         // if ((*cmd)->cmd) {
         // free((*cmd)->cmd);
         // (*cmd)->cmd = NULL;
         // }
-       if ((*cmd)->input) {
-        free((*cmd)->input);
-        (*cmd)->input = NULL;
-       }
-        if ((*cmd)->output) {
-        free((*cmd)->output);
-        (*cmd)->output = NULL;
-        }
+    //    if ((*cmd)->input) {
+    //     free((*cmd)->input);
+    //     (*cmd)->input = NULL;
+    //    }
+    //     if ((*cmd)->output) {
+    //     free((*cmd)->output);
+    //     (*cmd)->output = NULL;
+    //     }
 
         free(*cmd);
         *cmd = temp;
@@ -116,7 +117,6 @@ void free_list(t_app *shell)
         free(shell->prompt);
         shell->prompt = NULL;
     }
-    close_all_cmnds_fds(shell->cmd);
     free_cmd_list(&shell->cmd);
     free_token_list(&shell->tokens); 
 }

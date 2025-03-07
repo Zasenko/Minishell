@@ -22,6 +22,7 @@ t_redir *create_new_redir(void)
 	new->value = NULL;
 	new->type = -1;
 	new->fd = -1;
+	new->stop_word = NULL;
 	new->next = NULL;
 	return new;
 }

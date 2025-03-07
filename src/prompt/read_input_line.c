@@ -54,7 +54,27 @@ void print_cmd(t_app **shell)
         redir = head->redirs;
         while (redir != NULL)
         {
-            printf("file: %s\n", redir->value);
+            printf("file: %s", redir->value);
+            if (redir->type == REDIR_IN)
+            {
+                printf(" REDIR_IN");
+            }
+            if (redir->type == REDIR_OUT)
+            {
+                                printf(" REDIR_OUT");
+
+            }
+            if (redir->type == APPEND)
+            {
+                                printf(" APPEND");
+
+            }
+            if (redir->type == HEREDOC)
+            {
+                                printf(" HEREDOC");
+
+            }
+            printf("\n");
             redir = redir->next;
         }
         // printf("input: [%d] %s\n",i, head->input);
@@ -82,7 +102,7 @@ void read_input_line(t_app *shell)
             parse_tokens(shell);
             ft_execute(shell);
             // print_tokens(shell);
-            // print_cmd(&shell);
+            print_cmd(&shell);
             // print_envp(shell->envp);
             free_list(shell);
         }

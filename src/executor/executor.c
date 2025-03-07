@@ -6,11 +6,29 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:49:29 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/03/05 12:32:07 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/07 14:13:17 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	close_all_redirs_fds(t_redir *redir)
+{
+	t_redir	*temp;
+
+	temp = redir;
+	if (!temp)
+		return (0);
+	while (temp != NULL)
+	{
+		if (temp->fd != -1)
+		{
+			close(temp->fd);
+		}
+		temp = temp->next;
+	}
+	return (1);
+}
 
 int	close_all_cmnds_fds(t_cmd *cmd)
 {
@@ -21,14 +39,7 @@ int	close_all_cmnds_fds(t_cmd *cmd)
 		return (0);
 	while (temp != NULL)
 	{
-		if (temp->fd_in != -1)
-		{
-			close(temp->fd_in);
-		}
-		if (temp->fd_out != -1)
-		{
-			close(temp->fd_out);
-		}
+		close_all_redirs_fds(temp->redirs);
 		temp = temp->next;
 	}
 	return (1);
@@ -36,30 +47,65 @@ int	close_all_cmnds_fds(t_cmd *cmd)
 
 int	redirect(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 {
+	(void) shell;
 	if (prev_pipe != -1)
 	{
 		dup2(prev_pipe, 0);
 		close(prev_pipe);
 	}
-	if (cmd->fd_in != -1)
-	{
-		dup2(cmd->fd_in, 0);
-		close(cmd->fd_in);
-	}
+
 	if (cmd->next != NULL)
 	{
 		dup2(pipe_fd[1], 1);
 	}
-	if (cmd->fd_out != -1)
+	
+	t_redir *redir = cmd->redirs;
+	while (redir)
 	{
-		dup2(cmd->fd_out, 1);
-		close(cmd->fd_out);
+		if (redir->type == REDIR_IN && redir->fd != -1)
+		{
+			dup2(redir->fd, 0);
+			close(redir->fd);
+		}
+		if (redir->type == HEREDOC && redir->fd != -1)
+		{
+			dup2(redir->fd, 0);
+			close(redir->fd);
+		}	
+		if (redir->type == REDIR_OUT && redir->fd != -1)
+		{
+			dup2(redir->fd, 1);
+			close(redir->fd);
+		}
+		if (redir->type == APPEND && redir->fd != -1)
+		{
+			dup2(redir->fd, 1);
+			close(redir->fd);
+		}
+		redir = redir->next;
 	}
+
+	// if (cmd->fd_in != -1)
+	// {
+	// 	dup2(cmd->fd_in, 0);
+	// 	close(cmd->fd_in);
+	// }
+	// if (cmd->next != NULL)
+	// {
+	// 	dup2(pipe_fd[1], 1);
+	// }
+	// if (cmd->fd_out != -1)
+	// {
+	// 	dup2(cmd->fd_out, 1);
+	// 	close(cmd->fd_out);
+	// }
+
 	if (pipe_fd[0] != -1)
 		close(pipe_fd[0]);
 	if (pipe_fd[1] != -1)
 		close(pipe_fd[1]);
-	close_all_cmnds_fds(shell->cmd);
+	// close_all_cmnds_fds(shell->cmd);
+	// close_all_redirs_fds(cmd->redirs);
 	return (1);
 }
 
@@ -68,6 +114,7 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	int exit_status;
 
 	redirect(shell, cmd, prev_pipe, pipe_fd);
+	close_all_cmnds_fds(shell->cmd);
 	if (is_builtin_func(cmd->args[0]))
 	{
 		exit_status = exec_buildin(cmd, shell);
@@ -76,6 +123,7 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	}
 	else
 	{
+		//todo FREE!!!!!
 		execve(cmd->args[0], cmd->args, shell->env_var);
 		exit_with_error(shell, errno, strerror(errno));
 	}
@@ -108,10 +156,12 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 	if (cmd->pid == 0)
 		child_process(shell, cmd, *prev_pipe, pipe_fd);
 	
-	if (cmd->fd_in != -1)
-		close(cmd->fd_in);
-	if (cmd->fd_out != -1)
-		close(cmd->fd_out);
+	// close_all_redirs_fds(cmd->redirs);
+	close_all_cmnds_fds(cmd);
+	// if (cmd->fd_in != -1)
+	// 	close(cmd->fd_in);
+	// if (cmd->fd_out != -1)
+	// 	close(cmd->fd_out);
 
 	if (*prev_pipe != -1)
 		close(*prev_pipe);
@@ -172,29 +222,86 @@ int	ft_execute(t_app *shell)
 		return (0);
 	while (cmd != NULL)
 	{
-		if (cmd->input != NULL)
+		// if (cmd->input != NULL)
+		// {
+		// 	int fd_in = open(cmd->input, O_RDONLY);
+		// 	if (fd_in < 0)
+		// 	{
+		// 		perror("open");
+		// 	}
+		// 	else
+		// 	{
+		// 		cmd->fd_in = fd_in;
+		// 	}
+		// }
+		// if (cmd->output != NULL)
+		// {
+		// 	int fd_out = open(cmd->output, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
+		// 	if (fd_out < 0)
+		// 	{
+		// 		perror("open");
+		// 	}
+		// 	else
+		// 	{
+		// 		cmd->fd_out = fd_out;
+		// 	}
+		// }
+		
+		t_redir *redir = cmd->redirs;
+		while (redir)
 		{
-			int fd_in = open(cmd->input, O_RDONLY);
-			if (fd_in < 0)
+			if (redir->type == REDIR_IN)
 			{
-				perror("open");
+				printf("REDIR_IN %s\n", redir->value);
+				int fd_in = open(redir->value, O_RDONLY);
+				if (fd_in < 0)
+				{
+					perror("open");
+				}
+				else
+				{
+					redir->fd = fd_in;
+				}
+				printf("fd_in %d\n", fd_in);
 			}
-			else
+			if (redir->type == REDIR_OUT)
 			{
-				cmd->fd_in = fd_in;
+				printf("REDIR_OUT %s\n", redir->value);
+				int fd_out = open(redir->value, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
+				if (fd_out < 0)
+				{
+					perror("open");
+				}
+				else
+				{
+					redir->fd = fd_out;
+				}
+				printf("fd_out %d\n", fd_out);
 			}
-		}
-		if (cmd->output != NULL)
-		{
-			int fd_out = open(cmd->output, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
-			if (fd_out < 0)
+			if (redir->type == APPEND)
 			{
-				perror("open");
+				printf("APPEND %s\n", redir->value);
+				int fd_append = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
+				if (fd_append < 0)
+				{
+					perror("open");
+				}
+				else
+				{
+					redir->fd = fd_append;
+				}
+				printf("fd_append %d\n", fd_append);
 			}
-			else
+			if (redir->type == HEREDOC)
 			{
-				cmd->fd_out = fd_out;
+				printf("HEREDOC %s\n", redir->value);
+				if (redir->fd < 0)
+				{
+					perror("open");
+				}
+				printf("HEREDOC fd %d\n", redir->fd);
 			}
+			redir = redir->next;
 		}
 		cmd = cmd->next;
 	}
@@ -225,6 +332,7 @@ int	ft_execute(t_app *shell)
 	}
 
 	ft_wait_children(shell);
+	
 	close_all_cmnds_fds(shell->cmd);
 	if (prev_pipe != -1)
 		close(prev_pipe);

@@ -41,6 +41,7 @@ typedef struct s_redir
 {
     t_type          type;
     char            *value;
+    char            *stop_word; //For HEREDOCK
     int             fd;
     struct s_redir  *next;
 } t_redir;
@@ -57,12 +58,12 @@ typedef struct s_cmd
 {
     // char            *cmd;
     char            **args;     // Command arguments
-    char            *input;     // Input redirection file
-    char            *output;    // Output redirection file
-    bool            append;     // Append mode for output redirection (`>>`)
+    // char            *input;     // Input redirection file
+    // char            *output;    // Output redirection file
+    // bool            append;     // Append mode for output redirection (`>>`)
     bool            is_build;
-    int             fd_in;      // Input file descriptor
-    int             fd_out;     // Output file descriptor
+    // int             fd_in;      // Input file descriptor
+    // int             fd_out;     // Output file descriptor
     struct s_redir  *redirs;
     struct s_cmd    *next;      // Next command in pipeline
     struct s_cmd    *prev;      // Previous command (doubly linked list)

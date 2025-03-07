@@ -85,5 +85,5 @@ t_redir	*last_redir_node(t_redir *node);
 void	add_redir_back(t_redir **redir, t_redir *new);
 int	    count_redir(t_redir *redir);
 int     arr2d_len(char **arr);
-
+int     close_all_redirs_fds(t_redir *redir);
 #endif
