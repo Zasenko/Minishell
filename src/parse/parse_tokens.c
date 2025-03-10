@@ -255,8 +255,8 @@ char *parse_words(t_app *shell, char *input)
         } 
         else if (input[i] == '$' && (!is_sq_open || is_dq_open)) 
         {
-            if (input[i + 1] == ' ' || input[i + 1] == '\0' 
-                || input[i + 1] == '$' || input[i + 1] == '\t') 
+            if (input[i + 1] == ' ' || input[i + 1] == '\0' ||  input[i + 1] == '\"'
+                || input[i + 1] == '$' || input[i + 1] == '\t' || input[i + 1] == '\'') 
             {
                 result[len] = input[i];
                 len++;
@@ -439,12 +439,12 @@ bool parse_tokens(t_app *shell)
                 return false;
             if (is_there_quote(token->next->value))
             {
-                redir->type = OUT_FILE;
+                redir->type = REDIR_OUT;
                 redir->value = extract_word_from_quotes(token->next->value);
             }
             else
             {
-                redir->type = OUT_FILE;
+                redir->type = REDIR_OUT;
                 redir->value = ft_strdup(token->next->value);
             }
             add_redir_back(&cmd->redirs, redir);
