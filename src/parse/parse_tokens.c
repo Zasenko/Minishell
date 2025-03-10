@@ -255,8 +255,8 @@ char *parse_words(t_app *shell, char *input)
         } 
         else if (input[i] == '$' && (!is_sq_open || is_dq_open)) 
         {
-            if (input[i + 1] == ' ' || input[i + 1] == '\0' 
-                || input[i + 1] == '$' || input[i + 1] == '\t') 
+            if (input[i + 1] == ' ' || input[i + 1] == '\0' ||  input[i + 1] == '\"'
+                || input[i + 1] == '$' || input[i + 1] == '\t' || input[i + 1] == '\'') 
             {
                 result[len] = input[i];
                 len++;
