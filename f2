@@ -1,9 +1,0 @@
-total 124
--rw-r--r--  1 dzasenko 2024_vienna      0 Mar  7 14:23 f2
-drwxr-xr-x  2 dzasenko 2024_vienna    134 Mar  7 14:21 includes
--rw-r--r--  1 dzasenko 2024_vienna   3339 Mar  4 12:19 Makefile
--rwxr-xr-x  1 dzasenko 2024_vienna 117944 Mar  7 14:23 minishell
-drwxr-xr-x 12 dzasenko 2024_vienna    163 Mar  7 14:23 obj
--rw-r--r--  1 dzasenko 2024_vienna     82 Mar  5 14:36 README.md
-drwxr-xr-x 11 dzasenko 2024_vienna    143 Mar  3 11:09 src
-drwxr-xr-x  4 dzasenko 2024_vienna     39 Mar  3 11:09 utils
