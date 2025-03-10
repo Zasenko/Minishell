@@ -24,8 +24,8 @@ typedef enum
     HEREDOC,    // 6
     // VAR,        // 7
     // QUOTE,      // 8
-    IN_FILE,    // 9
-    OUT_FILE,   // 10
+    // IN_FILE,    // 9
+    // OUT_FILE,   // 10
     ERROR       // 11
 } t_type;
 
