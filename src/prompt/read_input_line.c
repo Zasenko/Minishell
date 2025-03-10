@@ -59,20 +59,20 @@ void print_cmd(t_app **shell)
             {
                 printf(" REDIR_IN");
             }
-            if (redir->type == REDIR_OUT)
+            else if (redir->type == REDIR_OUT)
             {
-                                printf(" REDIR_OUT");
-
+                printf(" REDIR_OUT");
             }
-            if (redir->type == APPEND)
+            else if (redir->type == APPEND)
             {
-                                printf(" APPEND");
-
+                printf(" APPEND");
             }
-            if (redir->type == HEREDOC)
+            else if (redir->type == HEREDOC)
             {
-                                printf(" HEREDOC");
-
+                printf(" HEREDOC");
+            }
+            else {
+                printf(" FUCK");
             }
             printf("\n");
             redir = redir->next;
@@ -102,7 +102,7 @@ void read_input_line(t_app *shell)
             parse_tokens(shell);
             ft_execute(shell);
             // print_tokens(shell);
-            print_cmd(&shell);
+            // print_cmd(&shell);
             // print_envp(shell->envp);
             free_list(shell);
         }

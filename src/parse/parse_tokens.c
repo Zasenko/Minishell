@@ -439,12 +439,12 @@ bool parse_tokens(t_app *shell)
                 return false;
             if (is_there_quote(token->next->value))
             {
-                redir->type = OUT_FILE;
+                redir->type = REDIR_OUT;
                 redir->value = extract_word_from_quotes(token->next->value);
             }
             else
             {
-                redir->type = OUT_FILE;
+                redir->type = REDIR_OUT;
                 redir->value = ft_strdup(token->next->value);
             }
             add_redir_back(&cmd->redirs, redir);

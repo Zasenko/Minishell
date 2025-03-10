@@ -17,7 +17,7 @@ bool check_pipe(t_token *token)
     if (token->type == PIPE)
     {
         if (token->next == NULL || token->prev == NULL 
-            ||  token->value == token->next->value  || token->next->type != CMD)
+            ||  token->value == token->next->value )// || token->next->type != CMD)
             return false;
     }
     return true;
