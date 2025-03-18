@@ -35,6 +35,7 @@ bool	is_builtin_func(char *cmd)
 
 int	exec_buildin(t_cmd *cmd, t_app *shell)
 {
+	// signal(SIGPIPE, SIG_IGN);
 	if (ft_strstr(cmd->args[0], "pwd"))
 		return (ft_pwd());
 	if (ft_strstr(cmd->args[0], "env"))

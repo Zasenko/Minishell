@@ -133,7 +133,6 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 		return (0); // todo? break and waitpid?
 	}
 
-	
 	// child
 	if (cmd->pid == 0)
 		child_process(shell, cmd, *prev_pipe, pipe_fd);
@@ -183,6 +182,7 @@ int ft_wait_children(t_app *shell)
 	return (1);
 }
 
+
 int	ft_execute(t_app *shell)
 {
 	t_cmd	*cmd;
@@ -207,7 +207,7 @@ int	ft_execute(t_app *shell)
 					ft_putstr_fd(redir->value, 2);
 					ft_putstr_fd(": No such file or directory\n", 2);
 					shell->last_exit_code = 1;
-					return 0;
+					break;
 				}
 				else
 				{
@@ -221,8 +221,8 @@ int	ft_execute(t_app *shell)
 				{
 					ft_putstr_fd(redir->value, 2);
 					ft_putstr_fd(": No such file or directory\n", 2);
-					shell->last_exit_code = 1;
-					return 0;
+					shell->last_exit_code = 0;
+					break;
 
 				}
 				else
@@ -238,7 +238,7 @@ int	ft_execute(t_app *shell)
 					ft_putstr_fd(redir->value, 2);
 					ft_putstr_fd(": No such file or directory\n", 2);
 					shell->last_exit_code = 1;
-					return 0;
+					break;
 
 				}
 				else
@@ -253,7 +253,7 @@ int	ft_execute(t_app *shell)
 					ft_putstr_fd(redir->value, 2);
 					ft_putstr_fd(": No such file or directory\n", 2);
 					shell->last_exit_code = 1;
-					return 0;
+					break;
 				}
 			}
 			redir = redir->next;

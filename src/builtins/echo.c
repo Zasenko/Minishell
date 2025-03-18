@@ -29,8 +29,18 @@ int ft_echo(char **args)
     {
         if (!ft_strncmp(args[i], "-n", 2))
         {
-            with_new_line = false;
-            i++;
+            int d = 2;
+            while (args[i][d] && args[i][d] == 'n')
+            {
+                d++;
+            }
+            if (args[i][d] == '\0') {
+                with_new_line = false;
+                i++;
+            }
+            else {
+                break;
+            }
         }
         else {
             break;
