@@ -23,34 +23,6 @@ bool is_there_quote(char *str)
     return false;
 }
 
-// char *extract_word_from_quotes(char *input)
-// {
-//     int     i;
-//     int     len;
-//     char    *res;
-//     char    quote = 0;
-
-//     i = 0;
-//     len = ft_strlen(input);
-//     res = (char *)malloc((len + 1) * sizeof(char));
-//     if (!res)
-//         return NULL;
-//     while (*input)
-//     {
-//         if (!quote && (*input == '\'' || *input == '\"'))
-//             quote = *input;
-//         if (*input != quote)
-//         {
-//             res[i] = *input;
-//             input++;
-//             i++;
-//         }
-//         else
-//             input++;
-//     }
-//     res[i] = '\0';
-//     return res;
-// }
 char *extract_word_from_quotes(char *input) 
 {
     int   i = 0, j = 0;

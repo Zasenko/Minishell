@@ -164,54 +164,49 @@ char *ft_devide_string(char *input, int *i, char delim, bool *is_open_q)
 char *extract_word(t_app *shell, char *input, int *i)
 {
     char    *part;
-    char    *res;
-    int     j;
+    char    *result = NULL;
+    char    *expanded;
+    char    *temp;
+    int     j = 0;
+    int     start;
 
-    // printf("=========================start===============================\n");
     part = divide_into_part(input, i);
-    // printf("part: %s\n",part);
+    if (!part) 
+        return NULL;
     if (!ft_strchr(part, '$', false))
-    {
-        // printf("=========================end===============================\n");
         return part;
-    }
-    else
-    {       
-        // printf("input: %s\n", part);
-        if (ft_strchr(part, '\"', false) || ft_strchr(part, '\'', false))
+    if (ft_strchr(part, '\"', false) || ft_strchr(part, '\'', false))
+    {
+        if (is_possible_expand(part) && is_there_valid_var(part))
         {
-            // printf("Expand $var with quotes \n");
-            if (is_possible_expand(part) && is_there_valid_var(part))
+            result = ft_strdup(""); 
+            while (part[j])
             {
-                // printf("In case where can be expande $ from quotes\n");
-
-                j = 0;
+                start = j; 
                 while (part[j] && part[j] != '$')
                     j++;
-                res = ft_substr(part, 0, j);
-                if (!res)
-                    return NULL;
-                char *expanded = expand_words(shell, part, &j);
-                char *temp = ft_strjoin(res, expanded);
-                free(res);  
-                char *final_result = ft_strjoin(temp, ft_strdup(&part[j]));
-                free(temp); 
-                return final_result;
-            }
-            else
-            {
-                // printf("In case that is no able to expand $ from quotes\n");
-                res = ft_strdup(part);
+                if (start != j)
+                {
+                    temp = ft_strjoin(result, ft_substr(part, start, j - start));
+                    free(result);
+                    result = temp;
+                }
+                if (part[j] == '$')
+                {
+                    expanded = expand_words(shell, part, &j);
+                    temp = ft_strjoin(result, expanded);
+                    free(result);
+                    result = temp;
+                }
             }
         }
         else
-        {
-            // printf("Expand $var without quotes \n");
-            res = expand_words(shell, part, &j);
-        }
+            result = ft_strdup(part);
     }
-    // printf("=========================end===============================\n");
-    return res;
+    else
+        result = expand_words(shell, part, &j); 
+    free(part);
+    return result;
 }
 
 bool define_valid_string(char *input) 
