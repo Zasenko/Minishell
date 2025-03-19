@@ -144,7 +144,7 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
 	    while (arg[i] >= 48 && arg[i] <= 57)
 	    {
 	    	result = result * 10 + (arg[i] - 48);
-            if ((sign > 0 && result > LLONG_MAX) || (sign < 0 && result > (size_t)(-LLONG_MIN)))
+            if ((sign > 0 && result > LLONG_MAX) || (sign < 0 && result > -(size_t)(LLONG_MIN)))
             {
                 ft_putstr_fd("exit: ", 2);
                 ft_putstr_fd(cmd->args[1], 2);

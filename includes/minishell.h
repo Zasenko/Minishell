@@ -52,13 +52,13 @@ bool	is_builtin_func(char *cmd);
 int     exec_buildin(t_cmd *cmd, t_app *shell);
 int     ft_pwd();
 bool    lexing_checker(t_app *shell);
-bool    handle_command(t_token *token, t_token *prev, char *input, int *i);
+bool    handle_command(t_app *shell, t_token *token, t_token *prev, char *input, int *i);
 bool    handle_operators(t_token *token, char *input, int *i);
 bool    handle_single_quote(t_token *token, char *input, int *i);
-bool    handle_variable(t_token *token,  t_token *prev, char *input, int *i);
+bool    handle_variable(t_app *shell, t_token *token,  t_token *prev, char *input, int *i);
 char    *extract_duble_string(char *input);
 bool    handle_quotes(t_token *token, t_token *prev, char *input, int *i);
-char    *extract_word(char *input, int *i);
+char    *extract_word(t_app *shell, char *input, int *i);
 void    skip_spases(char *input, int *i);
 bool    get_type_existence(t_token *token, t_type type);
 int	    get_envp_len(t_envp *envp);
@@ -86,5 +86,9 @@ void	add_redir_back(t_redir **redir, t_redir *new);
 int	    count_redir(t_redir *redir);
 int     arr2d_len(char **arr);
 int     close_all_redirs_fds(t_redir *redir);
-void print_cmd(t_app **shell);
+void    print_cmd(t_app **shell);
+char    *expand_words(t_app *shell, char *input, int *i);
+void    skip_quotes(char *input, int *i, char quote);
+char    *get_word_from_quotes(char *input);
+
 #endif

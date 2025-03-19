@@ -46,16 +46,8 @@ bool handle_quotes(t_token *token, t_token *prev, char *input, int *i)
 
     start = *i;
     quote = input[*i];
-    (*i)++;
-    while (input[*i])
-    {
-        if (input[*i] == quote && input[*i + 1] == ' ')
-        {
-            (*i)++;
-            break;
-        }
+    while (input[*i] && input[*i] != quote)
         (*i)++;
-    }
     if (!prev)
         token->type = CMD;
     else
