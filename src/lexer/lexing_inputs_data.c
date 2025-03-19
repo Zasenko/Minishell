@@ -50,15 +50,15 @@ bool handle_inputs(t_app *shell, t_token **head, t_token **token, char *str)
         //     extract_quoted_string(input, &i);
 
         // }
-        if (input[i] == '\'')
-        {
-            last = last_token_node(*head);
-            if (!define_valid_string(input))
-                return (print_message(QUOTE_ERR, false), false);
-            if (!handle_quotes(*token, last, input, &i))
-                return false;
-        }
-        else if (ft_strchr("|<>", input[i], false))
+        // if (input[i] == '\'')
+        // {
+        //     last = last_token_node(*head);
+        //     if (!define_valid_string(input))
+        //         return (print_message(QUOTE_ERR, false), false);
+        //     if (!handle_quotes(*token, last, input, &i))
+        //         return false;
+        // }
+        if (ft_strchr("|<>", input[i], false))
         {
             if (!handle_operators(*token, input, &i))
                 return false;

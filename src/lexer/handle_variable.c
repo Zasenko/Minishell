@@ -1,14 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   handle_variable.c                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/17 15:41:07 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/17 15:41:07 by marvin           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+// /* ************************************************************************** */
+// /*                                                                            */
+// /*                                                        :::      ::::::::   */
+// /*   handle_variable.c                                  :+:      :+:    :+:   */
+// /*                                                    +:+ +:+         +:+     */
+// /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+// /*                                                +#+#+#+#+#+   +#+           */
+// /*   Created: 2025/02/17 15:41:07 by marvin            #+#    #+#             */
+// /*   Updated: 2025/02/17 15:41:07 by marvin           ###   ########.fr       */
+// /*                                                                            */
+// /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
@@ -125,7 +125,7 @@ char *get_expanded_var(t_app *shell, char *var)
 char *expand_words(t_app *shell, char *input, int *i)
 {
     char    *var = NULL;
-    char    *result;
+    char    *result = NULL;
 
     if (!shell || !input)
         return 0;
@@ -163,14 +163,14 @@ char *expand_words(t_app *shell, char *input, int *i)
     return result;
 }
 
-bool handle_variable(t_app *shell, t_token *token, t_token *prev, char *input, int *i)
-{
-    if (!prev)
-        token->type = CMD;
-    else
-        token->type = ARG;
-    token->value = expand_words(shell, input, i);
-    if (!token->value)
-        return false;
-    return true;
-}
+// bool handle_variable(t_app *shell, t_token *token, t_token *prev, char *input, int *i)
+// {
+//     if (!prev)
+//         token->type = CMD;
+//     else
+//         token->type = ARG;
+//     token->value = expand_words(shell, input, i);
+//     if (!token->value)
+//         return false;
+//     return true;
+// }

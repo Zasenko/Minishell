@@ -56,7 +56,7 @@ typedef struct s_envp
 
 typedef struct s_cmd
 {
-    // char            *cmd;
+    char            *cmd;
     char            **args;     // Command arguments
     // char            *input;     // Input redirection file
     // char            *output;    // Output redirection file

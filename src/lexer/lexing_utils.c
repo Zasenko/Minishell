@@ -52,29 +52,47 @@ void skip_quotes(char *input, int *i, char quote)
     while (input[*i] == quote)
         (*i)++;
 }
-
-char	*ft_strcopy(char *input, int *i, char quote)
+bool is_there_valid_var(char *str)
 {
-	char	*result;
-	int		j = 0;
-    bool    is_quote = false;
+    bool is_valid;
 
-	if (!input)
-		return NULL;
-	result = (char *)malloc(sizeof(char) * (strlen(&input[*i]) + 1));
-	if (!result)
-		return (NULL);
-	while (input[*i] && input[*i] != '|' && input[*i] != '<' && input[*i] != '>')
-    {
-        if (input[*i] == quote )
-            is_quote = !is_quote;
-        if ((input[*i] == ' ' || input[*i] == '\t') && is_quote)
-            break;
-        result[j++] = input[(*i)++];
+    is_valid = false;
+    while (*str)
+    {   
+        if (*str == '$')
+        {
+            str++;
+            is_valid = true;
+            if (*str == '\0' || *str == '$' || *str == '\"'
+                ||  *str == ' ' || *str == '\t')
+                return false;
+        }
+        else
+            str++;
     }
-    result[j] = '\0';
-	return (result);
+    return is_valid;
 }
+
+char *divide_into_part(char *input, int *i)
+{
+    bool    is_dq_open = false;
+    bool    is_sq_open = false;
+    int     start;
+    
+    start = *i;
+    while (input[*i])
+    {
+        if (input[*i] == '\'' && !is_dq_open) 
+            is_sq_open = !is_sq_open;
+        else if (input[*i] == '\"' && !is_sq_open) 
+            is_dq_open = !is_dq_open;
+        else if ((input[*i] == ' ' || input[*i] == '\t') && !is_dq_open && !is_sq_open)
+            break;
+        (*i)++;
+    }
+    return ft_substr(input, start, *i - start);
+}
+
 int count_quotes(const char *input, char quote) 
 {
     int count = 0;
@@ -96,95 +114,103 @@ int count_quotes(const char *input, char quote)
 
 bool is_possible_expand(char *input)
 {
-    int     i = 0;
-    bool    is_dq_open = false;
-    bool    is_sq_open = false;
-    
+    int  i = 0;
+    bool is_dq_open = false;
+    bool is_sq_open = false;
+
     if (!input)
         return false;
 
-    // Ensure we only treat quote characters correctly
-    char quote = (input[i] == '\'' || input[i] == '\"') ? input[i] : '\0';
-
     while (input[i])
     {
-        if (input[i] == '\"' && !is_sq_open) 
+        if (input[i] == '\"' && !is_sq_open)
             is_dq_open = !is_dq_open;
-        else if (input[i] == '\'' && !is_dq_open) 
+        else if (input[i] == '\'' && !is_dq_open)
             is_sq_open = !is_sq_open;
-        
-        // Only allow expansion if we are NOT inside single quotes
-        if (input[i] == '$' && !is_sq_open)
+        else if (input[i] == '$' && !is_sq_open)
             return true;
         i++;
-        // Stop if we reach the end of the quoted section
-        if (quote && input[i] == quote)
-            break;
     }
-
     return false;
 }
 
-void divide_into_words(char *input, int *i)
-{
-    bool    is_dq_open = false;
-    bool    is_sq_open = false;
 
-    while (input[*i] && input[*i] != '|' && input[*i] != '<' && input[*i] != '>')
+char *ft_devide_string(char *input, int *i, char delim, bool *is_open_q)
+{
+    char *res;
+    int j;
+    int len;
+
+    if (!input)
+        return NULL;
+    len = 0;
+    while (input[len] != delim)
     {
-        if (input[*i] == '\'' && !is_dq_open) 
-            is_sq_open = !is_sq_open;
-        else if (input[*i] == '\"' && !is_sq_open) 
-            is_dq_open = !is_dq_open;
-        else if ((input[*i] == ' ' || input[*i] == '\t') && !is_dq_open && !is_sq_open)
-            break;
+        len++;
+        if (input[len] == '\"')
+            *is_open_q = !(*is_open_q);
+    }
+    res = ft_calloc((len + 1), sizeof(char));
+    j = 0;
+    while (j < len)
+    {
+        res[j] = input[j];
+        j++;
         (*i)++;
     }
+    return res;
 }
 
 char *extract_word(t_app *shell, char *input, int *i)
 {
-    int     start;
+    char    *part;
     char    *res;
     int     j;
-    
-    start = *i;
-    j = *i;
-    divide_into_words(input, &j);
-    if (!ft_strnstr(&input[start], "$", j - start))
+
+    // printf("=========================start===============================\n");
+    part = divide_into_part(input, i);
+    // printf("part: %s\n",part);
+    if (!ft_strchr(part, '$', false))
     {
-        res = ft_substr(input, start, j - start);
-        if (!res)
-            return NULL;
-        *i += j - start;  // Move pointer forward
+        // printf("=========================end===============================\n");
+        return part;
     }
     else
     {       
-            int k = 0;
-            char quote;
-            while (input[k])
+        // printf("input: %s\n", part);
+        if (ft_strchr(part, '\"', false) || ft_strchr(part, '\'', false))
+        {
+            // printf("Expand $var with quotes \n");
+            if (is_possible_expand(part) && is_there_valid_var(part))
             {
-                if (input[k] == '\'' && input[k] == '\"')
-                    quote = input[k];
-                k++;
-            }
-            if (is_possible_expand(&input[*i]))
-            {
-                while (input[*i] && input[*i] != '$')
-                    (*i)++;
-                res = ft_substr(input, start,  *i - start);
+                // printf("In case where can be expande $ from quotes\n");
+
+                j = 0;
+                while (part[j] && part[j] != '$')
+                    j++;
+                res = ft_substr(part, 0, j);
                 if (!res)
                     return NULL;
-                char *expanded = expand_words(shell, input, i);
+                char *expanded = expand_words(shell, part, &j);
                 char *temp = ft_strjoin(res, expanded);
-                free(res);  // Free old res
-                char *final_result = ft_strjoin(temp, ft_strcopy(input, i, quote));
-                free(temp); // Avoid memory leak
+                free(res);  
+                char *final_result = ft_strjoin(temp, ft_strdup(&part[j]));
+                free(temp); 
                 return final_result;
             }
             else
-                res = ft_strcopy(input, i, quote);
+            {
+                // printf("In case that is no able to expand $ from quotes\n");
+                res = ft_strdup(part);
+            }
+        }
+        else
+        {
+            // printf("Expand $var without quotes \n");
+            res = expand_words(shell, part, &j);
+        }
     }
+    // printf("=========================end===============================\n");
     return res;
 }
 
