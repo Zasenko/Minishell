@@ -161,14 +161,39 @@ char *ft_devide_string(char *input, int *i, char delim, bool *is_open_q)
     return res;
 }
 
-char *extract_word(t_app *shell, char *input, int *i)
+void join_partitions(t_app *shell, char **dest, char *input)
 {
-    char    *part;
-    char    *result = NULL;
     char    *expanded;
     char    *temp;
     int     j = 0;
     int     start;
+
+    *dest = ft_strdup(""); 
+    while (input[j])
+    {
+        start = j; 
+        while (input[j] && input[j] != '$')
+            j++;
+        if (start != j)
+        {
+            temp = ft_strjoin(*dest, ft_substr(input, start, j - start));
+            free(*dest);
+            *dest = temp;
+        }
+        if (input[j] == '$')
+        {
+            expanded = expand_words(shell, input, &j);
+            temp = ft_strjoin(*dest, expanded);
+            free(*dest);
+            *dest = temp;
+        }
+    }
+}
+
+char *extract_word(t_app *shell, char *input, int *i)
+{
+    char    *part;
+    char    *result = NULL;
 
     part = divide_into_part(input, i);
     if (!part) 
@@ -178,33 +203,17 @@ char *extract_word(t_app *shell, char *input, int *i)
     if (ft_strchr(part, '\"', false) || ft_strchr(part, '\'', false))
     {
         if (is_possible_expand(part) && is_there_valid_var(part))
-        {
-            result = ft_strdup(""); 
-            while (part[j])
-            {
-                start = j; 
-                while (part[j] && part[j] != '$')
-                    j++;
-                if (start != j)
-                {
-                    temp = ft_strjoin(result, ft_substr(part, start, j - start));
-                    free(result);
-                    result = temp;
-                }
-                if (part[j] == '$')
-                {
-                    expanded = expand_words(shell, part, &j);
-                    temp = ft_strjoin(result, expanded);
-                    free(result);
-                    result = temp;
-                }
-            }
-        }
+            join_partitions(shell, &result, part);
         else
             result = ft_strdup(part);
     }
     else
-        result = expand_words(shell, part, &j); 
+    {
+        if (is_there_valid_var(part))
+            join_partitions(shell, &result, part);
+        else
+            result = ft_strdup(part);
+    }
     free(part);
     return result;
 }
