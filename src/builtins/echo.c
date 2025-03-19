@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-int ft_echo(char **args)
+int ft_echo(char **args, int fd)
 {
     int i;
     bool with_new_line;
@@ -20,7 +20,7 @@ int ft_echo(char **args)
     with_new_line = true;
     if (!args || !*args)
     {
-        printf("\n");
+        ft_putstr_fd("\n", fd);
         return (EXIT_SUCCESS);
     }
     
@@ -48,14 +48,14 @@ int ft_echo(char **args)
     }
     while (args[i])
     {
-        printf("%s", args[i]);
+        ft_putstr_fd(args[i], fd);
         if (args[i + 1] != NULL)
-            printf(" ");
+            ft_putstr_fd(" ", fd);
         i++;   
     }
     if (with_new_line == true)
     {
-        printf("\n");
+        ft_putstr_fd("\n", fd);
     }
     return (EXIT_SUCCESS);
 }
