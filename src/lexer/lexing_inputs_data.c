@@ -14,16 +14,16 @@
 
 char *extract_quoted_string(char *input, int *i)
 {
-    char quote = input[*i]; // Detect ' or "
-    int start = ++(*i); // Move past the quote
+    char quote = input[*i]; 
+    int start = ++(*i); 
 
     while (input[*i] && input[*i] != quote)
         (*i)++;
 
-    if (input[*i] == quote) // Closing quote found
+    if (input[*i] == quote) 
         (*i)++;
 
-    return strndup(&input[start], (*i - start - 1)); // Extract content inside quotes
+    return strndup(&input[start], (*i - start - 1)); 
 }
 
 bool handle_inputs(t_app *shell, t_token **head, t_token **token, char *str)

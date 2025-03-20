@@ -42,6 +42,18 @@ char	*var_extractor(char *input, int *i)
     return ft_substr(input ,start, *i - start);
 }
 
+bool is_there_valid_var(char *str)
+{
+    while (*str)
+    {   
+        if (*str == '\0' || *str == '$'
+            ||  *str == ' ' || *str == '\t')
+            return false;
+        str++;
+    }
+    return true;
+}
+
 char *get_word_from_quotes(char *input)
 {
     int     i;
@@ -130,7 +142,10 @@ char *expand_words(t_app *shell, char *input, int *i)
     if (!shell || !input)
         return 0;
     (*i)++;
-    if (input[*i] != '(' && input[*i] != '?')
+    if (input[*i] == ' ' || input[*i] == '\0' ||  input[*i] == '\"'
+        || input[*i] == '$' || input[*i] == '\t' || input[*i] == '\'') 
+        result = ft_substr(input, *i - 1 , 1);
+    else if (input[*i] != '(' && input[*i] != '?')
     {
         var = var_extractor(input, i);
         if (var)
@@ -159,7 +174,7 @@ char *expand_words(t_app *shell, char *input, int *i)
         result = get_status_var(shell->last_exit_code);
         if (!result)
             return ft_strdup("");
-    }    
+    } 
     return result;
 }
 

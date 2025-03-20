@@ -52,26 +52,7 @@ void skip_quotes(char *input, int *i, char quote)
     while (input[*i] == quote)
         (*i)++;
 }
-bool is_there_valid_var(char *str)
-{
-    bool is_valid;
 
-    is_valid = false;
-    while (*str)
-    {   
-        if (*str == '$')
-        {
-            str++;
-            is_valid = true;
-            if (*str == '\0' || *str == '$' || *str == '\"'
-                ||  *str == ' ' || *str == '\t')
-                return false;
-        }
-        else
-            str++;
-    }
-    return is_valid;
-}
 
 char *divide_into_part(char *input, int *i)
 {
@@ -202,17 +183,17 @@ char *extract_word(t_app *shell, char *input, int *i)
         return part;
     if (ft_strchr(part, '\"', false) || ft_strchr(part, '\'', false))
     {
-        if (is_possible_expand(part) && is_there_valid_var(part))
+        if (is_possible_expand(part))
             join_partitions(shell, &result, part);
         else
             result = ft_strdup(part);
     }
     else
     {
-        if (is_there_valid_var(part))
+        // if (is_there_valid_var(part))
             join_partitions(shell, &result, part);
-        else
-            result = ft_strdup(part);
+        // else
+        //     result = ft_strdup(part);
     }
     free(part);
     return result;
