@@ -61,25 +61,35 @@ char **extract_arguments(t_token *token, char *cmd)
     int     i = 0;
     
     args_count = count_types(token, ARG) + 2;
-    result = (char**)malloc(args_count * sizeof(char*));
+    // printf("args_count: %d\n", args_count);
+    result = ft_calloc(args_count,  sizeof(char*));
     if (!result)
         return NULL;
     while (token && i < args_count - 1)
     {
-        if (i == 0 && token->type == ARG)
+        if (i == 0)
         {
             result[i] = ft_strdup(cmd);
             if (!result[i])
                 return NULL;
             i++;
         }
-        result[i] = extract_word_from_quotes(token->value);
-        if (!result[i])
-            return NULL;
+        if (token->type == PIPE)
+            break;
+        else if (token->type == REDIR_IN || token->type == REDIR_OUT
+            || token->type == APPEND)
+        {
+                token = token->next;
+        }
+        else if (token->type == ARG)
+        {
+            result[i] = extract_word_from_quotes(token->value);
+            if (!result[i])
+                return false;
+            i++;
+        }
         token = token->next;
-        i++;
     }
-    result[i] = NULL;
     return result;
 }
 
@@ -103,11 +113,13 @@ bool parse_tokens(t_app *shell)
         if (token->type == CMD)
         {
             // printf("CMD\n");
-            cmd->cmd = ft_strdup(token->value);
+            cmd->cmd = parse_command(shell, token->value);
+            if (!cmd->cmd)
+                return false;
             // printf("value: %s\n", cmd->cmd);
             if ((!token->next || token->next->type != ARG))
             {
-                cmd->args = extract_arguments(shell->tokens, token->value);
+                cmd->args = extract_arguments(token, token->value);
                 if (!cmd->args)
                     return false;
             }
@@ -116,13 +128,14 @@ bool parse_tokens(t_app *shell)
         {
             // printf("ARG\n");
             // printf("value: %s\n", token->value);
-            cmd->args = extract_arguments(shell->tokens, token->prev->value);
+            cmd->args = extract_arguments(token, token->prev->value);
             if (!cmd->args)
                 return false;
             iswriten = false;
         }
         else if (token->type == PIPE && token->next)
         {
+            // printf("PIPE\n");
             add_cmd_back(&head, cmd);
             cmd = create_new_cmd();
             iswriten = true;

@@ -1,0 +1,12 @@
+ -n
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: ''
+Type: 1, Value: -n
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [echo]
+j: arg: [1] []
+j: arg: [2] [-n]

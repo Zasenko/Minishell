@@ -16,7 +16,6 @@ int ft_unset(t_cmd *cmd, t_app *shell, bool is_child)
 {
     struct s_envp *envp = shell->envp;
     int i = 1;
-
     if (is_child)
         return (SUCCESS);
 
@@ -38,6 +37,7 @@ int ft_unset(t_cmd *cmd, t_app *shell, bool is_child)
                     if (prev)
                     {
                         prev->next = next;
+                        next->prev = prev;
                     }
                 }
                 else

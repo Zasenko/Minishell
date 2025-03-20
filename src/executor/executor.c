@@ -66,21 +66,21 @@ int	redirect(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 		{
 			dup2(redir->fd, 0);
 			close(redir->fd);
-		}
-		if (redir->type == HEREDOC && redir->fd != -1)
+		} else if (redir->type == HEREDOC && redir->fd != -1)
 		{
 			dup2(redir->fd, 0);
 			close(redir->fd);
-		}	
-		if (redir->type == REDIR_OUT && redir->fd != -1)
+		} else if (redir->type == REDIR_OUT && redir->fd != -1)
 		{
 			dup2(redir->fd, 1);
 			close(redir->fd);
-		}
-		if (redir->type == APPEND && redir->fd != -1)
+		} else if (redir->type == APPEND && redir->fd != -1)
 		{
 			dup2(redir->fd, 1);
 			close(redir->fd);
+		} else {
+			free_list(shell);
+			exit(EXIT_FAILURE);
 		}
 		redir = redir->next;
 	}
@@ -99,14 +99,15 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	close_all_cmnds_fds(shell->cmd);
 	if (is_builtin_func(cmd->args[0]))
 	{
-		exit_status = exec_buildin(cmd, shell);
+		exit_status = exec_buildin(cmd, shell, true, 1);
 		free_list(shell);
 		exit(exit_status);
 	}
 	else
 	{
+		// printf("child, no build in\n");
 		//todo FREE!!!!!
-		execve(cmd->args[0], cmd->args, shell->env_var);
+		execve(cmd->cmd, cmd->args, shell->env_var);
 		exit_with_error(shell, errno, strerror(errno));
 	}
 }
@@ -123,17 +124,18 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 		{
 			// check
 			perror("pipe");
-			return (0); // todo? break and waitpid?
+			shell->last_exit_code = errno;
+			return (EXIT_FAILURE); // todo? break and waitpid?
 		}
 	}
 	cmd->pid = fork();
 	if (cmd->pid < 0)
 	{
 		perror("fork");
-		return (0); // todo? break and waitpid?
+		shell->last_exit_code = errno;
+		return (EXIT_FAILURE);
 	}
 
-	
 	// child
 	if (cmd->pid == 0)
 		child_process(shell, cmd, *prev_pipe, pipe_fd);
@@ -183,6 +185,7 @@ int ft_wait_children(t_app *shell)
 	return (1);
 }
 
+
 int	ft_execute(t_app *shell)
 {
 	t_cmd	*cmd;
@@ -207,7 +210,7 @@ int	ft_execute(t_app *shell)
 					ft_putstr_fd(redir->value, 2);
 					ft_putstr_fd(": No such file or directory\n", 2);
 					shell->last_exit_code = 1;
-					return 0;
+					break;
 				}
 				else
 				{
@@ -221,9 +224,8 @@ int	ft_execute(t_app *shell)
 				{
 					ft_putstr_fd(redir->value, 2);
 					ft_putstr_fd(": No such file or directory\n", 2);
-					shell->last_exit_code = 1;
-					return 0;
-
+					shell->last_exit_code = 0;
+					break;
 				}
 				else
 				{
@@ -238,7 +240,7 @@ int	ft_execute(t_app *shell)
 					ft_putstr_fd(redir->value, 2);
 					ft_putstr_fd(": No such file or directory\n", 2);
 					shell->last_exit_code = 1;
-					return 0;
+					break;
 
 				}
 				else
@@ -253,7 +255,7 @@ int	ft_execute(t_app *shell)
 					ft_putstr_fd(redir->value, 2);
 					ft_putstr_fd(": No such file or directory\n", 2);
 					shell->last_exit_code = 1;
-					return 0;
+					break;
 				}
 			}
 			redir = redir->next;
@@ -262,24 +264,59 @@ int	ft_execute(t_app *shell)
 		cmd = cmd->next;
 	}
 	cmd = shell->cmd;
-	
-	if (cmd->next == NULL && !ft_strncmp("cd", cmd->args[0], sizeof(cmd->args[0])))
+
+	if (cmd->next == NULL && is_builtin_func(cmd->args[0]))
 	{
-		shell->last_exit_code = ft_cd(cmd, shell, false);
+		int dup_0 = -1;
+		int dup_1 = -1;
+
+		dup_0 = dup(0);
+		dup_1 = dup(1);
+
+		// printf("Redirection 0 - 1: %d | %d\n", dup_0, dup_1);
+
+		// ft_putstr_fd("no child\n", 1);
+		//todo double code
+		t_redir *redir = cmd->redirs;
+		while (redir)
+		{
+			// printf("Redirection type: %d, fd: %d\n", redir->type, redir->fd);
+
+			if (redir->type == REDIR_IN && redir->fd != -1)
+			{
+				dup2(redir->fd, dup_0);
+				close(redir->fd);
+			} 
+			else if (redir->type == HEREDOC && redir->fd != -1)
+			{
+				dup2(redir->fd, dup_0);
+				close(redir->fd);
+			} 
+			else if (redir->type == REDIR_OUT && redir->fd != -1)
+			{
+				dup2(redir->fd, dup_1);
+				close(redir->fd);
+			} 
+			else if (redir->type == APPEND && redir->fd != -1)
+			{
+				dup2(redir->fd, dup_1);
+				close(redir->fd);
+			} else {
+				printf("noooooooooooooooooooooooo\n");
+				free_list(shell);
+				exit(EXIT_FAILURE);
+			}
+			redir = redir->next;
+		}
+
+		shell->last_exit_code = exec_buildin(cmd, shell, false, dup_1);
+		close(dup_0);
+		close(dup_1);
+
+			
 	}
-	else if (cmd->next == NULL &&  !ft_strncmp("exit", cmd->args[0], sizeof(cmd->args[0])))
+	else
 	{
-		ft_exit(cmd, shell, 1);
-	}
-	else if (cmd->next == NULL && !ft_strncmp("export", cmd->args[0], sizeof(cmd->args[0])))
-	{
-		shell->last_exit_code = ft_export(cmd, shell, false);
-	}
-	else if (cmd->next == NULL && !ft_strncmp("unset", cmd->args[0], sizeof(cmd->args[0])))
-	{
-		shell->last_exit_code = ft_unset(cmd, shell, false);
-	}
-	else {
 		while (cmd != NULL)
 		{
 			ft_execute_command(shell, cmd, &prev_pipe);
@@ -288,9 +325,9 @@ int	ft_execute(t_app *shell)
 	}
 
 	ft_wait_children(shell);
-	
-	close_all_cmnds_fds(shell->cmd);
+
 	if (prev_pipe != -1)
 		close(prev_pipe);
+	close_all_cmnds_fds(shell->cmd);
 	return (1);
 }

@@ -15,6 +15,7 @@
 bool handle_command(t_app *shell, t_token *token, t_token *prev, char *input, int *i)
 {
     token->value = extract_word(shell, input, i);
+    // printf("value: %s\n", token->value);
     if (!token->value)
         return false;
     skip_spases(input, i);

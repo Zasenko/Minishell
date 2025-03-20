@@ -1,0 +1,19 @@
+1
+
+================= print_tokens ======================
+Type: 0, Value: cd
+Type: 1, Value: ""O"ME"/Desktop/
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [cd]
+j: arg: [1] [OME/Desktop/]
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 1, Value: 1
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [echo]
+j: arg: [1] [1]

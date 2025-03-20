@@ -1,0 +1,5 @@
+/bin/cat: Makefile: No such file or directory
+<<: stop: No such file or directory
+<<: file: No such file or directory
+will: command not found
+stop: command not found

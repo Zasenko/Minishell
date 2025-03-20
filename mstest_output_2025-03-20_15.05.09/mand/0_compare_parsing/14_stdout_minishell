@@ -1,0 +1,22 @@
+42
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 3, Value: <
+Type: 1, Value: 123
+Type: 3, Value: <
+Type: 1, Value: 456
+Type: 1, Value: hi
+Type: 2, Value: |
+Type: 0, Value: /bin/echo
+Type: 1, Value: 42
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [456]
+j: arg: [1] [hi]
+file: 123 REDIR_IN
+file: 456 REDIR_IN
+while: [1]
+j: arg: [0] [/bin/echo]
+j: arg: [1] [42]

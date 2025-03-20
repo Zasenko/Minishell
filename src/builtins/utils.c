@@ -33,23 +33,24 @@ bool	is_builtin_func(char *cmd)
 		return (false);
 }
 
-int	exec_buildin(t_cmd *cmd, t_app *shell)
+int	exec_buildin(t_cmd *cmd, t_app *shell, bool is_child, int fd)
 {
+	// signal(SIGPIPE, SIG_IGN);
 	if (ft_strstr(cmd->args[0], "pwd"))
 		return (ft_pwd());
 	if (ft_strstr(cmd->args[0], "env"))
 		return (ft_env(shell->env_var));
 	if (ft_strstr(cmd->args[0], "echo"))
-		return (ft_echo(cmd->args));
+		return (ft_echo(cmd->args, fd));
 	if (ft_strstr(cmd->args[0], "cd"))
-		return (ft_cd(cmd, shell, true));
+		return (ft_cd(cmd, shell, is_child));
 	if (ft_strstr(cmd->args[0], "exit"))
 		return (ft_exit(cmd, shell, 0));
 	if (ft_strstr(cmd->args[0], "export"))
-		return (ft_export(cmd, shell, true));
-	if (ft_strstr(cmd->args[0], "unsex"))
-		return (ft_unset(cmd, shell, true));
-	return (0);
+		return (ft_export(cmd, shell, is_child));
+	if (ft_strstr(cmd->args[0], "unset"))
+		return (ft_unset(cmd, shell, is_child));
+	return (EXIT_FAILURE);
 }
 
 

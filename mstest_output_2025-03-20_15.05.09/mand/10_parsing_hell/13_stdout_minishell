@@ -1,0 +1,15 @@
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 1, Value: T=">>"
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [export]
+j: arg: [1] [T=>>]
+
+================= print_tokens ======================
+Type: 0, Value: >>
+Type: 1, Value: lol
+
+================= print_cmd ======================

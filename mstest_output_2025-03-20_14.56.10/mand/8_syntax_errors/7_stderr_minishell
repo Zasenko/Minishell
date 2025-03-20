@@ -1,0 +1,1 @@
+line 635: 1532832 Segmentation fault      (core dumped) LD_PRELOAD=/home/ibondarc/42_minishell_tester/utils/libintercept/libintercept.so /home/ibondarc/study_project/Minishell/minishell

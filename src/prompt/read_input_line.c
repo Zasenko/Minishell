@@ -44,11 +44,11 @@ void print_cmd(t_app **shell)
     printf("\n================= print_cmd ======================\n");
     while (head != NULL)
     {
-        // printf("cmd: [%d] %s\n",i, head->cmd);
+        printf("while: [%d]\n",i);
         int j = 0;
         while (head->args[j])
         {
-            printf("j: arg: [%d] %s\n", j, head->args[j]);
+            printf("j: arg: [%d] [%s]\n", j, head->args[j]);
             j++;
         }
         redir = head->redirs;
@@ -100,9 +100,9 @@ void read_input_line(t_app *shell)
             add_history(input);
             lexing_inputs_data(shell, input);
             parse_tokens(shell);
-            ft_execute(shell);
             // print_tokens(shell);
             // print_cmd(&shell);
+            ft_execute(shell);
             // print_envp(shell->envp);
             free_list(shell);
         }

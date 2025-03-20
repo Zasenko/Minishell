@@ -1,0 +1,12 @@
+test1  test2 test3
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 1, Value: "test1  test2"
+Type: 1, Value: test3
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [/bin/echo]
+j: arg: [1] [test1  test2]
+j: arg: [2] [test3]

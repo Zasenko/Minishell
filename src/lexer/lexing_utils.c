@@ -67,7 +67,8 @@ char *divide_into_part(char *input, int *i)
             is_sq_open = !is_sq_open;
         else if (input[*i] == '\"' && !is_sq_open) 
             is_dq_open = !is_dq_open;
-        else if ((input[*i] == ' ' || input[*i] == '\t') && !is_dq_open && !is_sq_open)
+        else if ((input[*i] == ' ' || input[*i] == '\t' || input[*i] == '>'  // to do >> <<
+            || input[*i] == '<' || input[*i] == '|') && !is_dq_open && !is_sq_open)
             break;
         (*i)++;
     }
@@ -177,6 +178,7 @@ char *extract_word(t_app *shell, char *input, int *i)
     char    *result = NULL;
 
     part = divide_into_part(input, i);
+    // printf("part: %s\n", part);
     if (!part) 
         return NULL;
     if (!ft_strchr(part, '$', false))
