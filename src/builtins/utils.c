@@ -15,19 +15,19 @@
 bool	is_builtin_func(char *cmd)
 {
 
-	if (!ft_strncmp("pwd", cmd, sizeof(cmd)))
+	if (!ft_strncmp("pwd", cmd, ft_strlen(cmd)))
 		return (true);
-	if (!ft_strncmp("env", cmd, sizeof(cmd)))
+	if (!ft_strncmp("env", cmd, ft_strlen(cmd)))
 		return (true);
-	if (!ft_strncmp("echo", cmd, sizeof(cmd)))
+	if (!ft_strncmp("echo", cmd, ft_strlen(cmd)))
 		return (true);
-	if (!ft_strncmp("cd", cmd, sizeof(cmd)))
+	if (!ft_strncmp("cd", cmd, ft_strlen(cmd)))
 		return (true);
-	if (!ft_strncmp("exit", cmd, sizeof(cmd)))
+	if (!ft_strncmp("exit", cmd, ft_strlen(cmd)))
 		return (true);
-	if (!ft_strncmp("export", cmd, sizeof(cmd)))
+	if (!ft_strncmp("export", cmd, ft_strlen(cmd)))
 		return (true);
-	if (!ft_strncmp("unset", cmd, sizeof(cmd)))
+	if (!ft_strncmp("unset", cmd, ft_strlen(cmd)))
 		return (true);
 	else
 		return (false);

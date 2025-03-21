@@ -77,7 +77,7 @@ char **extract_arguments(t_token *token, char *cmd)
         if (token->type == PIPE)
             break;
         else if (token->type == REDIR_IN || token->type == REDIR_OUT
-            || token->type == APPEND)
+            || token->type == APPEND || token->type == HEREDOC)
         {
                 token = token->next;
         }
@@ -190,6 +190,25 @@ bool parse_tokens(t_app *shell)
             {
                 redir->type = APPEND;
                 redir->value = ft_strdup(token->next->value);
+            }
+            add_redir_back(&cmd->redirs, redir);
+            token = token->next;
+        }
+        else if (token->type == HEREDOC)
+        {
+            redir = create_new_redir();
+            if (!redir)
+                return false;
+            if (is_there_quote(token->next->value))
+            {
+                redir->type = HEREDOC;
+                redir->heredock_with_quotes = true;
+                redir->stop_word = extract_word_from_quotes(token->next->value);
+            }
+            else
+            {
+                redir->type = HEREDOC;
+                redir->stop_word = ft_strdup(token->next->value);
             }
             add_redir_back(&cmd->redirs, redir);
             token = token->next;

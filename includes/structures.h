@@ -43,6 +43,7 @@ typedef struct s_redir
     char            *value;
     char            *stop_word; //For HEREDOCK
     int             fd;
+    bool             heredock_with_quotes;
     struct s_redir  *next;
 } t_redir;
 
@@ -83,6 +84,7 @@ typedef struct s_app
     bool            is_envp_list_changed; //FLAG if we need to make new char** env_var
     struct s_cmd    *cmd;           // First command in pipeline
     struct s_token  *tokens;
+    int             heredock_num;
 } t_app;
 
 #endif

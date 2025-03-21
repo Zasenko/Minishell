@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 09:57:45 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/03/05 14:05:09 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/21 12:24:09 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
     
     if (cmd->args[1] != NULL)
     {
-        if (!ft_strncmp("-", cmd->args[1], sizeof(cmd->args[1])))   
+        if (!ft_strncmp("-", cmd->args[1], ft_strlen(cmd->args[1])))   
         {
             t_envp *oldpwd_node = find_envp_node(shell->envp, "OLDPWD");
             t_envp *pwd_node = find_envp_node(shell->envp, "PWD");

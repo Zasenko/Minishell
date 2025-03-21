@@ -25,5 +25,6 @@ void  initialize_shell(t_app *shell, char **envp)
     shell->is_envp_list_changed = false;
     shell->cmd = NULL;
     shell->tokens = NULL;
+    shell->heredock_num = 1;
     copy_env(shell, envp);
 }

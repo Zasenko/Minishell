@@ -66,7 +66,8 @@ int	redirect(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 		{
 			dup2(redir->fd, 0);
 			close(redir->fd);
-		} else if (redir->type == HEREDOC && redir->fd != -1)
+		} 
+		else if (redir->type == HEREDOC && redir->fd != -1)
 		{
 			dup2(redir->fd, 0);
 			close(redir->fd);
@@ -250,6 +251,20 @@ int	ft_execute(t_app *shell)
 			}
 			if (redir->type == HEREDOC)
 			{
+				char *heredoc_num = ft_itoa(shell->heredock_num);
+				if (!heredoc_num)
+				{
+					//todo error
+				}
+				redir->value = ft_strjoin("HEREDOCK_", heredoc_num);
+				if (!redir->value)
+				{
+					free(heredoc_num);
+					//todo error
+				}
+				free(heredoc_num);
+
+				redir->fd = open(redir->value, O_RDWR | O_CREAT | O_APPEND, 0644);
 				if (redir->fd < 0)
 				{
 					ft_putstr_fd(redir->value, 2);
@@ -257,6 +272,29 @@ int	ft_execute(t_app *shell)
 					shell->last_exit_code = 1;
 					break;
 				}
+				while (1)
+				{
+					char *input = readline("> ");
+					if (!input)
+					{
+						//todo
+					}
+					if (!ft_strncmp(redir->stop_word, input, ft_strlen(input)))
+					{
+						free(input);
+						break;
+					}
+					char *temp = ft_strjoin(input, "\n");
+					free(input);
+					if (!temp)
+					{
+						//todo
+					}
+					write(redir->fd, temp, ft_strlen(temp));
+					free(temp);
+				}
+
+				shell->heredock_num++;
 			}
 			redir = redir->next;
 		}

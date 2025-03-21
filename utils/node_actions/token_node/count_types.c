@@ -24,7 +24,7 @@ int	count_types(t_token *token, t_type type)
 	while (temp && temp->type != PIPE)
 	{
 		if (temp->type == REDIR_IN || temp->type == REDIR_OUT 
-			|| temp->type == APPEND)
+			|| temp->type == APPEND || token->type == HEREDOC)
 		{
                 token = token->next;
 		}
@@ -34,27 +34,3 @@ int	count_types(t_token *token, t_type type)
 	}
 	return (i);
 }
-
-// int	count_types(t_token *token, t_type type)
-// {
-// 	t_token	*temp;
-// 	int		i;
-
-// 	i = 0;
-// 	temp = token;
-// 	if (!temp)
-// 		return (i);
-// 	while (temp && temp->type != PIPE && temp->type != REDIR_IN 
-// 		&& temp->type != REDIR_OUT && temp->type != APPEND)
-// 	{
-// 		// if (temp->type == REDIR_IN || temp->type == REDIR_OUT 
-// 		// 	|| temp->type == APPEND)
-// 		// {
-//         //         token = token->next;
-// 		// }
-// 		if (temp->type == type)
-//         	i++;
-// 		temp = temp->next;
-// 	}
-// 	return (i);
-// }

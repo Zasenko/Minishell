@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_envp_node.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:01:50 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/02/28 11:28:29 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/03/21 12:25:32 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_envp *find_envp_node(t_envp *envp, char *key)
 	{
 		// printf("--temp->name-- %s\n", temp->name);
 		// printf("--key-- %s\n", key);
-        if (!ft_strncmp(temp->name, key, sizeof(key)))
+        if (!ft_strncmp(temp->name, key, ft_strlen(key)))
         {
             return (temp);
         }
