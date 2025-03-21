@@ -25,7 +25,12 @@ int	close_all_redirs_fds(t_redir *redir)
 		{
 			close(temp->fd);
 		}
+		if (temp->type == HEREDOC)
+		{
+			unlink(temp->value);
+		}
 		temp = temp->next;
+
 	}
 	return (1);
 }
@@ -284,16 +289,35 @@ int	ft_execute(t_app *shell)
 						free(input);
 						break;
 					}
+					if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
+					{
+						int test_p = 0;
+						char *test_char = expand_words(shell, input, &test_p);
+						if (!test_char)
+						{
+							free(input);
+							//todo 
+						}
+						free(input);
+						input = test_char;			
+					}
+
 					char *temp = ft_strjoin(input, "\n");
 					free(input);
 					if (!temp)
 					{
-						//todo
+							//todo
 					}
 					write(redir->fd, temp, ft_strlen(temp));
 					free(temp);
 				}
+				close(redir->fd);
 
+				redir->fd = open(redir->value, O_RDONLY, 0644);
+				if (redir->fd < 0)
+				{
+					//todo
+				}
 				shell->heredock_num++;
 			}
 			redir = redir->next;
@@ -302,6 +326,8 @@ int	ft_execute(t_app *shell)
 		cmd = cmd->next;
 	}
 	cmd = shell->cmd;
+	
+	// print_cmd(&shell);
 
 	if (cmd->next == NULL && is_builtin_func(cmd->args[0]))
 	{
