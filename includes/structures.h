@@ -22,10 +22,6 @@ typedef enum
     REDIR_OUT,  // 4
     APPEND,     // 5
     HEREDOC,    // 6
-    // VAR,        // 7
-    // QUOTE,      // 8
-    // IN_FILE,    // 9
-    // OUT_FILE,   // 10
     ERROR       // 11
 } t_type;
 
@@ -59,12 +55,7 @@ typedef struct s_cmd
 {
     char            *cmd;
     char            **args;     // Command arguments
-    // char            *input;     // Input redirection file
-    // char            *output;    // Output redirection file
-    // bool            append;     // Append mode for output redirection (`>>`)
     bool            is_build;
-    // int             fd_in;      // Input file descriptor
-    // int             fd_out;     // Output file descriptor
     struct s_redir  *redirs;
     struct s_cmd    *next;      // Next command in pipeline
     struct s_cmd    *prev;      // Previous command (doubly linked list)
@@ -73,7 +64,6 @@ typedef struct s_cmd
 
 typedef struct s_app
 {
-    // char            **path;         // PATH directories
     char            **env_var;      // envp variable as 2d array
     char            *user;          // User name
     char            *name;          // Shell name

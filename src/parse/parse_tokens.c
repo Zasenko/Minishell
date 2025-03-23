@@ -54,26 +54,58 @@ char *extract_word_from_quotes(char *input)
 }
 
 
-char **extract_arguments(t_token *token, char *cmd)
+// char **extract_arguments(t_token *token, char *cmd)
+// {
+//     char    **result;
+//     int     args_count;
+//     int     i = 0;
+    
+//     args_count = count_types(token, ARG) + 2;
+//     // printf("args_count: %d\n", args_count);
+//     result = ft_calloc(args_count,  sizeof(char*));
+//     if (!result)
+//         return NULL;
+//     while (token && i < args_count - 1)
+//     {
+//         if (i == 0)
+//         {
+//             result[i] = ft_strdup(cmd);
+//             if (!result[i])
+//                 return NULL;
+//             i++;
+//         }
+//         if (token->type == PIPE)
+//             break;
+//         else if (token->type == REDIR_IN || token->type == REDIR_OUT
+//             || token->type == APPEND || token->type == HEREDOC)
+//         {
+//                 token = token->next;
+//         }
+//         else if (token->type == ARG)
+//         {
+//             result[i] = extract_word_from_quotes(token->value);
+//             if (!result[i])
+//                 return false;
+//             i++;
+//         }
+//         token = token->next;
+//     }
+//     return result;
+// }
+
+char **extract_arguments(t_token *token)
 {
     char    **result;
     int     args_count;
     int     i = 0;
     
-    args_count = count_types(token, ARG) + 2;
+    args_count = count_types(token, ARG)  + 1;
     // printf("args_count: %d\n", args_count);
     result = ft_calloc(args_count,  sizeof(char*));
     if (!result)
         return NULL;
-    while (token && i < args_count - 1)
+    while (token && i < args_count)
     {
-        if (i == 0)
-        {
-            result[i] = ft_strdup(cmd);
-            if (!result[i])
-                return NULL;
-            i++;
-        }
         if (token->type == PIPE)
             break;
         else if (token->type == REDIR_IN || token->type == REDIR_OUT
@@ -83,9 +115,20 @@ char **extract_arguments(t_token *token, char *cmd)
         }
         else if (token->type == ARG)
         {
-            result[i] = extract_word_from_quotes(token->value);
-            if (!result[i])
-                return false;
+            if (token->next && !ft_strlen(token->value))
+            {
+                printf("nothing");
+                result[i] = ft_strdup(token->next->value);
+                if (!result[i])
+                    return NULL;
+                token = token->next;
+            }
+            else
+            {
+                result[i] = extract_word_from_quotes(token->value);
+                if (!result[i])
+                    return false;
+            }
             i++;
         }
         token = token->next;
@@ -110,32 +153,18 @@ bool parse_tokens(t_app *shell)
         return false;
     while (token != NULL)
     {
-        if (token->type == CMD)
+        if (token->type == ARG && iswriten)
         {
-            // printf("CMD\n");
-            cmd->cmd = parse_command(shell, token->value);
-            if (!cmd->cmd)
-                return false;
-            // printf("value: %s\n", cmd->cmd);
-            if ((!token->next || token->next->type != ARG))
-            {
-                cmd->args = extract_arguments(token, token->value);
-                if (!cmd->args)
-                    return false;
-            }
-        }
-        else if (token->type == ARG && iswriten)
-        {
-            // printf("ARG\n");
-            // printf("value: %s\n", token->value);
-            cmd->args = extract_arguments(token, token->prev->value);
+            cmd->args = extract_arguments(token);
             if (!cmd->args)
+                return false;
+            cmd->cmd = parse_command(shell, cmd->args[0]);
+            if (!cmd->cmd)
                 return false;
             iswriten = false;
         }
         else if (token->type == PIPE && token->next)
         {
-            // printf("PIPE\n");
             add_cmd_back(&head, cmd);
             cmd = create_new_cmd();
             iswriten = true;

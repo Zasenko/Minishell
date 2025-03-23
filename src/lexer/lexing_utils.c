@@ -12,49 +12,13 @@
 
 #include "../../includes/minishell.h"
 
-char *extract_single_string(char *input)
-{
-    int     i;
-    int     len;
-    char    *res;
-
-    i = 0;
-    len = ft_strlen(input);
-    res = (char *)malloc((len - 1) * sizeof(char));
-    if (!res)
-        return NULL;
-    i = 0;
-    while (*input)
-    {
-        if (*input == ' ')
-            break;
-        if (*input != '\'')
-        {
-            res[i] = *input;
-            input++;
-            i++;
-        }
-        else
-            input++;
-    }
-    res[i] = '\0';
-    return res;
-}
-
 void skip_spases(char *input, int *i)
 {
     while (input[*i] == 32 || input[*i] == 9)
         (*i)++;
 }
 
-void skip_quotes(char *input, int *i, char quote)
-{
-    while (input[*i] == quote)
-        (*i)++;
-}
-
-
-char *divide_into_part(char *input, int *i)
+char *divide_into_parts(char *input, int *i)
 {
     bool    is_dq_open = false;
     bool    is_sq_open = false;
@@ -73,25 +37,6 @@ char *divide_into_part(char *input, int *i)
         (*i)++;
     }
     return ft_substr(input, start, *i - start);
-}
-
-int count_quotes(const char *input, char quote) 
-{
-    int count = 0;
-    bool escaped = false;
-
-    while (*input) 
-    {
-        if (*input == '\\' && !escaped)
-            escaped = true;
-        else if (*input == quote && !escaped)
-            count++;
-        else
-            escaped = false;
-        
-        input++;
-    }
-    return count;
 }
 
 bool is_possible_expand(char *input)
@@ -149,13 +94,20 @@ void join_partitions(t_app *shell, char **dest, char *input)
     char    *temp;
     int     j = 0;
     int     start;
+    bool    is_sq = false;
 
     *dest = ft_strdup(""); 
     while (input[j])
     {
         start = j; 
-        while (input[j] && input[j] != '$')
+        while (input[j])
+        {
+            if (input[j] == '\'')
+                is_sq = !is_sq;
+            else if (input[j] == '$' && !is_sq)
+                break;
             j++;
+        }
         if (start != j)
         {
             temp = ft_strjoin(*dest, ft_substr(input, start, j - start));
@@ -177,7 +129,7 @@ char *extract_word(t_app *shell, char *input, int *i)
     char    *part;
     char    *result = NULL;
 
-    part = divide_into_part(input, i);
+    part = divide_into_parts(input, i);
     // printf("part: %s\n", part);
     if (!part) 
         return NULL;

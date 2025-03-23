@@ -46,7 +46,7 @@ void print_cmd(t_app **shell)
     {
         printf("while: [%d]\n",i);
         int j = 0;
-        while (head->args[j])
+        while (head->args && head->args[j])
         {
             printf("j: arg: [%d] [%s]\n", j, head->args[j]);
             j++;

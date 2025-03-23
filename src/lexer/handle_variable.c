@@ -177,15 +177,3 @@ char *expand_words(t_app *shell, char *input, int *i)
     } 
     return result;
 }
-
-// bool handle_variable(t_app *shell, t_token *token, t_token *prev, char *input, int *i)
-// {
-//     if (!prev)
-//         token->type = CMD;
-//     else
-//         token->type = ARG;
-//     token->value = expand_words(shell, input, i);
-//     if (!token->value)
-//         return false;
-//     return true;
-// }

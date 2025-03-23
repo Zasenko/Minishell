@@ -12,30 +12,11 @@
 
 #include "../../includes/minishell.h"
 
-bool handle_command(t_app *shell, t_token *token, t_token *prev, char *input, int *i)
+bool handle_command(t_app *shell, t_token *token, char *input, int *i)
 {
     token->value = extract_word(shell, input, i);
-    // printf("value: %s\n", token->value);
     if (!token->value)
         return false;
-    skip_spases(input, i);
-    if ((prev && prev->type == REDIR_IN) || (prev && prev->type == HEREDOC))
-        token->type = ARG;
-    else if ((prev && prev->type == REDIR_OUT) || (prev && prev->type == APPEND))
-        token->type = ARG;
-    else 
-    { 
-        if (prev && prev->type != CMD && prev->type != ARG)
-        {
-            token->type = CMD;
-        }
-        else 
-        {
-            if (!prev)
-                token->type = CMD;
-            else
-                token->type = ARG;
-        }
-    }
+    token->type = ARG;
     return true;
 }
