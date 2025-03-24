@@ -94,7 +94,8 @@ void join_partitions(t_app *shell, char **dest, char *input)
     char    *temp;
     int     j = 0;
     int     start;
-    bool    is_sq = false;
+    bool    sing_quote = false;
+    bool    doub_quote = false;
 
     *dest = ft_strdup(""); 
     while (input[j])
@@ -102,9 +103,11 @@ void join_partitions(t_app *shell, char **dest, char *input)
         start = j; 
         while (input[j])
         {
-            if (input[j] == '\'')
-                is_sq = !is_sq;
-            else if (input[j] == '$' && !is_sq)
+            if (input[j] == '\'' && !doub_quote)
+                sing_quote = !sing_quote;
+            if (input[j] == '\"' && !sing_quote)
+                doub_quote = !doub_quote;
+            else if (input[j] == '$' && !sing_quote)
                 break;
             j++;
         }

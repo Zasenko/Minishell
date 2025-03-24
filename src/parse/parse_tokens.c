@@ -54,45 +54,6 @@ char *extract_word_from_quotes(char *input)
 }
 
 
-// char **extract_arguments(t_token *token, char *cmd)
-// {
-//     char    **result;
-//     int     args_count;
-//     int     i = 0;
-    
-//     args_count = count_types(token, ARG) + 2;
-//     // printf("args_count: %d\n", args_count);
-//     result = ft_calloc(args_count,  sizeof(char*));
-//     if (!result)
-//         return NULL;
-//     while (token && i < args_count - 1)
-//     {
-//         if (i == 0)
-//         {
-//             result[i] = ft_strdup(cmd);
-//             if (!result[i])
-//                 return NULL;
-//             i++;
-//         }
-//         if (token->type == PIPE)
-//             break;
-//         else if (token->type == REDIR_IN || token->type == REDIR_OUT
-//             || token->type == APPEND || token->type == HEREDOC)
-//         {
-//                 token = token->next;
-//         }
-//         else if (token->type == ARG)
-//         {
-//             result[i] = extract_word_from_quotes(token->value);
-//             if (!result[i])
-//                 return false;
-//             i++;
-//         }
-//         token = token->next;
-//     }
-//     return result;
-// }
-
 char **extract_arguments(t_token *token)
 {
     char    **result;
