@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 09:57:45 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/03/24 11:53:07 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/24 13:33:47 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
     
     if (cmd->args[1] != NULL)
     {
-        if (!ft_strncmp("-", cmd->args[1], ft_strlen(cmd->args[1])))   
+        if (!ft_strcmp("-", cmd->args[1]))   
         {
             t_envp *oldpwd_node = find_envp_node(shell->envp, "OLDPWD");
             t_envp *pwd_node = find_envp_node(shell->envp, "PWD");

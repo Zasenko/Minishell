@@ -101,8 +101,8 @@ void read_input_line(t_app *shell)
             lexing_inputs_data(shell, input);
             parse_tokens(shell);
 
-            // print_tokens(shell);
-            // print_cmd(&shell);
+            print_tokens(shell);
+            print_cmd(&shell);
             ft_execute(shell);
 
             // print_envp(shell->envp);

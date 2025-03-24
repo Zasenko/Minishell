@@ -17,7 +17,7 @@ bool check_pipe(t_token *token)
     if (token->type == PIPE)
     {
         if (token->next == NULL || token->prev == NULL 
-            ||  token->value == token->next->value )// || token->next->type != CMD)
+            ||  token->value == token->next->value )
             return false;
     }
     return true;
@@ -40,7 +40,7 @@ bool check_rederections(t_token *token)
     else if (token->type == APPEND)
     {
         if (token->next == NULL || token->value == token->next->value
-            || token->next->type != ARG )
+            || token->next->type != ARG)
             return false;
     }
     return true;

@@ -18,50 +18,6 @@ void skip_spases(char *input, int *i)
         (*i)++;
 }
 
-char *divide_into_parts(char *input, int *i)
-{
-    bool    is_dq_open = false;
-    bool    is_sq_open = false;
-    int     start;
-    
-    start = *i;
-    while (input[*i])
-    {
-        if (input[*i] == '\'' && !is_dq_open) 
-            is_sq_open = !is_sq_open;
-        else if (input[*i] == '\"' && !is_sq_open) 
-            is_dq_open = !is_dq_open;
-        else if ((input[*i] == ' ' || input[*i] == '\t' || input[*i] == '>'  // to do >> <<
-            || input[*i] == '<' || input[*i] == '|') && !is_dq_open && !is_sq_open)
-            break;
-        (*i)++;
-    }
-    return ft_substr(input, start, *i - start);
-}
-
-bool is_possible_expand(char *input)
-{
-    int  i = 0;
-    bool is_dq_open = false;
-    bool is_sq_open = false;
-
-    if (!input)
-        return false;
-
-    while (input[i])
-    {
-        if (input[i] == '\"' && !is_sq_open)
-            is_dq_open = !is_dq_open;
-        else if (input[i] == '\'' && !is_dq_open)
-            is_sq_open = !is_sq_open;
-        else if (input[i] == '$' && !is_sq_open)
-            return true;
-        i++;
-    }
-    return false;
-}
-
-
 char *ft_devide_string(char *input, int *i, char delim, bool *is_open_q)
 {
     char *res;
@@ -88,73 +44,6 @@ char *ft_devide_string(char *input, int *i, char delim, bool *is_open_q)
     return res;
 }
 
-void join_partitions(t_app *shell, char **dest, char *input)
-{
-    char    *expanded;
-    char    *temp;
-    int     j = 0;
-    int     start;
-    bool    sing_quote = false;
-    bool    doub_quote = false;
-
-    *dest = ft_strdup(""); 
-    while (input[j])
-    {
-        start = j; 
-        while (input[j])
-        {
-            if (input[j] == '\'' && !doub_quote)
-                sing_quote = !sing_quote;
-            if (input[j] == '\"' && !sing_quote)
-                doub_quote = !doub_quote;
-            else if (input[j] == '$' && !sing_quote)
-                break;
-            j++;
-        }
-        if (start != j)
-        {
-            temp = ft_strjoin(*dest, ft_substr(input, start, j - start));
-            free(*dest);
-            *dest = temp;
-        }
-        if (input[j] == '$')
-        {
-            expanded = expand_words(shell, input, &j);
-            temp = ft_strjoin(*dest, expanded);
-            free(*dest);
-            *dest = temp;
-        }
-    }
-}
-
-char *extract_word(t_app *shell, char *input, int *i)
-{
-    char    *part;
-    char    *result = NULL;
-
-    part = divide_into_parts(input, i);
-    // printf("part: %s\n", part);
-    if (!part) 
-        return NULL;
-    if (!ft_strchr(part, '$', false))
-        return part;
-    if (ft_strchr(part, '\"', false) || ft_strchr(part, '\'', false))
-    {
-        if (is_possible_expand(part))
-            join_partitions(shell, &result, part);
-        else
-            result = ft_strdup(part);
-    }
-    else
-    {
-        // if (is_there_valid_var(part))
-            join_partitions(shell, &result, part);
-        // else
-        //     result = ft_strdup(part);
-    }
-    free(part);
-    return result;
-}
 
 bool define_valid_string(char *input) 
 {

@@ -114,7 +114,8 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 		// printf("child, no build in\n");
 		//todo FREE!!!!!
 		execve(cmd->cmd, cmd->args, shell->env_var);
-		exit_with_error(shell, errno, strerror(errno));
+		ft_putstr_fd(CMD_NOT_FND, 2);
+		shell->last_exit_code = CMD_N_FOUND;
 	}
 }
 

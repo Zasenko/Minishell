@@ -2,7 +2,7 @@
 # define MESSAGES_H
 
 # define INVALID_CMD "invalid command!"
-# define CMD_NOT_FND "command not found!"
+# define CMD_NOT_FND ": command not found\n"
 # define MALLOC_FAIL "memory allocation failed"
 # define FORK_ERROR "fork failed"
 # define REDIR_ERROR "redirection failed"

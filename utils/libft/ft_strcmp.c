@@ -1,33 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   find_envp_node.c                                   :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/27 10:01:50 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/03/24 13:26:44 by ibondarc         ###   ########.fr       */
+/*   Created: 2025/03/24 13:23:42 by ibondarc          #+#    #+#             */
+/*   Updated: 2025/03/24 13:25:17 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/libft.h"
 
-t_envp *find_envp_node(t_envp *envp, char *key)
+int    ft_strcmp(char *s1, char *s2)
 {
-	t_envp	*temp;
-
-	temp = envp;
-	if (!temp)
-		return (NULL);
-	while (temp != NULL)
-	{
-		// printf("--temp->name-- %s\n", temp->name);
-		// printf("--key-- %s\n", key);
-        if (!ft_strcmp(temp->name, key))
-        {
-            return (temp);
-        }
-		temp = temp->next;
-	}
-	return (NULL);
+    while (*s1 && *s2 && *s1 == *s2)
+    {
+        s1++;
+        s2++;
+    }
+    return ((unsigned char)*s1 - (unsigned char)*s2);
 }

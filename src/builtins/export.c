@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 09:54:19 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/03/24 12:59:57 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/24 13:07:18 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,8 +178,6 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
             t_envp *node = find_envp_node(shell->envp, lib->key);
             if (!node)
             {
-                printf("node not f   !!!!!!!!!!!!!!\n");
-
                 t_envp *new = create_new_envp(lib->value, lib->key);
                 if (!new)
                 {

@@ -142,8 +142,8 @@ char *expand_words(t_app *shell, char *input, int *i)
     if (!shell || !input)
         return 0;
     (*i)++;
-    if (input[*i] == ' ' || input[*i] == '\0' ||  input[*i] == '\"'
-        || input[*i] == '$' || input[*i] == '\t' || input[*i] == '\'') 
+    if (input[*i] == ' ' || input[*i] == '\0' ||  input[*i] == '\"' || input[*i] == '/'
+        || input[*i] == '$' || input[*i] == '\t' || input[*i] == '\'')
         result = ft_substr(input, *i - 1 , 1);
     else if (input[*i] != '(' && input[*i] != '?')
     {
