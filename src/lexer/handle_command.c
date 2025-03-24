@@ -97,8 +97,9 @@ void join_partitions(t_app *shell, char **dest, char *input)
 bool handle_command(t_app *shell, t_token *token, char *input, int *i)
 {
     char    *part;
+    char    **temp;
     char    *result = NULL;
-    bool    is_first = true;
+    int     j;
 
     part = divide_into_parts(input, i);
     // printf("part: %s\n", part);
@@ -122,18 +123,36 @@ bool handle_command(t_app *shell, t_token *token, char *input, int *i)
         }
         token->type = ARG;
     }
+    else if (token->prev && token->prev->type == REDIR_OUT)
+    {
+        join_partitions(shell, &result, part);
+        temp = ft_split(result, ' ');
+        j = 0;
+        while (temp[j])
+            j++;
+        if (j == 0 || j > 1 || !ft_strlen(temp[0]))
+        {
+            ft_putstr_fd(part, 2);
+            ft_putstr_fd(": ambiguous redirect\n", 2);
+            shell->last_exit_code = 1;
+            free(part);
+            return false;
+        } 
+        else
+            token->value =  result;
+        token->type = ARG;
+    }
     else
     {
-        int j = 0;
         join_partitions(shell, &result, part);
-        char **temp = ft_split(result, ' ');
+        temp = ft_split(result, ' ');
+        j = 0;
         while (temp[j])
         {
-            if (is_first)
+            if (j == 0)
             {
                 token->value = temp[j];
                 token->type = ARG;
-                is_first = false;
             }
             else
             {
