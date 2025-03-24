@@ -15,6 +15,9 @@
 bool	is_builtin_func(char *cmd)
 {
 
+	if (!cmd)
+		return false;
+
 	if (!ft_strncmp("pwd", cmd, ft_strlen(cmd)))
 		return (true);
 	if (!ft_strncmp("env", cmd, ft_strlen(cmd)))

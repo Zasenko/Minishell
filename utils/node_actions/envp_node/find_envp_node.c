@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:01:50 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/03/21 12:25:32 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/24 12:59:29 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_envp *find_envp_node(t_envp *envp, char *key)
 	{
 		// printf("--temp->name-- %s\n", temp->name);
 		// printf("--key-- %s\n", key);
-        if (!ft_strncmp(temp->name, key, ft_strlen(key)))
+        if (!ft_strncmp(temp->name, key, ft_strlen(temp->name)))
         {
             return (temp);
         }

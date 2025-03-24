@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 09:57:45 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/03/21 12:24:09 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/03/24 11:53:07 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,10 @@ int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
             result = chdir(oldpwd_node->envp);
             if (result == -1)
             {
-                ft_putstr_fd("cd: ", 2);
-                ft_putstr_fd(oldpwd_node->envp, 2);
-                ft_putstr_fd(": No such file or directory\n", 2);
+                perror(oldpwd_node->envp);
+                // ft_putstr_fd("cd: ", 2);
+                // ft_putstr_fd(oldpwd_node->envp, 2);
+                // ft_putstr_fd(": No such file or directory\n", 2);
                 return (EXIT_FAILURE);
             }
             if (!is_child)

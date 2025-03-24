@@ -199,15 +199,18 @@ int	ft_execute(t_app *shell)
 	int		prev_pipe;
 
 	cmd = shell->cmd;
+
 	cmd_count = cmd_len(shell->cmd);
 	prev_pipe = -1;
 	if (!cmd_count)
 		return (0);
 	while (cmd != NULL)
 	{
+
 		t_redir *redir = cmd->redirs;
 		while (redir)
 		{
+
 			if (redir->type == REDIR_IN)
 			{
 				int fd_in = open(redir->value, O_RDONLY);
@@ -243,8 +246,9 @@ int	ft_execute(t_app *shell)
 				int fd_append = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
 				if (fd_append < 0)
 				{
-					ft_putstr_fd(redir->value, 2);
-					ft_putstr_fd(": No such file or directory\n", 2);
+					perror(redir->value);
+					// ft_putstr_fd(redir->value, 2);
+					// ft_putstr_fd(": No such file or directory\n", 2);
 					shell->last_exit_code = 1;
 					break;
 
@@ -326,11 +330,17 @@ int	ft_execute(t_app *shell)
 		cmd = cmd->next;
 	}
 	cmd = shell->cmd;
-	
+
 	// print_cmd(&shell);
 
+
+	if (!cmd || !cmd->args)
+	{
+		return 0;
+	}
 	if (cmd->next == NULL && is_builtin_func(cmd->args[0]))
 	{
+
 		int dup_0 = -1;
 		int dup_1 = -1;
 
