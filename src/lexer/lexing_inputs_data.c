@@ -61,7 +61,7 @@ bool handle_inputs(t_app *shell, t_token **head, char *input)
     return true;
 }
 
-void lexing_inputs_data(t_app *shell, char *input)
+bool lexing_inputs_data(t_app *shell, char *input)
 {
     t_token *head = NULL;
     // t_token *token = NULL;
@@ -69,17 +69,18 @@ void lexing_inputs_data(t_app *shell, char *input)
 
 
     if (!shell)
-        return;
+        return false;
     str = ft_strtrim(input, " \t");
     if (!define_valid_string(str))
     {
         print_message(QUOTE_ERR, false);
-        return;
+        return false;
     }
     if (!handle_inputs(shell, &head, str))
-        return;
+        return false;
     free(input);
     shell->tokens = head;
     if (!lexing_checker(shell))
-        return;
+        return false;
+    return true;
 }

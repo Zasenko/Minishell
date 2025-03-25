@@ -377,7 +377,6 @@ int	ft_execute(t_app *shell)
 				dup2(redir->fd, dup_1);
 				close(redir->fd);
 			} else {
-				printf("noooooooooooooooooooooooo\n");
 				free_list(shell);
 				exit(EXIT_FAILURE);
 			}

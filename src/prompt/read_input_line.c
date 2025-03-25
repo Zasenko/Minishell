@@ -98,12 +98,17 @@ void read_input_line(t_app *shell)
         if (input)
         {
             add_history(input);
-            lexing_inputs_data(shell, input);
-            parse_tokens(shell);
-
-            // print_tokens(shell);
-            // print_cmd(&shell);
-            ft_execute(shell);
+            if (lexing_inputs_data(shell, input))
+            {
+                if (parse_tokens(shell))
+                {
+                // print_tokens(shell);
+                // print_cmd(&shell);
+                    ft_execute(shell);
+                }
+            }
+                
+      
 
             // print_envp(shell->envp);
             free_list(shell);

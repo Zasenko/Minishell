@@ -41,7 +41,7 @@ t_token *last_token_node(t_token *node);
 void    handle_signal(void);
 int     ft_execute(t_app *app);
 int	    cmd_len(t_cmd *cmd);
-void    lexing_inputs_data(t_app *shell, char *input);
+bool    lexing_inputs_data(t_app *shell, char *input);
 bool    parse_tokens(t_app *shell);
 char    *parse_command(t_app *shell, char *value);
 int     count_types(t_token *token, t_type type);

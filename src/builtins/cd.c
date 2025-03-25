@@ -79,10 +79,14 @@ int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
         else {
             result = chdir(cmd->args[1]);
             if (result == -1)
-            {
-                ft_putstr_fd("cd: ", 2);
-                ft_putstr_fd(cmd->args[1], 2);
-                ft_putstr_fd(": No such file or directory\n", 2);
+            { 
+                char *str_error = ft_strjoin("cd: ", cmd->args[1]);
+                if (!str_error)
+                {
+                    return (EXIT_FAILURE);
+                }
+                perror(str_error);
+                free(str_error);
                 return (EXIT_FAILURE);
             }
         }
