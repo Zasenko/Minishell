@@ -102,8 +102,8 @@ void read_input_line(t_app *shell)
             {
                 if (parse_tokens(shell))
                 {
-                // print_tokens(shell);
-                // print_cmd(&shell);
+                    // print_tokens(shell);
+                    // print_cmd(&shell);
                     ft_execute(shell);
                 }
             }

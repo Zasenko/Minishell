@@ -76,7 +76,7 @@ char *parse_command(t_app *shell, char *value)
 
 	env_path = NULL;
 	result = NULL;
-    if (ft_strchr(value, '/', false))
+    if (ft_strchr(value, '/', false) || value[0] == '\0')
     {
         result = ft_strdup(value);
         if (!result)
