@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <sys/stat.h>
 
 int	close_all_redirs_fds(t_redir *redir)
 {
@@ -116,31 +117,68 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 
 		execve(cmd->cmd, cmd->args, shell->env_var);
 
-		if (cmd->cmd[0] == '\0')
+		// ft_putstr_fd(cmd->args[0], 2);
+		// ft_putstr_fd("\n=============\n", 2);
+		// ft_putstr_fd(cmd->cmd, 2);
+		// ft_putstr_fd("\n=============\n", 2);
+
+
+		if (cmd->cmd[0] == '\0' || !ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], "..") )
 		{
+			ft_putstr_fd(cmd->args[0], 2);
 			ft_putstr_fd(": command not found\n", 2);
 			exit(127);
 		}
-		else if (access(cmd->cmd, F_OK) != 0 && ft_strstr(cmd->cmd, "/"))
+
+		struct stat buffer;
+		if (stat(cmd->cmd, &buffer) == 0)
 		{
-			ft_putstr_fd(cmd->args[0], 2);
-			ft_putstr_fd(": Is a directory\n", 2);
-			exit(126);
-		}
-		else {
-			if (access(cmd->cmd, F_OK) != 0)
+			if (S_ISDIR(buffer.st_mode))
 			{
+				ft_putstr_fd(cmd->args[0], 2);
+				ft_putstr_fd(": Is a directory\n", 2);
+				exit(126);
+			}
+			else
+			{
+				// perror(cmd->args[0]);
+				// // ft_putstr_fd(strerror(errno), 2);
+				// exit(errno);
 				ft_putstr_fd(cmd->args[0], 2);
 				ft_putstr_fd(": command not found\n", 2);
 				exit(126);
-			} else {
-				perror(cmd->args[0]);
-				// ft_putstr_fd(strerror(errno), 2);
-				exit(errno);
-				// shell->last_exit_code = CMD_N_FOUND;
 			}
+		}
+		else
+		{
+			ft_putstr_fd(cmd->args[0], 2);
+				ft_putstr_fd(": command not found\n", 2);
+				exit(127);
+		}
+		
 
-		}	
+
+
+		// else if (access(cmd->cmd, F_OK) < 0 && ft_strstr(cmd->cmd, "/"))
+		// {
+		// 	ft_putstr_fd(cmd->args[0], 2);
+		// 	ft_putstr_fd(": Is a directory\n", 2);
+		// 	exit(126);
+		// }
+		// else {
+		// 	if (access(cmd->cmd, F_OK) < 0)
+		// 	{
+		// 		ft_putstr_fd(cmd->args[0], 2);
+		// 		ft_putstr_fd(": command not found\n", 2);
+		// 		exit(126);
+		// 	} else {
+		// 		perror(cmd->args[0]);
+		// 		// ft_putstr_fd(strerror(errno), 2);
+		// 		exit(errno);
+		// 		// shell->last_exit_code = CMD_N_FOUND;
+		// 	}
+
+		// }	
 	}
 }
 
