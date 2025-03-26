@@ -76,12 +76,6 @@ bool lexing_checker(t_app *shell)
         }
         if (!check_rederections(shell, token))
 		{
-            // ft_putstr_fd("syntax error near unexpected token `", 2);
-            // if (token->next)
-            //     ft_putstr_fd(token->next->value, 2);
-            // ft_putstr_fd("'\n", 2);
-            // printf("EEEEEE: %s\n", token->value);
-            // print_message(REDIR_ERROR, false);
             return false;
         }
         token = token->next;
