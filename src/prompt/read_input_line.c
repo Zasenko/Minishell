@@ -104,6 +104,7 @@ void read_input_line(t_app *shell)
                 {
                     // print_tokens(shell);
                     // print_cmd(&shell);
+                    // ft_putstr_fd("-----------!!!!----------\n", 2);
                     ft_execute(shell);
                 }
             }
