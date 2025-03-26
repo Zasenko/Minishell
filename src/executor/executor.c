@@ -396,8 +396,6 @@ int	ft_execute(t_app *shell)
 		shell->last_exit_code = exec_buildin(cmd, shell, false, dup_1);
 		close(dup_0);
 		close(dup_1);
-
-			
 	}
 	else
 	{
