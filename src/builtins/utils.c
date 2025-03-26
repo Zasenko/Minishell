@@ -78,3 +78,43 @@ bool	ft_strstr(char *str, char *to_find)
 	}
 	return (false);
 }
+
+void sort_environment(t_envp **envp)
+{
+    t_envp *curr;
+    t_envp *temp1;
+    t_envp *temp2;
+    bool swapped;
+
+    if (!envp || !(*envp)) 
+        return;
+    while (1)
+    {
+        swapped = true;
+        curr = *envp;
+
+        while (curr->next)
+        {
+            if (ft_strcmp(curr->name, curr->next->name) > 0)
+            {
+                temp1 = curr;
+                temp2 = curr->next;
+                temp1->next = temp2->next;
+                if (temp2->next)
+                    temp2->next->prev = temp1;
+                temp2->prev = temp1->prev;
+                temp2->next = temp1;
+                if (temp1->prev)
+                    temp1->prev->next = temp2;
+                else
+                    *envp = temp2;
+                temp1->prev = temp2;
+                swapped = false;
+            }
+            else
+                curr = curr->next;
+        }
+        if (swapped)
+            break;
+    }
+}

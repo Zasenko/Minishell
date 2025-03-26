@@ -61,6 +61,7 @@ void build_env_into_2d_arr(t_app *shell)
     }
     shell->env_var = env_var;
 }
+
 void copy_env(t_app *shell, char **envp)
 {
     int     i;
