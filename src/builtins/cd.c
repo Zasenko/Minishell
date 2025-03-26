@@ -14,6 +14,100 @@
 
 int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
 {
+    t_envp *home_node = find_envp_node(shell->envp, "HOME");
+    t_envp *oldpwd_node = find_envp_node(shell->envp, "OLDPWD");
+    t_envp *pwd_node = find_envp_node(shell->envp, "PWD");
+    char *dir = NULL;
+    int result;
+
+    if (arr2d_len(cmd->args) > 2)
+    {
+        ft_putstr_fd("cd: too many arguments\n", 2);
+        return (EXIT_FAILURE);
+    }
+    
+    if (cmd->args[1] == NULL)
+    {
+        if (!home_node || !home_node->envp)
+        {
+            ft_putstr_fd("cd: HOME not set\n", 2);
+            return (EXIT_FAILURE);
+        }
+        dir = home_node->envp;
+    }
+    else
+    {
+        if (!ft_strcmp("-", cmd->args[1]))
+        {
+            if (!oldpwd_node || !oldpwd_node->envp)
+            {
+                ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
+                return (EXIT_FAILURE);
+            }
+            dir = oldpwd_node->envp;
+        }
+        else
+        {
+            dir = cmd->args[1];
+        }
+    }
+
+    result = chdir(dir);
+    if (result == -1)
+    {
+        char *str_error = ft_strjoin("minishell: cd: ", dir);
+        if (!str_error)
+        {
+            return (EXIT_FAILURE);
+        }
+        char *final_error = ft_strjoin(str_error, ": No such file or directory\n");
+        free(str_error);
+        if (!final_error)
+        {
+            return (EXIT_FAILURE);
+        }
+        ft_putstr_fd(final_error, 2);
+        return (errno);
+    }     
+    if (!is_child)
+    {
+        if (oldpwd_node)
+        {
+            char *new_oldpwd = NULL;
+            if (pwd_node && pwd_node->envp)
+            {
+                new_oldpwd = ft_strdup(pwd_node->envp);
+                if (!new_oldpwd)
+                {
+                    return EXIT_FAILURE;
+                }
+                if (oldpwd_node->envp)
+                {
+                    free(oldpwd_node->envp);
+                }
+                oldpwd_node->envp = new_oldpwd;
+            }
+        }
+    
+        if (pwd_node)
+        {
+            char *new_pwd = ft_strdup(dir);
+            if (!new_pwd)
+            {
+                return EXIT_FAILURE;
+            }
+            if (pwd_node->envp)
+            {
+                free (pwd_node->envp);
+            }
+            pwd_node->envp = new_pwd;
+        }
+    }
+    return (SUCCESS);
+}
+
+int ft_cd2(t_cmd *cmd, t_app *shell, bool is_child)
+{
     char buf[MAXPATHLEN];
     char *current_dir;
     int result;
@@ -44,19 +138,23 @@ int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
                 ft_putstr_fd("cd: OLDPWD not set\n", 2);
                 return (EXIT_FAILURE);
             }
+            // ft_putstr_fd("--------: oldpwd_node->envp\n", 2);
+
+
+
             result = chdir(oldpwd_node->envp);
             if (result == -1)
             {
-                perror(oldpwd_node->envp);
-                // ft_putstr_fd("cd: ", 2);
-                // ft_putstr_fd(oldpwd_node->envp, 2);
-                // ft_putstr_fd(": No such file or directory\n", 2);
+                // perror(oldpwd_node->envp);
+                ft_putstr_fd("cd: ", 2);
+                ft_putstr_fd(oldpwd_node->envp, 2);
+                ft_putstr_fd(": No such file or directory\n", 2);
                 return (EXIT_FAILURE);
             }
             if (!is_child)
             {
                 char *temp = pwd_node->envp;
-                if (pwd_node)
+                if (temp)
                 {
                     char *new_pwd = ft_strdup(oldpwd_node->envp);
                     if (!new_pwd)
