@@ -63,15 +63,17 @@ int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
         ft_putstr_fd("\n", 2);
         return (EXIT_FAILURE);
     }
+    
+    char buf[MAXPATHLEN];
+    char *current_dir;
+    current_dir = NULL;
+    current_dir = getcwd(buf, MAXPATHLEN);
+
+    if (!current_dir)
+        return (perror("getcwd"), errno);
+    
     if (cmd->args[1] != NULL && !ft_strcmp("-", cmd->args[1]))
     {
-        char buf[MAXPATHLEN];
-        char *current_dir;
-
-        current_dir = NULL;
-        current_dir = getcwd(buf, MAXPATHLEN);
-        if (!current_dir)
-            return (perror("getcwd"), errno);
         ft_putstr_fd(current_dir, 1);
         ft_putstr_fd("\n", 1);
     }
@@ -94,10 +96,9 @@ int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
                 oldpwd_node->envp = new_oldpwd;
             }
         }
-    
         if (pwd_node)
         {
-            char *new_pwd = ft_strdup(dir);
+            char *new_pwd = ft_strdup(current_dir);
             if (!new_pwd)
             {
                 return EXIT_FAILURE;
