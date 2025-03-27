@@ -1,8 +1,0 @@
-
-================= print_tokens ======================
-Type: 0, Value: "ECHO"
-
-================= print_cmd ======================
-while: [0]
-j: arg: [0] [ECHO]
-is valid cmd: [0]
