@@ -113,10 +113,21 @@ char *parse_command(t_app *shell, char *value)
         	}
 			else
 			{
-				ft_putstr_fd(value, 2);
-				ft_putstr_fd(": command not found\n", 2);
-				shell->last_exit_code = 127;
-				return (NULL);
+				char *temp_path = ft_strjoin(shell->pwd, "/");
+				if (!temp_path)
+					return (NULL);
+				char *full_path = ft_strjoin(temp_path, value);
+				free(temp_path);
+				if (!full_path)
+					return (NULL);
+				if (!access_checking(full_path))
+				{
+					ft_putstr_fd(value, 2);
+					ft_putstr_fd(": command not found\n", 2);
+					shell->last_exit_code = 127;
+					return NULL;
+				}
+				return full_path;
 			}
 		}
     }
