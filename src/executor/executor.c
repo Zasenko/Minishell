@@ -152,33 +152,9 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 		else
 		{
 			ft_putstr_fd(cmd->args[0], 2);
-				ft_putstr_fd(": command not found\n", 2);
+				ft_putstr_fd(": No such file or directory\n", 2);
 				exit(127);
-		}
-		
-
-
-
-		// else if (access(cmd->cmd, F_OK) < 0 && ft_strstr(cmd->cmd, "/"))
-		// {
-		// 	ft_putstr_fd(cmd->args[0], 2);
-		// 	ft_putstr_fd(": Is a directory\n", 2);
-		// 	exit(126);
-		// }
-		// else {
-		// 	if (access(cmd->cmd, F_OK) < 0)
-		// 	{
-		// 		ft_putstr_fd(cmd->args[0], 2);
-		// 		ft_putstr_fd(": command not found\n", 2);
-		// 		exit(126);
-		// 	} else {
-		// 		perror(cmd->args[0]);
-		// 		// ft_putstr_fd(strerror(errno), 2);
-		// 		exit(errno);
-		// 		// shell->last_exit_code = CMD_N_FOUND;
-		// 	}
-
-		// }	
+		}	
 	}
 }
 
@@ -205,8 +181,6 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 		shell->last_exit_code = errno;
 		return (EXIT_FAILURE);
 	}
-
-	// child
 	if (cmd->pid == 0)
 		child_process(shell, cmd, *prev_pipe, pipe_fd);
 	
@@ -229,7 +203,6 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell)
 	{
 		shell->last_exit_code = errno;
 		return (strerror(errno), errno);
-
 	}
 	if (WIFEXITED(status))
 	{
