@@ -332,15 +332,40 @@ int	ft_execute(t_app *shell)
 					}
 					if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
 					{
-						int test_p = 0;
-						char *test_char = expand_words(shell, input, &test_p);
-						if (!test_char)
+						// int test_p = 0;
+						char *dest = ft_strdup("");
+						char *temp;
+						char *expanded;
+						int j = 0;
+						int start;
+						while (input[j])
 						{
-							free(input);
-							//todo 
+							start = j; 
+							while (input[j] && input[j] != '$')
+								j++;
+							if (start != j)
+							{
+								temp = ft_strjoin(dest, ft_substr(input, start, j - start));
+								free(dest);
+								dest = temp;
+							}
+							if (input[j] == '$')
+							{
+								expanded = expand_words(shell, input, &j);
+								temp = ft_strjoin(dest, expanded);
+								free(dest);
+								dest = temp;
+							}
 						}
+
+						// char *test_char = expand_words(shell, input, &test_p);
+						// if (!test_char)
+						// {
+						// 	free(input);
+						// 	//todo 
+						// }
 						free(input);
-						input = test_char;			
+						input = dest;			
 					}
 
 					char *temp = ft_strjoin(input, "\n");

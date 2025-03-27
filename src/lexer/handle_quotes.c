@@ -39,21 +39,21 @@
 // }
 
 
-bool handle_quotes(t_token *token, t_token *prev, char *input, int *i)
-{
-    char quote;
-    int start;
+// bool handle_quotes(t_token *token, t_token *prev, char *input, int *i)
+// {
+//     char quote;
+//     int start;
 
-    start = *i;
-    quote = input[*i];
-    while (input[*i] && input[*i] != quote)
-        (*i)++;
-    if (!prev)
-        token->type = CMD;
-    else
-        token->type = ARG;
-    token->value = ft_substr(input, start, (*i - start));
-    if (!token->value)
-        return false;
-    return true;
-}
+//     start = *i;
+//     quote = input[*i];
+//     while (input[*i] && input[*i] != quote)
+//         (*i)++;
+//     if (!prev)
+//         token->type = CMD;
+//     else
+//         token->type = ARG;
+//     token->value = ft_substr(input, start, (*i - start));
+//     if (!token->value)
+//         return false;
+//     return true;
+// }

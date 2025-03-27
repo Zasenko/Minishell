@@ -24,8 +24,7 @@ bool check_pipe(t_app *shell, t_token *token)
             shell->last_exit_code = 2;
             return false;
         }
-        else if (token->next == NULL || token->value == token->next->value 
-            || token->next->type != ARG )
+        else if (token->next == NULL || token->value == token->next->value)
         {
             ft_putstr_fd("syntax error near unexpected token `", 2);
             if (token->next)
