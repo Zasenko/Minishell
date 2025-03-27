@@ -60,9 +60,9 @@ long long	ft_my_atoi(const char *nptr)
 
 int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
 {
+    printf("exit\n");
     if (arr2d_len(cmd->args) == 1)
     {
-        printf("exit\n");
         if (is_parent)
         {
             free_list(shell);
@@ -75,12 +75,26 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
     int f = 1;
     while (cmd->args[f])
     {
+        if (f == 2)
+        {
+            if (arr2d_len(cmd->args) > 2)
+            {
+                ft_putstr_fd("exit: too many arguments\n", 2);
+                if (is_parent)
+                {
+                    shell->last_exit_code = 1;
+                    return 1;
+                }
+                else
+                    exit(1);
+            }
+        }
+
         char *trimmed = ft_strtrim(cmd->args[f], " \t");  
         if (!trimmed)
         {
             if (is_parent)
             {
-                // free_envp_list(&shell->envp);
                 free_list(shell);
                 exit(1);
             }
@@ -162,21 +176,6 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
         exit_code = (long long)result * sign;
         f++;
     }
-     
-
-    if (arr2d_len(cmd->args) > 2)
-    {
-        ft_putstr_fd("exit: too many arguments\n", 2);
-        if (is_parent)
-        {
-            shell->last_exit_code = 1;
-            return 1;
-        }
-        else
-            exit(1);
-    }
-
-    printf("exit\n");
     if (is_parent)
     {
         free_list(shell);
