@@ -1,0 +1,15 @@
+text'ibondarc'  $USER 
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 0, Value: text"'ibondarc'"
+Type: 0, Value: ' $USER '
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [/bin/echo]
+is valid cmd: [1]
+j: arg: [1] [text'ibondarc']
+is valid cmd: [1]
+j: arg: [2] [ $USER ]
+is valid cmd: [1]

@@ -56,6 +56,7 @@ typedef struct s_cmd
     char            *cmd;
     char            **args;     // Command arguments
     bool            is_build;
+    bool            is_valid_cmd;
     struct s_redir  *redirs;
     struct s_cmd    *next;      // Next command in pipeline
     struct s_cmd    *prev;      // Previous command (doubly linked list)
@@ -74,6 +75,7 @@ typedef struct s_app
     bool            is_envp_list_changed; //FLAG if we need to make new char** env_var
     struct s_cmd    *cmd;           // First command in pipeline
     struct s_token  *tokens;
+    bool            is_valid_syntax;
     int             heredock_num;
 } t_app;
 

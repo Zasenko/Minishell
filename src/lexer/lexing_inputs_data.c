@@ -70,6 +70,7 @@ bool lexing_inputs_data(t_app *shell, char *input)
 
     if (!shell)
         return false;
+    shell->is_valid_syntax = true;
     str = ft_strtrim(input, " \t");
     if (!define_valid_string(str))
     {
@@ -81,6 +82,9 @@ bool lexing_inputs_data(t_app *shell, char *input)
     free(input);
     shell->tokens = head;
     if (!lexing_checker(shell))
+    {
+        shell->is_valid_syntax = false;
         return false;
+    }
     return true;
 }

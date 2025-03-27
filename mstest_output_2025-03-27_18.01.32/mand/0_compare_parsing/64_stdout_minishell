@@ -1,0 +1,17 @@
+test1
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 0, Value: -n
+Type: 0, Value: -n
+Type: 0, Value: test1
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [/bin/echo]
+is valid cmd: [1]
+j: arg: [1] [-n]
+is valid cmd: [1]
+j: arg: [2] [-n]
+is valid cmd: [1]
+j: arg: [3] [test1]
+is valid cmd: [1]

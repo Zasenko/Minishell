@@ -1,0 +1,11 @@
+
+================= print_tokens ======================
+Type: 0, Value: ">>"
+Type: 0, Value: asd
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [>>]
+is valid cmd: [0]
+j: arg: [1] [asd]
+is valid cmd: [0]

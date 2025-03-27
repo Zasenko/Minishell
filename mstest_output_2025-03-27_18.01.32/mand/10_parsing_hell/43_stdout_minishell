@@ -1,0 +1,29 @@
+-$Tnnnnnnnnnnnnn -nnnnnnnn$T -nnnnnnnn 
+
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 0, Value: T=nnnnnnnn
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [export]
+is valid cmd: [1]
+j: arg: [1] [T=nnnnnnnn]
+is valid cmd: [1]
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 0, Value: "-"'$T'nnnnnnnnnnnnn
+Type: 0, Value: -nnnnnnnn'$T'
+Type: 0, Value: '-'"nnnnnnnn "
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [echo]
+is valid cmd: [1]
+j: arg: [1] [-$Tnnnnnnnnnnnnn]
+is valid cmd: [1]
+j: arg: [2] [-nnnnnnnn$T]
+is valid cmd: [1]
+j: arg: [3] [-nnnnnnnn ]
+is valid cmd: [1]

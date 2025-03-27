@@ -49,6 +49,7 @@ void print_cmd(t_app **shell)
         while (head->args && head->args[j])
         {
             printf("j: arg: [%d] [%s]\n", j, head->args[j]);
+            printf("is valid cmd: [%d]\n", head->is_valid_cmd);
             j++;
         }
         redir = head->redirs;
@@ -98,22 +99,13 @@ void read_input_line(t_app *shell)
         if (input)
         {
             add_history(input);
-            if (lexing_inputs_data(shell, input))
-            {
-                if (parse_tokens(shell))
-                {
-               
-                    // ft_putstr_fd("-----------!!!!----------\n", 2);
-                    ft_execute(shell);
-                }
-            }
-                
+            lexing_inputs_data(shell, input);
+            parse_tokens(shell);
+            ft_execute(shell);
             // print_tokens(shell);
             // print_cmd(&shell);
-
             // print_envp(shell->envp);
             free_list(shell);
-
         }
         else 
             break;

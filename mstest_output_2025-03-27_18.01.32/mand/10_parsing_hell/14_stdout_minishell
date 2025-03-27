@@ -1,0 +1,13 @@
+why
+not
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 5, Value: <<
+Type: 0, Value: "$USER"
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [cat]
+is valid cmd: [1]
+file: HEREDOCK_1 HEREDOC

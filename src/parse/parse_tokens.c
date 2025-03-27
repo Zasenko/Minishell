@@ -110,18 +110,19 @@ bool parse_tokens(t_app *shell)
     iswriten = true;
     token = shell->tokens;
     cmd = create_new_cmd();
-    if (!cmd)
+    if (!cmd || !shell->is_valid_syntax)
         return false;
     while (token != NULL)
     {
         if (token->type == ARG && iswriten)
         {
+            cmd->is_valid_cmd = true;
             cmd->args = extract_arguments(token);
-            if (!cmd->args)
-                return false;
             cmd->cmd = parse_command(shell, cmd->args[0]);
             if (!cmd->cmd)
-                return false;
+            {
+                cmd->is_valid_cmd = false;
+            }
             iswriten = false;
         }
         else if (token->type == PIPE && token->next)

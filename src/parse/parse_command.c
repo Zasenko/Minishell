@@ -98,16 +98,16 @@ char *parse_command(t_app *shell, char *value)
         	    paths = ft_split(env_path, ':');
         	    if (!paths)
         		{
-				shell->last_exit_code = 1;
-				return (NULL);
+					shell->last_exit_code = 1;
+					return (NULL);
 				}
         	    result = extract_full_path(paths, value);
         	    free_2d_array(paths);
 				if (!result)
 				{
-					ft_putstr_fd(value, 2);
-					ft_putstr_fd(": command not found\n", 2);
-					shell->last_exit_code = 127;
+					// ft_putstr_fd(value, 2);
+					// ft_putstr_fd(": Command not found\n", 2);
+					// shell->last_exit_code = 127;
 					return (NULL);
 				}
         	}
@@ -122,9 +122,9 @@ char *parse_command(t_app *shell, char *value)
 					return (NULL);
 				if (!access_checking(full_path))
 				{
-					ft_putstr_fd(value, 2);
-					ft_putstr_fd(": command not found\n", 2);
-					shell->last_exit_code = 127;
+					// ft_putstr_fd(value, 2);
+					// ft_putstr_fd(": command not found\n", 2);
+					// shell->last_exit_code = 127;
 					return NULL;
 				}
 				return full_path;

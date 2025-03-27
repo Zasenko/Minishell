@@ -1,0 +1,23 @@
+bye
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 0, Value: hi
+Type: 3, Value: >
+Type: 0, Value: ./outfiles/outfile01
+Type: 1, Value: |
+Type: 0, Value: /bin/echo
+Type: 0, Value: bye
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [/bin/echo]
+is valid cmd: [1]
+j: arg: [1] [hi]
+is valid cmd: [1]
+file: ./outfiles/outfile01 REDIR_OUT
+while: [1]
+j: arg: [0] [/bin/echo]
+is valid cmd: [1]
+j: arg: [1] [bye]
+is valid cmd: [1]

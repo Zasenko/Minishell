@@ -1,0 +1,25 @@
+
+================= print_tokens ======================
+Type: 3, Value: >
+Type: 0, Value: ">"
+Type: 0, Value: asd
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [asd]
+is valid cmd: [0]
+file: > REDIR_OUT
+
+================= print_tokens ======================
+Type: 0, Value: /bin/rm
+Type: 0, Value: -f
+Type: 0, Value: ">"
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [/bin/rm]
+is valid cmd: [1]
+j: arg: [1] [-f]
+is valid cmd: [1]
+j: arg: [2] [>]
+is valid cmd: [1]

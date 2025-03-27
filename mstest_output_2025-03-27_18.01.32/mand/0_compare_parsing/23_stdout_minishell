@@ -1,0 +1,21 @@
+ibondarc =intergalaktikus miaf szomez
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 0, Value: ibondarc
+Type: 0, Value: =intergalaktikus
+Type: 0, Value: miaf
+Type: 0, Value: szomez
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [/bin/echo]
+is valid cmd: [1]
+j: arg: [1] [ibondarc]
+is valid cmd: [1]
+j: arg: [2] [=intergalaktikus]
+is valid cmd: [1]
+j: arg: [3] [miaf]
+is valid cmd: [1]
+j: arg: [4] [szomez]
+is valid cmd: [1]

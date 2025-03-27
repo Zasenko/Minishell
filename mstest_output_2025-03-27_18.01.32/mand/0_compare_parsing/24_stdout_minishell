@@ -1,0 +1,15 @@
+-n-n bonjour
+
+================= print_tokens ======================
+Type: 0, Value: /bin/echo
+Type: 0, Value: -n"-n"
+Type: 0, Value: bonjour
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [/bin/echo]
+is valid cmd: [1]
+j: arg: [1] [-n-n]
+is valid cmd: [1]
+j: arg: [2] [bonjour]
+is valid cmd: [1]

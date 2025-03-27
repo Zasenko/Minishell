@@ -1,0 +1,33 @@
+
+================= print_tokens ======================
+Type: 4, Value: >>
+Type: 0, Value: '$USER'
+
+================= print_cmd ======================
+while: [0]
+file: $USER APPEND
+
+================= print_tokens ======================
+Type: 0, Value: cat
+Type: 0, Value: '$USER'
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [cat]
+is valid cmd: [1]
+j: arg: [1] [$USER]
+is valid cmd: [1]
+
+================= print_tokens ======================
+Type: 0, Value: /bin/rm
+Type: 0, Value: -f
+Type: 0, Value: '$USER'
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [/bin/rm]
+is valid cmd: [1]
+j: arg: [1] [-f]
+is valid cmd: [1]
+j: arg: [2] [$USER]
+is valid cmd: [1]

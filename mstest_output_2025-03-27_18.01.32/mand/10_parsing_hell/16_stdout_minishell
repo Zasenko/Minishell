@@ -1,0 +1,8 @@
+
+================= print_tokens ======================
+Type: 4, Value: >>
+Type: 0, Value: /home/ibondarc
+
+================= print_cmd ======================
+while: [0]
+file: /home/ibondarc APPEND

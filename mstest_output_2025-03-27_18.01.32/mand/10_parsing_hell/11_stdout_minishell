@@ -1,0 +1,30 @@
+   -n -n -n -n
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 0, Value: ""
+Type: 0, Value: ""
+Type: 0, Value: ""
+Type: 0, Value: -n
+Type: 0, Value: -n
+Type: 0, Value: -n
+Type: 0, Value: -n
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [echo]
+is valid cmd: [1]
+j: arg: [1] []
+is valid cmd: [1]
+j: arg: [2] []
+is valid cmd: [1]
+j: arg: [3] []
+is valid cmd: [1]
+j: arg: [4] [-n]
+is valid cmd: [1]
+j: arg: [5] [-n]
+is valid cmd: [1]
+j: arg: [6] [-n]
+is valid cmd: [1]
+j: arg: [7] [-n]
+is valid cmd: [1]

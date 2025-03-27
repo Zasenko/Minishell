@@ -1,0 +1,34 @@
+test1 -n test 2
+================= print_tokens ======================
+Type: 0, Value: export
+Type: 0, Value: T="-n test1 -n test 2"
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [export]
+is valid cmd: [1]
+j: arg: [1] [T=-n test1 -n test 2]
+is valid cmd: [1]
+
+================= print_tokens ======================
+Type: 0, Value: echo
+Type: 0, Value: -n
+Type: 0, Value: test1
+Type: 0, Value: -n
+Type: 0, Value: test
+Type: 0, Value: 2
+
+================= print_cmd ======================
+while: [0]
+j: arg: [0] [echo]
+is valid cmd: [1]
+j: arg: [1] [-n]
+is valid cmd: [1]
+j: arg: [2] [test1]
+is valid cmd: [1]
+j: arg: [3] [-n]
+is valid cmd: [1]
+j: arg: [4] [test]
+is valid cmd: [1]
+j: arg: [5] [2]
+is valid cmd: [1]
