@@ -55,11 +55,12 @@ char *divide_into_parts(char *input, int *i)
     return ft_substr(input, start, *i - start);
 }
 
-void join_partitions(t_app *shell, char **dest, char *input)
+int join_partitions(t_app *shell, char **dest, char *input)
 {
     char    *expanded;
     char    *temp;
     int     j = 0;
+    int     k;
     int     start;
     bool    sing_quote = false;
     bool    doub_quote = false;
@@ -86,12 +87,19 @@ void join_partitions(t_app *shell, char **dest, char *input)
         }
         if (input[j] == '$')
         {
+            char **splited;
             expanded = expand_words(shell, input, &j);
+            char * trimed = ft_strtrim(expanded, " \t");
+            splited = ft_split(trimed, ' ');
+            k = 0;
+            while (splited[k])
+                k++;
             temp = ft_strjoin(*dest, expanded);
             free(*dest);
             *dest = temp;
         }
     }
+    return k;
 }
 
 bool handle_command(t_app *shell, t_token *token, char *input, int *i)
@@ -114,7 +122,33 @@ bool handle_command(t_app *shell, t_token *token, char *input, int *i)
     if (ft_strchr(part, '\"', false) || ft_strchr(part, '\'', false))
     {
         if (is_possible_expand(part))
-            join_partitions(shell, &token->value, part);
+        {
+            // printf("with quote expand\n");
+            int count = join_partitions(shell, &token->value, part);
+            if (count > 1)
+            {
+                // printf("count: %d\n", count);
+                // char * trimed = ft_strtrim(token->value, " \t");
+                temp = ft_split(token->value, ' ');
+                j = 0;
+                while (temp[j])
+                {
+                    if (j == 0)
+                    {
+                        token->value = temp[j];
+                        token->type = ARG;
+                    }
+                    else
+                    {
+                        t_token *new = create_new_token();
+                        new->value = temp[j];
+                        new->type = ARG;
+                        add_token_back(&token, new);     
+                    }
+                    j++;
+                }
+            }
+        }
         else
         {
             token->value = ft_strdup(part);
