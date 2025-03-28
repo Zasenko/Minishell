@@ -226,15 +226,6 @@ int ft_wait_children(t_app *shell)
 	return (1);
 }
 
-void print_fd_err(char *val, char *err_msg)
-{
-	if (!val || !err_msg)
-		return;
-	ft_putstr_fd(val, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putstr_fd(err_msg, 2);
-	ft_putstr_fd("\n", 2);
-}
 
 int	ft_execute(t_app *shell)
 {
@@ -260,7 +251,8 @@ int	ft_execute(t_app *shell)
 				int fd_in = open(redir->value, O_RDONLY);
 				if (fd_in < 0)
 				{
-					print_fd_err(redir->value, strerror(errno));
+					ft_putstr_fd(redir->value, 2);
+					ft_putstr_fd(": No such file or directory\n", 2);
 					shell->last_exit_code = 1;
 					break;
 				}
@@ -274,8 +266,9 @@ int	ft_execute(t_app *shell)
 				int fd_out = open(redir->value, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
 				if (fd_out < 0)
 				{
-					print_fd_err(redir->value, strerror(errno));
-					shell->last_exit_code = 1;
+					ft_putstr_fd(redir->value, 2);
+					ft_putstr_fd(": No such file or directory\n", 2);
+					shell->last_exit_code = 0;
 					break;
 				}
 				else
@@ -288,7 +281,9 @@ int	ft_execute(t_app *shell)
 				int fd_append = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
 				if (fd_append < 0)
 				{
-					print_fd_err(redir->value, strerror(errno));
+					perror(redir->value);
+					// ft_putstr_fd(redir->value, 2);
+					// ft_putstr_fd(": No such file or directory\n", 2);
 					shell->last_exit_code = 1;
 					break;
 
@@ -316,7 +311,8 @@ int	ft_execute(t_app *shell)
 				redir->fd = open(redir->value, O_RDWR | O_CREAT | O_APPEND, 0644);
 				if (redir->fd < 0)
 				{
-					print_fd_err(redir->value, strerror(errno));
+					ft_putstr_fd(redir->value, 2);
+					ft_putstr_fd(": No such file or directory\n", 2);
 					shell->last_exit_code = 1;
 					break;
 				}
@@ -359,6 +355,13 @@ int	ft_execute(t_app *shell)
 								dest = temp;
 							}
 						}
+
+						// char *test_char = expand_words(shell, input, &test_p);
+						// if (!test_char)
+						// {
+						// 	free(input);
+						// 	//todo 
+						// }
 						free(input);
 						input = dest;			
 					}
@@ -377,8 +380,7 @@ int	ft_execute(t_app *shell)
 				redir->fd = open(redir->value, O_RDONLY, 0644);
 				if (redir->fd < 0)
 				{
-					print_fd_err(redir->value, strerror(errno));
-					shell->last_exit_code = 1;
+					//todo
 				}
 				shell->heredock_num++;
 			}
