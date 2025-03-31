@@ -60,7 +60,7 @@ int join_partitions(t_app *shell, char **dest, char *input)
     char    *expanded;
     char    *temp;
     int     j = 0;
-    int     k;
+    bool    do_split = false;
     int     start;
     bool    sing_quote = false;
     bool    doub_quote = false;
@@ -87,19 +87,15 @@ int join_partitions(t_app *shell, char **dest, char *input)
         }
         if (input[j] == '$')
         {
-            char **splited;
             expanded = expand_words(shell, input, &j);
-            char * trimed = ft_strtrim(expanded, " \t");
-            splited = ft_split(trimed, ' ');
-            k = 0;
-            while (splited[k])
-                k++;
+            if (ft_strchr(expanded, ' ', false))
+                do_split = !do_split;
             temp = ft_strjoin(*dest, expanded);
             free(*dest);
             *dest = temp;
         }
     }
-    return k;
+    return do_split;
 }
 
 bool handle_command(t_app *shell, t_token *token, char *input, int *i)
@@ -110,7 +106,6 @@ bool handle_command(t_app *shell, t_token *token, char *input, int *i)
     int     j;
 
     part = divide_into_parts(input, i);
-    // printf("part: %s\n", part);
     if (!part) 
         return NULL;
     if (!ft_strchr(part, '$', false))
@@ -123,12 +118,9 @@ bool handle_command(t_app *shell, t_token *token, char *input, int *i)
     {
         if (is_possible_expand(part))
         {
-            // printf("with quote expand\n");
-            int count = join_partitions(shell, &token->value, part);
-            if (count > 1)
+            bool do_split = join_partitions(shell, &token->value, part);
+            if (do_split)
             {
-                // printf("count: %d\n", count);
-                // char * trimed = ft_strtrim(token->value, " \t");
                 temp = ft_split(token->value, ' ');
                 j = 0;
                 while (temp[j])

@@ -36,7 +36,7 @@ char	*var_extractor(char *input, int *i)
         }
         else if (input[*i] == ' ' || input[*i] == '\"' || input[*i] == ')' 
             || input[*i] == '$' || input[*i] == '\'' || input[*i] == '/'
-            || input[*i] == 46)
+            || input[*i] == 46 || input[*i] == '?')
             break;
 		(*i)++;
 	}

@@ -15,7 +15,6 @@
 
 typedef enum
 {
-    // CMD,        // 0
     ARG,        // 1
     PIPE,       // 2
     REDIR_IN,   // 3
