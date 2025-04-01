@@ -107,6 +107,28 @@ char *get_status_var(int status)
     return result;
 }
 
+char *wrap_in_quotes(char *str)
+{
+    int i = 0;
+    int len;
+    char *result;
+
+    if (!str)
+        return NULL;
+    len = ft_strlen(str) + 2;
+    result = ft_calloc(len + 1, sizeof(char));
+    if (!result)
+        return NULL;
+    result[i++] = '\'';
+    result[len--] = '\'';
+    while (i < len)
+    {
+        result[i] = str[i - 1];
+        i++;
+    }
+    return result;
+}
+
 char *get_env_var(t_envp *envp, char *var)
 {
     char *result;
@@ -118,9 +140,19 @@ char *get_env_var(t_envp *envp, char *var)
     var_val = find_envp_node(envp, var);
     if (!var_val)
         return NULL;
-    result = get_word_from_quotes(var_val->envp);
-    if (!result)
-        return NULL;
+    if (var_val->envp[0] == '\"')
+    {
+        result = wrap_in_quotes(var_val->envp);
+        if (!result)
+            return NULL;
+    }
+    else
+    {
+        result = ft_strdup(var_val->envp);
+        if (!result)
+            return NULL;
+    }
+        
     return result;
 }
 char *get_expanded_var(t_app *shell, char *var)
