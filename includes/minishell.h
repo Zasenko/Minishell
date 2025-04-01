@@ -90,5 +90,7 @@ void    print_cmd(t_app **shell);
 char    *expand_words(t_app *shell, char *input, int *i);
 void    skip_quotes(char *input, int *i, char quote);
 char    *get_word_from_quotes(char *input);
+void handle_child_signal(void);
+void handle_heredoc_signal(void);
 
 #endif

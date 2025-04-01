@@ -85,16 +85,20 @@ void print_cmd(t_app **shell)
     }
 }
 
+
 void read_input_line(t_app *shell)
 {
     char    *input;
+    input= NULL;
 
     if (!shell)
         return ;
     while (1)
     {
+        // handle_signal();
         build_env_into_2d_arr(shell);
         create_prompt_path(shell);
+
         input = readline(shell->prompt);
         if (input)
         {
@@ -108,7 +112,12 @@ void read_input_line(t_app *shell)
             free_list(shell);
         }
         else 
+        {
+            // printf("exit\n");
+            // free_list(shell);
+            // exit(0);
             break;
+        }
 	}
 	exit_with_error(shell, shell->last_exit_code, NULL);
 }

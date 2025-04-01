@@ -12,6 +12,14 @@
 
 #include "../../includes/minishell.h"
 
+void	ft_putfullstr_fd(char *s, int fd)
+{
+	if (!s || !(fd >= 0))
+		return ;
+	int len = ft_strlen(s);
+	write(fd, s, len);
+}
+
 int	close_all_redirs_fds(t_redir *redir)
 {
 	t_redir	*temp;
@@ -97,50 +105,68 @@ int	redirect(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	return (1);
 }
 
-void handle_execve_error(t_cmd *cmd)
+int handle_execve_error(t_cmd *cmd)
 {
     struct stat buffer;
 
 	if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' || 
         !ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
     {
-        ft_putstr_fd(cmd->args[0], 2);
-        ft_putstr_fd(": command not found\n", 2);
-        exit(127);
+        char *error_msg = ft_strjoin(cmd->args[0], ": command not found\n");
+		if (!error_msg)
+			return 1;
+		ft_putfullstr_fd(error_msg, 2);
+		free(error_msg);
+		return (127);
     }
     if (stat(cmd->cmd, &buffer) == 0)
     {
         if (S_ISDIR(buffer.st_mode))
         {
-            ft_putstr_fd(cmd->args[0], 2);
-            ft_putstr_fd(": Is a directory\n", 2);
-            exit(126);
+			char *error_msg = ft_strjoin(cmd->args[0], ": Is a directory\n");
+			if (!error_msg)
+				return 1;
+			ft_putfullstr_fd(error_msg, 2);
+			free(error_msg);
+            return (126);
         }
         else if (access(cmd->cmd, X_OK) == -1)
         {
-            ft_putstr_fd(cmd->args[0], 2);
-            ft_putstr_fd(": Permission denied\n", 2);
-            exit(126);
+			char *error_msg = ft_strjoin(cmd->args[0], ": Permission denied\n");
+			if (!error_msg)
+				return 1;
+			ft_putfullstr_fd(error_msg, 2);
+			free(error_msg);
+			return (126);
         }
     }
     else
     {
         if (errno == ENOENT || errno == ENOTDIR)
         {
-            ft_putstr_fd(cmd->args[0], 2);
-            ft_putstr_fd(": No such file or directory\n", 2);
-            exit(127);
+			char *error_msg = ft_strjoin(cmd->args[0], ": No such file or directory\n");
+			if (!error_msg)
+				return 1;
+			ft_putfullstr_fd(error_msg, 2);
+			free(error_msg);
+			return (127);
         }
     }
-    ft_putstr_fd(cmd->args[0], 2);
-    ft_putstr_fd(": command not found\n", 2);
-    exit(127);
+	char *error_msg = ft_strjoin(cmd->args[0], ": command not found\n");
+	if (!error_msg)
+		return 1;
+	ft_putfullstr_fd(error_msg, 2);
+	free(error_msg);
+    return (127);
 }
+
+
 
 void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 {
 	int exit_status;
 
+	handle_child_signal();
 	redirect(shell, cmd, prev_pipe, pipe_fd);
 	close_all_cmnds_fds(shell->cmd);
 	if (is_builtin_func(cmd->args[0]))
@@ -152,7 +178,9 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	else
 	{
 		execve(cmd->cmd, cmd->args, shell->env_var);
-		handle_execve_error(cmd);
+		exit_status = handle_execve_error(cmd);
+		free_list(shell);
+		exit(exit_status);
 	}
 }
 
@@ -172,6 +200,7 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 			return (EXIT_FAILURE); // todo? break and waitpid?
 		}
 	}
+	// signal(SIGINT, SIG_IGN);
 	cmd->pid = fork();
 	if (cmd->pid < 0)
 	{
@@ -179,9 +208,14 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 		shell->last_exit_code = errno;
 		return (EXIT_FAILURE);
 	}
+	// handle_child_signal();
+
 	if (cmd->pid == 0)
+	{
 		child_process(shell, cmd, *prev_pipe, pipe_fd);
-	
+	}
+	// handle_signal();
+	// printf("pid id: %d\n", cmd->pid);
 	close_all_redirs_fds(cmd->redirs);
 	if (*prev_pipe != -1)
 		close(*prev_pipe);
@@ -191,7 +225,7 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 	return (1);
 }
 
-int	ft_wait_child(t_cmd *cmd, t_app *shell)
+int	ft_wait_child(t_cmd *cmd, t_app *shell, int *print_sig_error)
 {
 	int		status;
 	pid_t	child_pid;
@@ -207,6 +241,20 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell)
 		shell->last_exit_code = WEXITSTATUS(status);
 		return (SUCCESS);
 	}
+	else if (WIFSIGNALED(status))
+	{
+		shell->last_exit_code = 128 + WTERMSIG(status);
+		if (WTERMSIG(status) == SIGQUIT)
+			*print_sig_error = 1;
+		t_cmd *temp_cmd = shell->cmd;
+		while (temp_cmd)
+		{
+			if (kill(temp_cmd->pid, 0) == 0)
+				kill(temp_cmd->pid, SIGINT);
+			temp_cmd = temp_cmd->next;
+		}
+		return (SUCCESS);
+	}
 	return (SUCCESS);
 }
 
@@ -215,13 +263,21 @@ int ft_wait_children(t_app *shell)
 	t_cmd	*cmd;
 
 	cmd = shell->cmd;
+	int print_sig_error = 0;
 	while (cmd != NULL)
 	{
 		if (cmd->pid != -1)
 		{
-			ft_wait_child(cmd, shell);
+			ft_wait_child(cmd, shell, &print_sig_error); //todo return int
 		}
 		cmd = cmd->next;
+	}
+	if (print_sig_error)
+	{
+		if (shell->last_exit_code == 131)
+		{
+			printf("Quit (core dumped)\n");
+		}
 	}
 	return (1);
 }
@@ -300,6 +356,8 @@ int	ft_execute(t_app *shell)
 			}
 			if (redir->type == HEREDOC)
 			{
+				handle_heredoc_signal();
+
 				char *heredoc_num = ft_itoa(shell->heredock_num);
 				if (!heredoc_num)
 				{
@@ -381,6 +439,8 @@ int	ft_execute(t_app *shell)
 					shell->last_exit_code = 1;
 				}
 				shell->heredock_num++;
+				handle_signal();
+
 			}
 			redir = redir->next;
 		}
@@ -446,13 +506,15 @@ int	ft_execute(t_app *shell)
 	}
 	else
 	{
+		handle_child_signal();
 		while (cmd != NULL)
 		{
 			ft_execute_command(shell, cmd, &prev_pipe);
 			cmd = cmd->next;
 		}
 	}
-	ft_wait_children(shell);
+	ft_wait_children(shell); // todo return 0 or 1
+	handle_signal();
 	if (prev_pipe != -1)
 		close(prev_pipe);
 	close_all_cmnds_fds(shell->cmd);

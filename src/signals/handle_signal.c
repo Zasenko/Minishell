@@ -14,25 +14,72 @@
 
 static int g_signal = 0;
 
+void signal_new_line(void)
+{
+    printf("\n"); 
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay(); 
+}
+
 void signal_hendler(int sig)
 {
-    if (sig == SIGINT)  
+    if (sig == SIGINT)
     {
-        g_signal = SIGINT;  
-        printf("\n"); 
-        rl_on_new_line();
-        rl_replace_line("", 0);
-        rl_redisplay(); 
+        g_signal = SIGINT;
+        signal_new_line();
     }
-    else if (sig == SIGQUIT) 
-    {
-        g_signal = SIGQUIT;  
-        printf("Quit\n");  
-    }
+    // else if (sig == SIGQUIT)
+    // {
+    //     g_signal = SIGQUIT;
+    //     printf("exit\n");
+    // }
 }
 
 void handle_signal(void)
 {
-    signal(SIGINT, signal_hendler);
-    signal(SIGQUIT, signal_hendler);
+    signal(SIGINT, &signal_hendler);
+    signal(SIGQUIT, &signal_hendler);
+}
+
+void signal_hendler_in_child(int sig)
+{
+    if (sig == SIGINT)
+    {
+        g_signal = SIGINT;  
+        ft_putstr_fd("\n", 1);
+    }
+    // else if (sig == SIGQUIT)
+    // {
+    //     g_signal = SIGQUIT;  
+    //     ft_putstr_fd("Quit", 1);
+    // }
+}
+
+
+void handle_child_signal(void)
+{
+    signal(SIGINT, &signal_hendler_in_child);
+    signal(SIGQUIT, &signal_hendler_in_child);
+}
+
+void signal_hendler_in_heredoc(int sig)
+{
+    if (sig == SIGINT)
+    {
+        g_signal = SIGINT;  
+        ft_putstr_fd("HEREDOC SIGINT\n", 1);
+    }
+    else if (sig == SIGQUIT)
+    {
+        g_signal = SIGQUIT;  
+        ft_putstr_fd("HEREDOC SIGQUIT\n", 1);
+    }
+}
+
+void handle_heredoc_signal(void)
+{
+    // g_signal = 0;
+    signal(SIGINT, &signal_hendler_in_heredoc);
+    signal(SIGQUIT, &signal_hendler_in_heredoc);
 }
