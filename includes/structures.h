@@ -77,6 +77,7 @@ typedef struct s_app
     struct s_token  *tokens;
     bool            is_valid_syntax;
     int             heredock_num;
+    // bool            close_heredoc;
 } t_app;
 
 #endif

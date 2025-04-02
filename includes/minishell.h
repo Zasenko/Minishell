@@ -92,5 +92,7 @@ void    skip_quotes(char *input, int *i, char quote);
 char    *get_word_from_quotes(char *input);
 void handle_child_signal(void);
 void handle_heredoc_signal(void);
+void check_signal_exit(t_app *shell);
+int signal_last_code(void);
 
 #endif

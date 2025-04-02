@@ -14,6 +14,32 @@
 
 static int g_signal = 0;
 
+void check_signal_exit(t_app *shell)
+{
+    if (g_signal != 0)
+    {
+        printf("exit\n");
+        free_list(shell);
+        exit(0);
+    }
+}
+
+int signal_last_code(void)
+{
+
+    return (g_signal);
+}
+
+// void check_signal_heredoc_exit(t_app *shell)
+// {
+//     if (g_signal != 0)
+//     {
+//         printf("exit\n");
+//         free_list(shell);
+//         exit(0);
+//     }
+// }
+
 void signal_new_line(void)
 {
     printf("\n"); 
@@ -29,15 +55,15 @@ void signal_hendler(int sig)
         g_signal = SIGINT;
         signal_new_line();
     }
-    // else if (sig == SIGQUIT)
-    // {
-    //     g_signal = SIGQUIT;
-    //     printf("exit\n");
-    // }
+    else if (sig == SIGQUIT)
+    {
+        g_signal = SIGQUIT;
+    }
 }
 
 void handle_signal(void)
 {
+    g_signal = 0;
     signal(SIGINT, &signal_hendler);
     signal(SIGQUIT, &signal_hendler);
 }
@@ -49,37 +75,38 @@ void signal_hendler_in_child(int sig)
         g_signal = SIGINT;  
         ft_putstr_fd("\n", 1);
     }
-    // else if (sig == SIGQUIT)
-    // {
-    //     g_signal = SIGQUIT;  
-    //     ft_putstr_fd("Quit", 1);
-    // }
+    else if (sig == SIGQUIT)
+    {
+        g_signal = SIGQUIT;  
+    }
 }
-
 
 void handle_child_signal(void)
 {
+    g_signal = 0;
     signal(SIGINT, &signal_hendler_in_child);
     signal(SIGQUIT, &signal_hendler_in_child);
 }
 
 void signal_hendler_in_heredoc(int sig)
 {
+    // ft_putstr_fd("signal_hendler_in_heredoc: ", 0);
+    // ft_putnbr_fd(sig, 0);
+    // ft_putstr_fd("\n", 0);
     if (sig == SIGINT)
     {
         g_signal = SIGINT;  
-        ft_putstr_fd("HEREDOC SIGINT\n", 1);
-    }
-    else if (sig == SIGQUIT)
-    {
-        g_signal = SIGQUIT;  
-        ft_putstr_fd("HEREDOC SIGQUIT\n", 1);
+        ft_putstr_fd("[-SIGINT-\n]", 1);
+        printf("\n"); 
+        rl_on_new_line();
+        rl_replace_line("", 0);
+        rl_redisplay(); 
     }
 }
 
 void handle_heredoc_signal(void)
 {
-    // g_signal = 0;
-    signal(SIGINT, &signal_hendler_in_heredoc);
-    signal(SIGQUIT, &signal_hendler_in_heredoc);
+    g_signal = 0;
+    signal(SIGINT, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
 }

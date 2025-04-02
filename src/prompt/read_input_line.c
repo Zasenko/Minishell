@@ -113,9 +113,7 @@ void read_input_line(t_app *shell)
         }
         else 
         {
-            // printf("exit\n");
-            // free_list(shell);
-            // exit(0);
+            check_signal_exit(shell);
             break;
         }
 	}

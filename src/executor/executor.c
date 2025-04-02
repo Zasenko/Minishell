@@ -12,6 +12,154 @@
 
 #include "../../includes/minishell.h"
 
+int	close_all_redirs_fds2(t_redir *redir)
+{
+	t_redir	*temp;
+
+	temp = redir;
+	if (!temp)
+		return (0);
+	while (temp != NULL)
+	{
+		if (temp->fd != -1)
+		{
+			close(temp->fd);
+		}
+		temp = temp->next;
+	}
+	return (1);
+}
+
+void free_cmd_list2(t_cmd **cmd)
+{
+    t_cmd *temp;
+
+    if (!cmd)
+        return ;
+    while (*cmd != NULL)
+    {
+        temp = (*cmd)->next;
+        if ((*cmd)->args)
+        {
+            free_2d_array((*cmd)->args);
+            (*cmd)->args = NULL;
+        }
+        close_all_redirs_fds2((*cmd)->redirs);
+        free(*cmd);
+        *cmd = temp;
+    }
+    free(*cmd);
+    *cmd = NULL;
+}
+
+
+void free_list2(t_app *shell)
+{
+    if (!shell)
+        return ;
+    // if (shell->path)
+    //     free_2d_array(shell->path);
+    if (shell->env_var)
+    {
+        free_2d_array(shell->env_var);
+        shell->env_var = NULL;
+    }
+    if (shell->user)
+    {
+        free(shell->user);
+        shell->user = NULL;
+    }
+    if (shell->name) 
+    {
+        free(shell->name);
+        shell->name = NULL;
+    }
+    if (shell->pwd)
+    {
+        free(shell->pwd);
+        shell->pwd = NULL;
+    }
+    if (shell->prompt)
+    {
+        free(shell->prompt);
+        shell->prompt = NULL;
+    }
+    free_cmd_list2(&shell->cmd);
+    free_token_list(&shell->tokens); 
+}
+
+void child_heredock(t_app *shell, t_redir *redir, int fd)
+{
+	signal(SIGINT, SIG_DFL);
+    // signal(SIGQUIT, SIG_DFL);
+
+	char *input = readline("> ");
+
+	if (!input || signal_last_code() != 0)
+	{
+		if (input)
+			free(input);
+
+		free_list2(shell);
+		close(redir->fd);
+		close(fd);
+		exit(3);
+	}
+	if (!ft_strncmp(redir->stop_word, input, ft_strlen(input)))
+	{
+		free(input);
+		free_list2(shell);
+		close(redir->fd);
+		close(fd);
+		exit(55);
+	}
+	if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
+	{
+		char *dest = ft_strdup("");
+		char *temp;
+		char *expanded;
+		int j = 0;
+		int start;
+		while (input[j])
+		{
+			start = j; 
+			while (input[j] && input[j] != '$')
+				j++;
+			if (start != j)
+			{
+				temp = ft_strjoin(dest, ft_substr(input, start, j - start));
+				free(dest);
+				dest = temp;
+			}
+			if (input[j] == '$')
+			{
+				expanded = expand_words(shell, input, &j);
+				temp = ft_strjoin(dest, expanded);
+				free(dest);
+				dest = temp;
+			}
+		}
+		free(input);
+		input = dest;			
+	}
+
+	char *temp = ft_strjoin(input, "\n");
+	free(input);
+	if (!temp)
+	{
+		free_list2(shell);
+		close(redir->fd);
+		close(fd);
+		exit(EXIT_FAILURE);
+			//todo
+	}
+	write(redir->fd, temp, ft_strlen(temp));
+	free(temp);
+	free_list2(shell);
+	close(redir->fd);
+	exit(EXIT_SUCCESS);
+}
+
 void	ft_putfullstr_fd(char *s, int fd)
 {
 	if (!s || !(fd >= 0))
@@ -160,8 +308,6 @@ int handle_execve_error(t_cmd *cmd)
     return (127);
 }
 
-
-
 void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 {
 	int exit_status;
@@ -298,19 +444,219 @@ int	ft_execute(t_app *shell)
 	int		cmd_count;
 	int		prev_pipe;
 
-	cmd = shell->cmd;
-
+	
 	cmd_count = cmd_len(shell->cmd);
 	prev_pipe = -1;
 	if (!cmd_count || !shell->is_valid_syntax)
 		return (0);
+
+	//HEREDOCs
+	cmd = shell->cmd;
+	
 	while (cmd != NULL)
 	{
 
 		t_redir *redir = cmd->redirs;
 		while (redir)
 		{
+			// shell->close_heredoc = true;
+			if (redir->type == HEREDOC)
+			{
+				char *heredoc_num = ft_itoa(shell->heredock_num);
+				if (!heredoc_num)
+				{
+					//todo error
+					
+				}
+				redir->value = ft_strjoin("HEREDOCK_", heredoc_num);
+				if (!redir->value)
+				{
+					free(heredoc_num);
+					//todo error
+				}
+				free(heredoc_num);
 
+				redir->fd = open(redir->value, O_RDWR | O_CREAT | O_APPEND, 0644);
+				if (redir->fd < 0)
+				{
+					print_fd_err(redir->value, strerror(errno));
+					shell->last_exit_code = 1;
+					break;
+				}
+				handle_heredoc_signal();
+
+
+				while (1)
+				{
+					// int signal_code = signal_last_code();	
+					// printf("\n --- %d --- \n", signal_code);
+					// if (signal_code == SIGQUIT)
+					// {
+					// 	printf("--- SIGQUIT --- \n");
+					// 	ft_putstr_fd("bash: warning: here-document delimited by end-of-file (wanted `", 2);
+					// 	ft_putstr_fd(redir->stop_word, 2);	
+					// 	ft_putstr_fd("')\n", 2);
+					// 	break;
+					// }
+					// else if (signal_code == SIGINT)
+					// {
+					// 	printf("--- SIGINT --- \n");
+					// 	shell->last_exit_code = 128 + WTERMSIG(signal_code);
+					// 	handle_signal();
+					// 	return 0;
+					// }
+									
+					pid_t heredoc_pid = fork();
+
+				 	int fd = dup(0);
+					if (heredoc_pid == 0)
+					{
+						child_heredock(shell, redir, fd);
+					}
+					close(fd);
+					int		status;
+					pid_t	child_pid;
+				
+					child_pid = waitpid(heredoc_pid, &status, 0);
+					if (child_pid == -1)
+					{
+						shell->last_exit_code = errno;
+						return (strerror(errno), errno);
+					}
+					if (WIFEXITED(status))
+					{
+						// printf("\n --- WEXITSTATUS(status): %d --- \n", WEXITSTATUS(status));
+						if (WEXITSTATUS(status) == 55)
+						{
+							break;
+						}
+						else if (WEXITSTATUS(status) == 3)
+						{
+							break;
+						}
+						
+						else {
+							shell->last_exit_code = WEXITSTATUS(status);
+							continue;;
+						}
+						// shell->last_exit_code = WEXITSTATUS(status);
+						// return (SUCCESS);
+					}
+					else if (WIFSIGNALED(status))
+					{
+						shell->last_exit_code = 128 + WTERMSIG(status);
+						printf("\n");
+						// printf("\n --- WTERMSIG(status): %d --- \n", WTERMSIG(status));
+						return 0;
+					}
+
+				}
+				
+				// while(1)
+				// {
+				// 	ft_putstr_fd("> ", 1);
+				// 	int fd = dup(0);
+				// 	char *input = get_next_line(fd);
+				// 	close(fd);
+				// 	ft_putstr_fd("{", 2);
+				// 	ft_putstr_fd(input, 2);
+				// 	ft_putstr_fd("}\n", 2);
+
+				// 	if (!ft_strncmp(redir->stop_word, input, ft_strlen(input)))
+				// 	{
+				// 		ft_putstr_fd("AAAAA\n", 1);
+				// 		free(input);
+				// 		break;
+				// 	}
+				// 	if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
+				// 	{
+				// 		// int test_p = 0;
+				// 		char *dest = ft_strdup("");
+				// 		char *temp;
+				// 		char *expanded;
+				// 		int j = 0;
+				// 		int start;
+				// 		while (input[j])
+				// 		{
+				// 			start = j; 
+				// 			while (input[j] && input[j] != '$')
+				// 				j++;
+				// 			if (start != j)
+				// 			{
+				// 				temp = ft_strjoin(dest, ft_substr(input, start, j - start));
+				// 				free(dest);
+				// 				dest = temp;
+				// 			}
+				// 			if (input[j] == '$')
+				// 			{
+				// 				expanded = expand_words(shell, input, &j);
+				// 				temp = ft_strjoin(dest, expanded);
+				// 				free(dest);
+				// 				dest = temp;
+				// 			}
+				// 		}
+				// 		free(input);
+				// 		input = dest;			
+				// 	}
+
+				// 	char *temp = ft_strjoin(input, "\n");
+				// 	free(input);
+				// 	if (!temp)
+				// 	{
+				// 			//todo
+				// 	}
+				// 	write(redir->fd, temp, ft_strlen(temp));
+				// 	free(temp);
+				// 	ft_putstr_fd("\n", 1);
+				// }
+				
+	
+				handle_signal();
+				close(redir->fd);
+
+				// int signal_code2 = signal_last_code();
+				// printf("\n ============== %d ================ \n", signal_code2);
+
+				// if (signal_code2 == SIGQUIT)
+				// {
+				// 	printf("--- SIGQUIT --- \n");
+				// 	ft_putstr_fd("bash: warning: here-document delimited by end-of-file (wanted `", 2);
+				// 	ft_putstr_fd(redir->stop_word, 2);	
+				// 	ft_putstr_fd("')\n", 2);
+				// 	break;	
+				// }
+				// else if (signal_code2 == SIGINT)
+				// {
+				// 	printf("--- SIGINT --- \n");
+				// 	shell->last_exit_code = 128 + WTERMSIG(signal_code2);
+				// 	handle_signal();
+				// 	return 0;
+				// }
+
+
+				redir->fd = open(redir->value, O_RDONLY, 0644);
+				if (redir->fd < 0)
+				{
+					print_fd_err(redir->value, strerror(errno));
+					shell->last_exit_code = 1;
+				}
+				
+				shell->heredock_num++;
+			}
+			redir = redir->next;
+		}
+
+		cmd = cmd->next;
+	}
+	
+	//REDIR
+	cmd = shell->cmd;
+	while (cmd != NULL)
+	{
+
+		t_redir *redir = cmd->redirs;
+		while (redir)
+		{
 			if (redir->type == REDIR_IN)
 			{
 				int fd_in = open(redir->value, O_RDONLY);
@@ -354,104 +700,13 @@ int	ft_execute(t_app *shell)
 					redir->fd = fd_append;
 				}
 			}
-			if (redir->type == HEREDOC)
-			{
-				handle_heredoc_signal();
-
-				char *heredoc_num = ft_itoa(shell->heredock_num);
-				if (!heredoc_num)
-				{
-					//todo error
-				}
-				redir->value = ft_strjoin("HEREDOCK_", heredoc_num);
-				if (!redir->value)
-				{
-					free(heredoc_num);
-					//todo error
-				}
-				free(heredoc_num);
-
-				redir->fd = open(redir->value, O_RDWR | O_CREAT | O_APPEND, 0644);
-				if (redir->fd < 0)
-				{
-					print_fd_err(redir->value, strerror(errno));
-					shell->last_exit_code = 1;
-					break;
-				}
-				while (1)
-				{
-					char *input = readline("> ");
-					if (!input)
-					{
-						//todo
-					}
-					if (!ft_strncmp(redir->stop_word, input, ft_strlen(input)))
-					{
-						free(input);
-						break;
-					}
-					if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
-					{
-						// int test_p = 0;
-						char *dest = ft_strdup("");
-						char *temp;
-						char *expanded;
-						int j = 0;
-						int start;
-						while (input[j])
-						{
-							start = j; 
-							while (input[j] && input[j] != '$')
-								j++;
-							if (start != j)
-							{
-								temp = ft_strjoin(dest, ft_substr(input, start, j - start));
-								free(dest);
-								dest = temp;
-							}
-							if (input[j] == '$')
-							{
-								expanded = expand_words(shell, input, &j);
-								temp = ft_strjoin(dest, expanded);
-								free(dest);
-								dest = temp;
-							}
-						}
-						free(input);
-						input = dest;			
-					}
-
-					char *temp = ft_strjoin(input, "\n");
-					free(input);
-					if (!temp)
-					{
-							//todo
-					}
-					write(redir->fd, temp, ft_strlen(temp));
-					free(temp);
-				}
-				close(redir->fd);
-
-				redir->fd = open(redir->value, O_RDONLY, 0644);
-				if (redir->fd < 0)
-				{
-					print_fd_err(redir->value, strerror(errno));
-					shell->last_exit_code = 1;
-				}
-				shell->heredock_num++;
-				handle_signal();
-
-			}
 			redir = redir->next;
 		}
-
 		cmd = cmd->next;
 	}
+	
+	// EXE
 	cmd = shell->cmd;
-
-	// print_cmd(&shell);
-
-
 	if (!cmd || !cmd->args)
 	{
 		return 0;
