@@ -486,10 +486,10 @@ int	ft_execute(t_app *shell)
 				{
 					
 					int signal_code = signal_last_code();	
-					printf("\n --------START WITH: %d -------- \n", signal_code);
+					// printf("\n --------START WITH: %d -------- \n", signal_code);
 					if (signal_code == SIGQUIT)
 					{
-						printf("--- START SIGQUIT --- \n");
+						// printf("--- START SIGQUIT --- \n");
 						ft_putstr_fd("bash: warning: here-document delimited by end-of-file (wanted `", 2);
 						ft_putstr_fd(redir->stop_word, 2);	
 						ft_putstr_fd("')\n", 2);
@@ -497,7 +497,7 @@ int	ft_execute(t_app *shell)
 					}
 					else if (signal_code == SIGINT)
 					{
-						printf("--- START SIGINT --- \n");
+						// printf("--- START SIGINT --- \n");
 						shell->last_exit_code = 128 + WTERMSIG(signal_code);
 						handle_signal();
 						return 0;
@@ -505,17 +505,17 @@ int	ft_execute(t_app *shell)
 					char *input = readline("> ");
 					if (!input)
 					{
-						printf("-- NO INPUT: %d --\n", signal_last_code());
+						// printf("-- NO INPUT: %d --\n", signal_last_code());
 						if (signal_last_code() == 2)
 						{
 							int df_0 = open("/dev/tty", O_RDONLY);
 							if (df_0 == 0)
 							{
-								printf("open new fd 0\n");
+								// printf("open new fd 0\n");
 							}
 							if (df_0 < 0)
 							{
-								printf("open new fd 0 - ERROR\n");
+								// printf("open new fd 0 - ERROR\n");
 							}
 							return 0;
 						}
@@ -524,10 +524,10 @@ int	ft_execute(t_app *shell)
 					
 					if (!ft_strcmp(redir->stop_word, input))
 					{
-						printf("-- STOP WORD found: %s, input: %s--\n", redir->stop_word, input);
+						// printf("-- STOP WORD found: %s, input: %s--\n", redir->stop_word, input);
 						break;
 					}
-					
+
 
 					if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
 					{

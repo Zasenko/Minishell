@@ -51,12 +51,11 @@ void signal_new_line(void)
 
 void signal_hendler(int sig)
 {
-    printf("MAIN SIG: %d\n", sig);
+    // printf("MAIN SIG: %d\n", sig);
     if (sig == SIGINT)
     {
         g_signal = SIGINT;
         signal_new_line();
-
     }
     else if (sig == SIGQUIT)
     {
@@ -93,18 +92,16 @@ void handle_child_signal(void)
 
 void signal_hendler_in_heredoc(int sig)
 {
-    printf("signal_hendler_in_heredoc: %d\n", g_signal);
+    // printf("signal_hendler_in_heredoc: %d\n", g_signal);
     if (sig == SIGINT)
     {
         g_signal = SIGINT;  
-        ft_putstr_fd("[-SIGINT-\n]", 1);
         printf("\n");
         close(0);
     }
     if (sig == SIGQUIT)
     {
         g_signal = SIGQUIT;  
-        ft_putstr_fd("[-SIGQUIT-\n]", 1);
         printf("\n"); 
         rl_on_new_line();
         rl_replace_line("", 0);
