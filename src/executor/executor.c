@@ -437,6 +437,147 @@ void print_fd_err(char *val, char *err_msg)
 	ft_putstr_fd("\n", 2);
 }
 
+int heredoc_handler(t_app *shell, t_redir *redir)
+{
+	int signal_code;
+	signal_code = signal_last_code();	
+	char *input = readline("> ");
+	if (!input)
+	{
+		if (signal_last_code() == 2)
+		{
+			int df_0 = open("/dev/tty", O_RDONLY);
+			if (df_0 < 0)
+			{
+				return -1;
+			}
+			return 2;
+		}
+		else
+		{
+			ft_putstr_fd("warning: here-document delimited by end-of-file (wanted `", 2);
+			ft_putstr_fd(redir->stop_word, 2);
+			ft_putstr_fd("')\n", 2);
+			return (0);
+		}
+	}
+	
+	if (!ft_strcmp(redir->stop_word, input))
+	{
+		return (0);
+	}
+	if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
+	{
+		char *dest = ft_strdup("");
+		char *temp;
+		char *expanded;
+		int j = 0;
+		int start;
+		while (input[j])
+		{
+			start = j; 
+			while (input[j] && input[j] != '$')
+				j++;
+			if (start != j)
+			{
+				temp = ft_strjoin(dest, ft_substr(input, start, j - start));
+				free(dest);
+				dest = temp;
+			}
+			if (input[j] == '$')
+			{
+				expanded = expand_words(shell, input, &j);
+				temp = ft_strjoin(dest, expanded);
+				free(dest);
+				dest = temp;
+			}
+		}
+		free(input);
+		input = dest;			
+	}
+	char *temp = ft_strjoin(input, "\n");
+	free(input);
+	if (!temp)
+	{
+		return (-1);
+		//todo
+	}
+	write(redir->fd, temp, ft_strlen(temp));
+	return (1);
+}
+
+int heredocs_maker(t_app *shell, t_redir *redir)
+{
+	char *heredoc_num = ft_itoa(shell->heredock_num);
+	if (!heredoc_num)
+	{
+		// todo: error, exit
+	}
+	redir->value = ft_strjoin("HEREDOCK_", heredoc_num);
+	if (!redir->value)
+	{
+		free(heredoc_num);
+		// todo: error, exit
+	}
+	free(heredoc_num);
+	
+	//todo: check if file exist!!!
+
+	redir->fd = open(redir->value, O_RDWR | O_CREAT | O_APPEND, 0644);
+	if (redir->fd < 0)
+	{
+		print_fd_err(redir->value, strerror(errno));
+		shell->last_exit_code = 1;
+		return (0);
+	}
+
+	handle_heredoc_signal();
+	while (1)
+	{
+		int heredoc_result = heredoc_handler(shell, redir);
+		if (heredoc_result == -1)
+			return -1;
+		if (heredoc_result == 0)
+			break;
+		if (heredoc_result == 2)
+		{
+			return (2);
+		}
+	}
+	handle_signal();
+	close(redir->fd);
+	redir->fd = open(redir->value, O_RDONLY, 0644);
+	if (redir->fd < 0)
+	{
+		//todo?
+		print_fd_err(redir->value, strerror(errno));
+		shell->last_exit_code = 1;
+	}
+	shell->heredock_num++;
+	return 1;
+}
+//return 0; break
+
+int heredocs_checker(t_app *shell, t_redir *redir)
+{
+	t_redir *temp_redir;
+
+	temp_redir = redir;
+	while (temp_redir)
+	{
+		if (temp_redir->type == HEREDOC)
+		{
+			int heredoc_result = heredocs_maker(shell, temp_redir);
+			if (heredoc_result == 0)
+				break;
+			if (heredoc_result == 2)
+				return (2);
+		}
+		temp_redir = temp_redir->next;
+	}
+	return (1);
+}
+
 int	ft_execute(t_app *shell)
 {
 	t_cmd	*cmd;
@@ -452,137 +593,17 @@ int	ft_execute(t_app *shell)
 	//HEREDOCs
 	cmd = shell->cmd;
 	
-	while (cmd != NULL)
+	while (cmd)
 	{
-		t_redir *redir = cmd->redirs;
-		while (redir)
-		{
-			if (redir->type == HEREDOC)
-			{
-				char *heredoc_num = ft_itoa(shell->heredock_num);
-				if (!heredoc_num)
-				{
-					//todo error
-				}
-				redir->value = ft_strjoin("HEREDOCK_", heredoc_num);
-				if (!redir->value)
-				{
-					free(heredoc_num);
-					//todo error
-				}
-				free(heredoc_num);
-				
-				//check if file exist!!!
-				redir->fd = open(redir->value, O_RDWR | O_CREAT | O_APPEND, 0644);
-				if (redir->fd < 0)
-				{
-					print_fd_err(redir->value, strerror(errno));
-					shell->last_exit_code = 1;
-					break;
-				}
-
-				handle_heredoc_signal();
-				while (1)
-				{
-					
-					int signal_code = signal_last_code();	
-					// printf("\n --------START WITH: %d -------- \n", signal_code);
-					if (signal_code == SIGQUIT)
-					{
-						// printf("--- START SIGQUIT --- \n");
-						ft_putstr_fd("bash: warning: here-document delimited by end-of-file (wanted `", 2);
-						ft_putstr_fd(redir->stop_word, 2);	
-						ft_putstr_fd("')\n", 2);
-						break;
-					}
-					else if (signal_code == SIGINT)
-					{
-						// printf("--- START SIGINT --- \n");
-						shell->last_exit_code = 128 + WTERMSIG(signal_code);
-						handle_signal();
-						return 0;
-					}
-					char *input = readline("> ");
-					if (!input)
-					{
-						// printf("-- NO INPUT: %d --\n", signal_last_code());
-						if (signal_last_code() == 2)
-						{
-							int df_0 = open("/dev/tty", O_RDONLY);
-							if (df_0 == 0)
-							{
-								// printf("open new fd 0\n");
-							}
-							if (df_0 < 0)
-							{
-								// printf("open new fd 0 - ERROR\n");
-							}
-							return 0;
-						}
-						break;
-					}
-					
-					if (!ft_strcmp(redir->stop_word, input))
-					{
-						// printf("-- STOP WORD found: %s, input: %s--\n", redir->stop_word, input);
-						break;
-					}
-
-
-					if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
-					{
-						char *dest = ft_strdup("");
-						char *temp;
-						char *expanded;
-						int j = 0;
-						int start;
-						while (input[j])
-						{
-							start = j; 
-							while (input[j] && input[j] != '$')
-								j++;
-							if (start != j)
-							{
-								temp = ft_strjoin(dest, ft_substr(input, start, j - start));
-								free(dest);
-								dest = temp;
-							}
-							if (input[j] == '$')
-							{
-								expanded = expand_words(shell, input, &j);
-								temp = ft_strjoin(dest, expanded);
-								free(dest);
-								dest = temp;
-							}
-						}
-						free(input);
-						input = dest;			
-					}
-					char *temp = ft_strjoin(input, "\n");
-					free(input);
-					if (!temp)
-					{
-						//todo
-					}
-					write(redir->fd, temp, ft_strlen(temp));
-				}
-				handle_signal();
-				close(redir->fd);
-				redir->fd = open(redir->value, O_RDONLY, 0644);
-				if (redir->fd < 0)
-				{
-					print_fd_err(redir->value, strerror(errno));
-					shell->last_exit_code = 1;
-				}
-				shell->heredock_num++;
-			}
-			redir = redir->next;
-		}
-
+		int heredoc_checker_result = heredocs_checker(shell, cmd->redirs);
+		if (heredoc_checker_result == -1)
+			return -1;
+		else if (heredoc_checker_result == 0)
+			break;
+		else if (heredoc_checker_result == 2)
+			break;
 		cmd = cmd->next;
 	}
-
-
 	
 	//REDIR
 	cmd = shell->cmd;

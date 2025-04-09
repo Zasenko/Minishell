@@ -95,8 +95,8 @@ void signal_hendler_in_heredoc(int sig)
     // printf("signal_hendler_in_heredoc: %d\n", g_signal);
     if (sig == SIGINT)
     {
-        g_signal = SIGINT;  
-        printf("\n");
+        g_signal = SIGINT;
+        printf("\n");;
         close(0);
     }
     if (sig == SIGQUIT)
