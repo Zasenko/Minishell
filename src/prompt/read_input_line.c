@@ -95,7 +95,7 @@ void read_input_line(t_app *shell)
         return ;
     while (1)
     {
-        // handle_signal();
+        handle_signal();
         build_env_into_2d_arr(shell);
         create_prompt_path(shell);
 
@@ -113,9 +113,10 @@ void read_input_line(t_app *shell)
         }
         else 
         {
-            check_signal_exit(shell);
+            // check_signal_exit(shell);
             break;
         }
 	}
+    //TODO rl_clear_history!!!!!!!!
 	exit_with_error(shell, shell->last_exit_code, NULL);
 }

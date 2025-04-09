@@ -16,12 +16,13 @@ static int g_signal = 0;
 
 void check_signal_exit(t_app *shell)
 {
-    if (g_signal != 0)
-    {
+    // printf("g_signal: %d", g_signal);
+    // if (g_signal == 0 )
+    // {
         printf("exit\n");
         free_list(shell);
         exit(0);
-    }
+    // }
 }
 
 int signal_last_code(void)
@@ -50,10 +51,12 @@ void signal_new_line(void)
 
 void signal_hendler(int sig)
 {
+    printf("MAIN SIG: %d\n", sig);
     if (sig == SIGINT)
     {
         g_signal = SIGINT;
         signal_new_line();
+
     }
     else if (sig == SIGQUIT)
     {
@@ -77,7 +80,7 @@ void signal_hendler_in_child(int sig)
     }
     else if (sig == SIGQUIT)
     {
-        g_signal = SIGQUIT;  
+        g_signal = SIGQUIT;
     }
 }
 
@@ -90,13 +93,18 @@ void handle_child_signal(void)
 
 void signal_hendler_in_heredoc(int sig)
 {
-    // ft_putstr_fd("signal_hendler_in_heredoc: ", 0);
-    // ft_putnbr_fd(sig, 0);
-    // ft_putstr_fd("\n", 0);
+    printf("signal_hendler_in_heredoc: %d\n", g_signal);
     if (sig == SIGINT)
     {
         g_signal = SIGINT;  
         ft_putstr_fd("[-SIGINT-\n]", 1);
+        printf("\n");
+        close(0);
+    }
+    if (sig == SIGQUIT)
+    {
+        g_signal = SIGQUIT;  
+        ft_putstr_fd("[-SIGQUIT-\n]", 1);
         printf("\n"); 
         rl_on_new_line();
         rl_replace_line("", 0);
@@ -107,6 +115,6 @@ void signal_hendler_in_heredoc(int sig)
 void handle_heredoc_signal(void)
 {
     g_signal = 0;
-    signal(SIGINT, SIG_IGN);
+    signal(SIGINT, &signal_hendler_in_heredoc);
     signal(SIGQUIT, SIG_IGN);
 }

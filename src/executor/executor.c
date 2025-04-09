@@ -52,7 +52,6 @@ void free_cmd_list2(t_cmd **cmd)
     *cmd = NULL;
 }
 
-
 void free_list2(t_app *shell)
 {
     if (!shell)
@@ -95,7 +94,7 @@ void child_heredock(t_app *shell, t_redir *redir, int fd)
 
 	char *input = readline("> ");
 
-	if (!input || signal_last_code() != 0)
+	if (!input)
 	{
 		if (input)
 			free(input);
@@ -455,18 +454,15 @@ int	ft_execute(t_app *shell)
 	
 	while (cmd != NULL)
 	{
-
 		t_redir *redir = cmd->redirs;
 		while (redir)
 		{
-			// shell->close_heredoc = true;
 			if (redir->type == HEREDOC)
 			{
 				char *heredoc_num = ft_itoa(shell->heredock_num);
 				if (!heredoc_num)
 				{
 					//todo error
-					
 				}
 				redir->value = ft_strjoin("HEREDOCK_", heredoc_num);
 				if (!redir->value)
@@ -475,7 +471,8 @@ int	ft_execute(t_app *shell)
 					//todo error
 				}
 				free(heredoc_num);
-
+				
+				//check if file exist!!!
 				redir->fd = open(redir->value, O_RDWR | O_CREAT | O_APPEND, 0644);
 				if (redir->fd < 0)
 				{
@@ -483,164 +480,100 @@ int	ft_execute(t_app *shell)
 					shell->last_exit_code = 1;
 					break;
 				}
+
 				handle_heredoc_signal();
-
-
 				while (1)
 				{
-					// int signal_code = signal_last_code();	
-					// printf("\n --- %d --- \n", signal_code);
-					// if (signal_code == SIGQUIT)
-					// {
-					// 	printf("--- SIGQUIT --- \n");
-					// 	ft_putstr_fd("bash: warning: here-document delimited by end-of-file (wanted `", 2);
-					// 	ft_putstr_fd(redir->stop_word, 2);	
-					// 	ft_putstr_fd("')\n", 2);
-					// 	break;
-					// }
-					// else if (signal_code == SIGINT)
-					// {
-					// 	printf("--- SIGINT --- \n");
-					// 	shell->last_exit_code = 128 + WTERMSIG(signal_code);
-					// 	handle_signal();
-					// 	return 0;
-					// }
-									
-					pid_t heredoc_pid = fork();
-
-				 	int fd = dup(0);
-					if (heredoc_pid == 0)
+					
+					int signal_code = signal_last_code();	
+					printf("\n --------START WITH: %d -------- \n", signal_code);
+					if (signal_code == SIGQUIT)
 					{
-						child_heredock(shell, redir, fd);
+						printf("--- START SIGQUIT --- \n");
+						ft_putstr_fd("bash: warning: here-document delimited by end-of-file (wanted `", 2);
+						ft_putstr_fd(redir->stop_word, 2);	
+						ft_putstr_fd("')\n", 2);
+						break;
 					}
-					close(fd);
-					int		status;
-					pid_t	child_pid;
-				
-					child_pid = waitpid(heredoc_pid, &status, 0);
-					if (child_pid == -1)
+					else if (signal_code == SIGINT)
 					{
-						shell->last_exit_code = errno;
-						return (strerror(errno), errno);
-					}
-					if (WIFEXITED(status))
-					{
-						// printf("\n --- WEXITSTATUS(status): %d --- \n", WEXITSTATUS(status));
-						if (WEXITSTATUS(status) == 55)
-						{
-							break;
-						}
-						else if (WEXITSTATUS(status) == 3)
-						{
-							break;
-						}
-						
-						else {
-							shell->last_exit_code = WEXITSTATUS(status);
-							continue;;
-						}
-						// shell->last_exit_code = WEXITSTATUS(status);
-						// return (SUCCESS);
-					}
-					else if (WIFSIGNALED(status))
-					{
-						shell->last_exit_code = 128 + WTERMSIG(status);
-						printf("\n");
-						// printf("\n --- WTERMSIG(status): %d --- \n", WTERMSIG(status));
+						printf("--- START SIGINT --- \n");
+						shell->last_exit_code = 128 + WTERMSIG(signal_code);
+						handle_signal();
 						return 0;
 					}
+					char *input = readline("> ");
+					if (!input)
+					{
+						printf("-- NO INPUT: %d --\n", signal_last_code());
+						if (signal_last_code() == 2)
+						{
+							int df_0 = open("/dev/tty", O_RDONLY);
+							if (df_0 == 0)
+							{
+								printf("open new fd 0\n");
+							}
+							if (df_0 < 0)
+							{
+								printf("open new fd 0 - ERROR\n");
+							}
+							return 0;
+						}
+						break;
+					}
+					
+					if (!ft_strcmp(redir->stop_word, input))
+					{
+						printf("-- STOP WORD found: %s, input: %s--\n", redir->stop_word, input);
+						break;
+					}
+					
 
+					if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
+					{
+						char *dest = ft_strdup("");
+						char *temp;
+						char *expanded;
+						int j = 0;
+						int start;
+						while (input[j])
+						{
+							start = j; 
+							while (input[j] && input[j] != '$')
+								j++;
+							if (start != j)
+							{
+								temp = ft_strjoin(dest, ft_substr(input, start, j - start));
+								free(dest);
+								dest = temp;
+							}
+							if (input[j] == '$')
+							{
+								expanded = expand_words(shell, input, &j);
+								temp = ft_strjoin(dest, expanded);
+								free(dest);
+								dest = temp;
+							}
+						}
+						free(input);
+						input = dest;			
+					}
+					char *temp = ft_strjoin(input, "\n");
+					free(input);
+					if (!temp)
+					{
+						//todo
+					}
+					write(redir->fd, temp, ft_strlen(temp));
 				}
-				
-				// while(1)
-				// {
-				// 	ft_putstr_fd("> ", 1);
-				// 	int fd = dup(0);
-				// 	char *input = get_next_line(fd);
-				// 	close(fd);
-				// 	ft_putstr_fd("{", 2);
-				// 	ft_putstr_fd(input, 2);
-				// 	ft_putstr_fd("}\n", 2);
-
-				// 	if (!ft_strncmp(redir->stop_word, input, ft_strlen(input)))
-				// 	{
-				// 		ft_putstr_fd("AAAAA\n", 1);
-				// 		free(input);
-				// 		break;
-				// 	}
-				// 	if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
-				// 	{
-				// 		// int test_p = 0;
-				// 		char *dest = ft_strdup("");
-				// 		char *temp;
-				// 		char *expanded;
-				// 		int j = 0;
-				// 		int start;
-				// 		while (input[j])
-				// 		{
-				// 			start = j; 
-				// 			while (input[j] && input[j] != '$')
-				// 				j++;
-				// 			if (start != j)
-				// 			{
-				// 				temp = ft_strjoin(dest, ft_substr(input, start, j - start));
-				// 				free(dest);
-				// 				dest = temp;
-				// 			}
-				// 			if (input[j] == '$')
-				// 			{
-				// 				expanded = expand_words(shell, input, &j);
-				// 				temp = ft_strjoin(dest, expanded);
-				// 				free(dest);
-				// 				dest = temp;
-				// 			}
-				// 		}
-				// 		free(input);
-				// 		input = dest;			
-				// 	}
-
-				// 	char *temp = ft_strjoin(input, "\n");
-				// 	free(input);
-				// 	if (!temp)
-				// 	{
-				// 			//todo
-				// 	}
-				// 	write(redir->fd, temp, ft_strlen(temp));
-				// 	free(temp);
-				// 	ft_putstr_fd("\n", 1);
-				// }
-				
-	
 				handle_signal();
 				close(redir->fd);
-
-				// int signal_code2 = signal_last_code();
-				// printf("\n ============== %d ================ \n", signal_code2);
-
-				// if (signal_code2 == SIGQUIT)
-				// {
-				// 	printf("--- SIGQUIT --- \n");
-				// 	ft_putstr_fd("bash: warning: here-document delimited by end-of-file (wanted `", 2);
-				// 	ft_putstr_fd(redir->stop_word, 2);	
-				// 	ft_putstr_fd("')\n", 2);
-				// 	break;	
-				// }
-				// else if (signal_code2 == SIGINT)
-				// {
-				// 	printf("--- SIGINT --- \n");
-				// 	shell->last_exit_code = 128 + WTERMSIG(signal_code2);
-				// 	handle_signal();
-				// 	return 0;
-				// }
-
-
 				redir->fd = open(redir->value, O_RDONLY, 0644);
 				if (redir->fd < 0)
 				{
 					print_fd_err(redir->value, strerror(errno));
 					shell->last_exit_code = 1;
 				}
-				
 				shell->heredock_num++;
 			}
 			redir = redir->next;
@@ -648,6 +581,8 @@ int	ft_execute(t_app *shell)
 
 		cmd = cmd->next;
 	}
+
+
 	
 	//REDIR
 	cmd = shell->cmd;
