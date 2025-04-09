@@ -15,7 +15,6 @@
 
 typedef enum
 {
-    // CMD,        // 0
     ARG,        // 1
     PIPE,       // 2
     REDIR_IN,   // 3
@@ -48,7 +47,7 @@ typedef struct s_envp
     char            *envp;          //envp variable 
     char            *name;          // envp name
     struct s_envp    *next;          // Next command in pipeline
-    struct s_envp    *prev;          // Previous command (doubly linked list)          // First command in pipeline
+    struct s_envp    *prev;          // Previous command (doubly linked list)          
 } t_envp;
 
 typedef struct s_cmd
