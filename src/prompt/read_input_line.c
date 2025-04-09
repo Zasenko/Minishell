@@ -85,7 +85,6 @@ void print_cmd(t_app **shell)
     }
 }
 
-
 void read_input_line(t_app *shell)
 {
     char    *input;

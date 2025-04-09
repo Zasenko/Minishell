@@ -12,153 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-int	close_all_redirs_fds2(t_redir *redir)
-{
-	t_redir	*temp;
-
-	temp = redir;
-	if (!temp)
-		return (0);
-	while (temp != NULL)
-	{
-		if (temp->fd != -1)
-		{
-			close(temp->fd);
-		}
-		temp = temp->next;
-	}
-	return (1);
-}
-
-void free_cmd_list2(t_cmd **cmd)
-{
-    t_cmd *temp;
-
-    if (!cmd)
-        return ;
-    while (*cmd != NULL)
-    {
-        temp = (*cmd)->next;
-        if ((*cmd)->args)
-        {
-            free_2d_array((*cmd)->args);
-            (*cmd)->args = NULL;
-        }
-        close_all_redirs_fds2((*cmd)->redirs);
-        free(*cmd);
-        *cmd = temp;
-    }
-    free(*cmd);
-    *cmd = NULL;
-}
-
-void free_list2(t_app *shell)
-{
-    if (!shell)
-        return ;
-    // if (shell->path)
-    //     free_2d_array(shell->path);
-    if (shell->env_var)
-    {
-        free_2d_array(shell->env_var);
-        shell->env_var = NULL;
-    }
-    if (shell->user)
-    {
-        free(shell->user);
-        shell->user = NULL;
-    }
-    if (shell->name) 
-    {
-        free(shell->name);
-        shell->name = NULL;
-    }
-    if (shell->pwd)
-    {
-        free(shell->pwd);
-        shell->pwd = NULL;
-    }
-    if (shell->prompt)
-    {
-        free(shell->prompt);
-        shell->prompt = NULL;
-    }
-    free_cmd_list2(&shell->cmd);
-    free_token_list(&shell->tokens); 
-}
-
-void child_heredock(t_app *shell, t_redir *redir, int fd)
-{
-	signal(SIGINT, SIG_DFL);
-    // signal(SIGQUIT, SIG_DFL);
-
-	char *input = readline("> ");
-
-	if (!input)
-	{
-		if (input)
-			free(input);
-
-		free_list2(shell);
-		close(redir->fd);
-		close(fd);
-		exit(3);
-	}
-	if (!ft_strncmp(redir->stop_word, input, ft_strlen(input)))
-	{
-		free(input);
-		free_list2(shell);
-		close(redir->fd);
-		close(fd);
-		exit(55);
-	}
-	if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
-	{
-		char *dest = ft_strdup("");
-		char *temp;
-		char *expanded;
-		int j = 0;
-		int start;
-		while (input[j])
-		{
-			start = j; 
-			while (input[j] && input[j] != '$')
-				j++;
-			if (start != j)
-			{
-				temp = ft_strjoin(dest, ft_substr(input, start, j - start));
-				free(dest);
-				dest = temp;
-			}
-			if (input[j] == '$')
-			{
-				expanded = expand_words(shell, input, &j);
-				temp = ft_strjoin(dest, expanded);
-				free(dest);
-				dest = temp;
-			}
-		}
-		free(input);
-		input = dest;			
-	}
-
-	char *temp = ft_strjoin(input, "\n");
-	free(input);
-	if (!temp)
-	{
-		free_list2(shell);
-		close(redir->fd);
-		close(fd);
-		exit(EXIT_FAILURE);
-			//todo
-	}
-	write(redir->fd, temp, ft_strlen(temp));
-	free(temp);
-	free_list2(shell);
-	close(redir->fd);
-	exit(EXIT_SUCCESS);
-}
-
 void	ft_putfullstr_fd(char *s, int fd)
 {
 	if (!s || !(fd >= 0))
@@ -310,7 +163,9 @@ int handle_execve_error(t_cmd *cmd)
 void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 {
 	int exit_status;
-
+	ft_putstr_fd("\n------- ",2);
+	ft_putstr_fd(cmd->cmd	,2);
+	ft_putstr_fd("\n",2);
 	handle_child_signal();
 	redirect(shell, cmd, prev_pipe, pipe_fd);
 	close_all_cmnds_fds(shell->cmd);
@@ -354,7 +209,7 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 		return (EXIT_FAILURE);
 	}
 	// handle_child_signal();
-
+	printf("COMMAND: %s\n", cmd->cmd);
 	if (cmd->pid == 0)
 	{
 		child_process(shell, cmd, *prev_pipe, pipe_fd);
@@ -437,146 +292,6 @@ void print_fd_err(char *val, char *err_msg)
 	ft_putstr_fd("\n", 2);
 }
 
-int heredoc_handler(t_app *shell, t_redir *redir)
-{
-	int signal_code;
-	signal_code = signal_last_code();	
-	char *input = readline("> ");
-	if (!input)
-	{
-		if (signal_last_code() == 2)
-		{
-			int df_0 = open("/dev/tty", O_RDONLY);
-			if (df_0 < 0)
-			{
-				return -1;
-			}
-			return 2;
-		}
-		else
-		{
-			ft_putstr_fd("warning: here-document delimited by end-of-file (wanted `", 2);
-			ft_putstr_fd(redir->stop_word, 2);
-			ft_putstr_fd("')\n", 2);
-			return (0);
-		}
-	}
-	
-	if (!ft_strcmp(redir->stop_word, input))
-	{
-		return (0);
-	}
-	if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
-	{
-		char *dest = ft_strdup("");
-		char *temp;
-		char *expanded;
-		int j = 0;
-		int start;
-		while (input[j])
-		{
-			start = j; 
-			while (input[j] && input[j] != '$')
-				j++;
-			if (start != j)
-			{
-				temp = ft_strjoin(dest, ft_substr(input, start, j - start));
-				free(dest);
-				dest = temp;
-			}
-			if (input[j] == '$')
-			{
-				expanded = expand_words(shell, input, &j);
-				temp = ft_strjoin(dest, expanded);
-				free(dest);
-				dest = temp;
-			}
-		}
-		free(input);
-		input = dest;			
-	}
-	char *temp = ft_strjoin(input, "\n");
-	free(input);
-	if (!temp)
-	{
-		return (-1);
-		//todo
-	}
-	write(redir->fd, temp, ft_strlen(temp));
-	return (1);
-}
-
-int heredocs_maker(t_app *shell, t_redir *redir)
-{
-	char *heredoc_num = ft_itoa(shell->heredock_num);
-	if (!heredoc_num)
-	{
-		// todo: error, exit
-	}
-	redir->value = ft_strjoin("HEREDOCK_", heredoc_num);
-	if (!redir->value)
-	{
-		free(heredoc_num);
-		// todo: error, exit
-	}
-	free(heredoc_num);
-	
-	//todo: check if file exist!!!
-
-	redir->fd = open(redir->value, O_RDWR | O_CREAT | O_APPEND, 0644);
-	if (redir->fd < 0)
-	{
-		print_fd_err(redir->value, strerror(errno));
-		shell->last_exit_code = 1;
-		return (0);
-	}
-
-	handle_heredoc_signal();
-	while (1)
-	{
-		int heredoc_result = heredoc_handler(shell, redir);
-		if (heredoc_result == -1)
-			return -1;
-		if (heredoc_result == 0)
-			break;
-		if (heredoc_result == 2)
-		{
-			return (2);
-		}
-	}
-	handle_signal();
-	close(redir->fd);
-	redir->fd = open(redir->value, O_RDONLY, 0644);
-	if (redir->fd < 0)
-	{
-		//todo?
-		print_fd_err(redir->value, strerror(errno));
-		shell->last_exit_code = 1;
-	}
-	shell->heredock_num++;
-	return 1;
-}
-//return 0; break
-
-int heredocs_checker(t_app *shell, t_redir *redir)
-{
-	t_redir *temp_redir;
-
-	temp_redir = redir;
-	while (temp_redir)
-	{
-		if (temp_redir->type == HEREDOC)
-		{
-			int heredoc_result = heredocs_maker(shell, temp_redir);
-			if (heredoc_result == 0)
-				break;
-			if (heredoc_result == 2)
-				return (2);
-		}
-		temp_redir = temp_redir->next;
-	}
-	return (1);
-}
 
 int	ft_execute(t_app *shell)
 {
@@ -596,12 +311,13 @@ int	ft_execute(t_app *shell)
 	while (cmd)
 	{
 		int heredoc_checker_result = heredocs_checker(shell, cmd->redirs);
+		// printf("heredoc_checker_result: --- %d ---\n", heredoc_checker_result);
 		if (heredoc_checker_result == -1)
 			return -1;
 		else if (heredoc_checker_result == 0)
 			break;
 		else if (heredoc_checker_result == 2)
-			break;
+			return 1;
 		cmd = cmd->next;
 	}
 	
@@ -609,7 +325,6 @@ int	ft_execute(t_app *shell)
 	cmd = shell->cmd;
 	while (cmd != NULL)
 	{
-
 		t_redir *redir = cmd->redirs;
 		while (redir)
 		{
@@ -663,6 +378,9 @@ int	ft_execute(t_app *shell)
 	
 	// EXE
 	cmd = shell->cmd;
+
+	print_cmd(&shell);
+
 	if (!cmd || !cmd->args)
 	{
 		return 0;

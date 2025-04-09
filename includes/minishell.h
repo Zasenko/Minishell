@@ -94,5 +94,6 @@ void handle_child_signal(void);
 void handle_heredoc_signal(void);
 void check_signal_exit(t_app *shell);
 int signal_last_code(void);
-
+int heredocs_checker(t_app *shell, t_redir *redir);
+void print_fd_err(char *val, char *err_msg);
 #endif

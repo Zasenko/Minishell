@@ -54,6 +54,7 @@ SRC = 		main.c \
 			builtins/cd.c \
 			builtins/exit.c \
 			builtins/export.c \
+			heredoc/heredoc.c \
 
 UTILS_SRC = node_actions/cmd_node/add_cmd_back.c \
 			node_actions/cmd_node/create_new_cmd.c \
