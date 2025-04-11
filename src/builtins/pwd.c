@@ -21,6 +21,7 @@ int ft_pwd()
     dir = getcwd(buf, MAXPATHLEN);
     if (!dir)
         return (perror("getcwd"), errno);
-    printf("%s\n", dir);
+    ft_putstr_fd(dir, 1);
+    ft_putstr_fd("\n", 1);
     return (SUCCESS);
 }

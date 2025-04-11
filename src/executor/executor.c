@@ -144,6 +144,11 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	redirect(shell, cmd, prev_pipe, pipe_fd);
 	close_all_cmnds_fds(shell->cmd);
 	
+	if (!cmd->args)
+	{
+		free_list(shell);
+		exit(0);
+	}
 
 	if (is_builtin_func(cmd->args[0]))
 	{
@@ -452,11 +457,11 @@ int	ft_execute(t_app *shell)
 	
 	//EXE
 	cmd = shell->cmd;
-	if (!cmd || !cmd->args)
+	if (!cmd)
 	{
 		return 0;
 	}
-	if (cmd->next == NULL && is_builtin_func(cmd->args[0]))
+	if (cmd->next == NULL && cmd->args && is_builtin_func(cmd->args[0]))
 	{
 
 		int dup_0 = -1;
