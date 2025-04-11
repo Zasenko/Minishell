@@ -143,6 +143,8 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 
 	redirect(shell, cmd, prev_pipe, pipe_fd);
 	close_all_cmnds_fds(shell->cmd);
+	
+
 	if (is_builtin_func(cmd->args[0]))
 	{
 		exit_status = exec_buildin(cmd, shell, true, 1);
@@ -263,62 +265,22 @@ int	ft_execute(t_app *shell)
 	int		cmd_count;
 	int		prev_pipe;
 
-	cmd = shell->cmd;
+	
 
 	cmd_count = cmd_len(shell->cmd);
 	prev_pipe = -1;
 	if (!cmd_count || !shell->is_valid_syntax)
 		return (0);
+	
+	//HEREDOC
+
+	cmd = shell->cmd;
 	while (cmd != NULL)
 	{
 
 		t_redir *redir = cmd->redirs;
 		while (redir)
 		{
-
-			if (redir->type == REDIR_IN)
-			{
-				int fd_in = open(redir->value, O_RDONLY);
-				if (fd_in < 0)
-				{
-					print_fd_err(redir->value, strerror(errno));
-					shell->last_exit_code = 1;
-					break;
-				}
-				else
-				{
-					redir->fd = fd_in;
-				}
-			}
-			if (redir->type == REDIR_OUT)
-			{
-				int fd_out = open(redir->value, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
-				if (fd_out < 0)
-				{
-					print_fd_err(redir->value, strerror(errno));
-					shell->last_exit_code = 1;
-					break;
-				}
-				else
-				{
-					redir->fd = fd_out;
-				}
-			}
-			if (redir->type == APPEND)
-			{
-				int fd_append = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-				if (fd_append < 0)
-				{
-					print_fd_err(redir->value, strerror(errno));
-					shell->last_exit_code = 1;
-					break;
-
-				}
-				else
-				{
-					redir->fd = fd_append;
-				}
-			}
 			if (redir->type == HEREDOC)
 			{
 				char *heredoc_num = ft_itoa(shell->heredock_num);
@@ -356,13 +318,17 @@ int	ft_execute(t_app *shell)
 					got_sigint = 0;
 					char *input = readline("> ");
 					if (got_sigint) {
-						printf("ctrl + c...\n");
+						// printf("\n");
+						shell->last_exit_code = 130;
 						rl_event_hook = readline_event_hook2;
 						return 0;   // back to prompt
 					}
 			
 					if (input == NULL) { // Ctrl+D (EOF)
-						printf("\nExiting...\n");
+						// printf("\nExiting...\n");
+						ft_putstr_fd("warning: here-document delimited by end-of-file (wanted `", 2);
+						ft_putstr_fd(redir->stop_word, 2);
+						ft_putstr_fd("')\n", 2);
 						break;
 					}
 					if (!ft_strncmp(redir->stop_word, input, ft_strlen(input)))
@@ -425,11 +391,67 @@ int	ft_execute(t_app *shell)
 
 		cmd = cmd->next;
 	}
+
+	//REDIR
 	cmd = shell->cmd;
+	while (cmd != NULL)
+	{
 
-	// print_cmd(&shell);
+		t_redir *redir = cmd->redirs;
+		while (redir)
+		{
 
+			if (redir->type == REDIR_IN)
+			{
+				int fd_in = open(redir->value, O_RDONLY);
+				if (fd_in < 0)
+				{
+					print_fd_err(redir->value, strerror(errno));
+					shell->last_exit_code = 1;
+					break;
+				}
+				else
+				{
+					redir->fd = fd_in;
+				}
+			}
+			if (redir->type == REDIR_OUT)
+			{
+				int fd_out = open(redir->value, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
+				if (fd_out < 0)
+				{
+					print_fd_err(redir->value, strerror(errno));
+					shell->last_exit_code = 1;
+					break;
+				}
+				else
+				{
+					redir->fd = fd_out;
+				}
+			}
+			if (redir->type == APPEND)
+			{
+				int fd_append = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
+				if (fd_append < 0)
+				{
+					print_fd_err(redir->value, strerror(errno));
+					shell->last_exit_code = 1;
+					break;
 
+				}
+				else
+				{
+					redir->fd = fd_append;
+				}
+			}
+			redir = redir->next;
+		}
+
+		cmd = cmd->next;
+	}
+	
+	//EXE
+	cmd = shell->cmd;
 	if (!cmd || !cmd->args)
 	{
 		return 0;
