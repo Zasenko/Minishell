@@ -235,7 +235,28 @@ void print_fd_err(char *val, char *err_msg)
 	ft_putstr_fd(err_msg, 2);
 	ft_putstr_fd("\n", 2);
 }
+volatile sig_atomic_t got_sigint = 0;
 
+// Signal handler using sigaction
+void sigint_handler(int sig) 
+{
+	(void)sig;
+    got_sigint = 1;
+}
+
+// Event hook called during readline's loop
+int readline_event_hook() {
+    if (got_sigint) {
+        rl_done = 1; // Tell readline to return
+    }
+    return 0; // Keep readline running otherwise
+}
+int readline_event_hook2() {
+    if (got_sigint) {
+        rl_done = 0; // Tell readline to return
+    }
+    return 0; // Keep readline running otherwise
+}
 int	ft_execute(t_app *shell)
 {
 	t_cmd	*cmd;
@@ -320,12 +341,29 @@ int	ft_execute(t_app *shell)
 					shell->last_exit_code = 1;
 					break;
 				}
+				 // Set up sigaction for SIGINT
+				 struct sigaction sa;
+				 sa.sa_handler = sigint_handler;
+				 sigemptyset(&sa.sa_mask);
+				 sa.sa_flags = 0;
+				 sigaction(SIGINT, &sa, NULL);
+			 
+				 // Set the event hook so readline checks the flag
+				 rl_event_hook = readline_event_hook;
 				while (1)
 				{
+			
+					got_sigint = 0;
 					char *input = readline("> ");
-					if (!input)
-					{
-						//todo
+					if (got_sigint) {
+						printf("ctrl + c...\n");
+						rl_event_hook = readline_event_hook2;
+						return 0;   // back to prompt
+					}
+			
+					if (input == NULL) { // Ctrl+D (EOF)
+						printf("\nExiting...\n");
+						break;
 					}
 					if (!ft_strncmp(redir->stop_word, input, ft_strlen(input)))
 					{
