@@ -34,6 +34,18 @@ void print_envp(t_envp *head)
     }
 }
 
+
+void print_env_var(char **arr)
+{
+    int i = 0;
+    printf("\n================= env_arr ======================\n");
+    while (arr[i])
+    {
+        printf("%s\n", arr[i]);
+        i++;
+    }
+}
+
 void print_cmd(t_app **shell)
 {
     int i = 0;
@@ -105,6 +117,7 @@ void read_input_line(t_app *shell)
             // print_tokens(shell);
             // print_cmd(&shell);
             // print_envp(shell->envp);
+            // print_env_var(shell->env_var);
             free_list(shell);
         }
         else 

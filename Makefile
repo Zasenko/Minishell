@@ -24,6 +24,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 SRC = 		main.c \
 			init/initialize_shell.c \
 			init/copy_env.c \
+			init/make_env_arr.c \
 			prompt/read_input_line.c  \
 			prompt/get_env_info.c  \
 			prompt/create_prompt.c \

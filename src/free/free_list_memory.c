@@ -27,19 +27,6 @@ void free_cmd_list(t_cmd **cmd)
             (*cmd)->args = NULL;
         }
         close_all_redirs_fds((*cmd)->redirs);
-        // if ((*cmd)->cmd) {
-        // free((*cmd)->cmd);
-        // (*cmd)->cmd = NULL;
-        // }
-    //    if ((*cmd)->input) {
-    //     free((*cmd)->input);
-    //     (*cmd)->input = NULL;
-    //    }
-    //     if ((*cmd)->output) {
-    //     free((*cmd)->output);
-    //     (*cmd)->output = NULL;
-    //     }
-
         free(*cmd);
         *cmd = temp;
     }
@@ -90,8 +77,6 @@ void free_list(t_app *shell)
 {
     if (!shell)
         return ;
-    // if (shell->path)
-    //     free_2d_array(shell->path);
     if (shell->env_var)
     {
         free_2d_array(shell->env_var);
