@@ -193,9 +193,6 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
             }
             else
             {
-                // printf("name: %s\n", node->name);
-                // printf("envp: %s\n", node->envp);
-
                 if (node->envp != NULL)
                 {
                     free(node->envp);

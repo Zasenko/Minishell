@@ -21,7 +21,8 @@ void	copy_env(t_app *shell, char **envp)
 	char *s;
 
 	i = 0;
-	if (envp)
+
+	if (envp && envp[0])
 	{
 		while (envp[i] != NULL)
 		{
@@ -35,8 +36,32 @@ void	copy_env(t_app *shell, char **envp)
 			name = ft_substr(s, 0, j);
 			if (!name)
 				break ;
+
+            if (!ft_strcmp(name, "SHLVL"))
+            {
+                int i = ft_atoi(env_var);
+                //todo
+                i++;
+                free(env_var);
+                env_var = ft_itoa(i);
+                //todo
+            }
+
 			add_envp_back(&shell->envp, create_new_envp(env_var, name));
 			i++;
 		}
 	}
+    else
+    {
+        char buf[MAXPATHLEN];
+        char *dir;
+    
+        dir = NULL;
+        dir = getcwd(buf, MAXPATHLEN);
+        // TODO
+        // if (!dir)
+        //     return (perror("getcwd"), errno);
+        add_envp_back(&shell->envp, create_new_envp(dir, "PWD"));
+        add_envp_back(&shell->envp, create_new_envp("1", "SHLVL"));
+    }
 }

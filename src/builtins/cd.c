@@ -112,25 +112,3 @@ int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
     }
     return (SUCCESS);
 }
-
-// int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
-// {
-//     char buf[MAXPATHLEN];
-//     char *current_dir;
-//     int result;
-    
-//     if (!cmd)
-//         return (EXIT_FAILURE);
-
-//     current_dir = NULL;
-//     current_dir = getcwd(buf, MAXPATHLEN);
-//     if (!current_dir)
-//         return (perror("getcwd"), errno);
-//     if (cmd->args[1] != NULL)
-//     {
-//         result =chdir(cmd->args[1]);
-//         if (result == -1)
-//             return (perror("chdir"), errno);
-//     }
-//     return (SUCCESS);
-// }
