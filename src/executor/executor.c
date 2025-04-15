@@ -108,7 +108,7 @@ void handle_execve_error(t_cmd *cmd)
         ft_putstr_fd(": command not found\n", 2);
         exit(127);
     }
-    if (stat(cmd->cmd, &buffer) == 0)
+    else if (stat(cmd->cmd, &buffer) == 0)
     {
         if (S_ISDIR(buffer.st_mode))
         {
@@ -132,6 +132,7 @@ void handle_execve_error(t_cmd *cmd)
             exit(127);
         }
     }
+
     ft_putstr_fd(cmd->args[0], 2);
     ft_putstr_fd(": command not found\n", 2);
     exit(127);
@@ -158,7 +159,42 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	}
 	else
 	{
+		if (ft_strstr(cmd->args[0], "/minishell"))
+		{
+			t_envp *node = find_envp_node(shell->envp, "SHLVL");
+			if (node && node->envp)
+			{
+				int level = ft_atoi(node->envp);
+				level++;
+				char *new_lvl = ft_itoa(level);
+				if (!new_lvl)
+				{
+					//todo;
+				}
+				free(node->envp);
+				node->envp = new_lvl;
+
+				char **new_2d_env = copy_into_2d_arr(shell->envp);
+				if (!new_2d_env)
+				{
+					//todo;
+				}
+				if (shell->env_var)
+				{
+					free_2d_array(shell->env_var);
+					shell->env_var = NULL;
+				}
+				shell->env_var = new_2d_env;
+			}
+		}
+		
 		execve(cmd->cmd, cmd->args, shell->env_var);
+		if (find_path(shell) == NULL)
+		{
+			ft_putstr_fd(cmd->args[0], 2);
+            ft_putstr_fd(": No such file or directory\n", 2);
+            exit(127);
+		}
 		handle_execve_error(cmd);
 	}
 }

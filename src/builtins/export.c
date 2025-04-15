@@ -18,7 +18,6 @@ typedef struct s_lib
     char            *value;
 } t_lib;
 
-
 int check_export_key(char *str)
 {
     int i = 0;
@@ -131,6 +130,34 @@ t_lib *check_export_arg(char *str, int *exit_code)
     return lib;
 }
 
+void    sort_2d_env(char **env)
+{
+    int     i;
+    int     sorted;
+    char    *tmp;
+
+    if (!env)
+        return;
+    sorted = 0;
+    while (!sorted)
+    {
+        i = 0;
+        sorted = 1;
+        while (env[i] && env[i + 1])
+        {
+            if (ft_strcmp(env[i], env[i + 1]) > 0)
+            {
+                tmp = env[i];
+                env[i] = env[i + 1];
+                env[i + 1] = tmp;
+                sorted = 0;
+            }
+            i++;
+        }
+    }
+}
+
+
 int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
 {
     struct s_envp *envp = shell->envp;
@@ -140,18 +167,42 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
     
     if (cmd->args[n] == NULL)
     {
-        while (envp != NULL)
+        char **new_2d_env = copy_into_2d_arr(envp);
+        if (!new_2d_env)
         {
-            printf("declare -x ");
-            printf("%s", envp->name);
-            if (envp->envp)
-            {
-                printf("=\"");
-                printf("%s\"", envp->envp);
-            }
-            printf("\n");
-            envp = envp->next;
+            if (is_child)
+                exit(1);
+            else
+                return(1);
         }
+        sort_2d_env(new_2d_env);
+
+        int i = 0;
+        while (new_2d_env[i])
+        {
+            if (new_2d_env[i][0] == '_')
+            {
+                i++;
+                continue;
+            }
+            printf("declare -x "); 
+            int g = 0;
+            int f = 1;
+            while (new_2d_env[i][g])
+            {
+                printf("%c", new_2d_env[i][g]);
+                if (new_2d_env[i][g] == '=' && f)
+                {
+                    f = 0;
+                    printf("%c", '"');
+                }
+                g++;
+            }
+            printf("%c", '"');
+            printf("\n");
+            i++;
+        }
+        free_2d_array(new_2d_env);
     }
     else
     {
