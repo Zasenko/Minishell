@@ -12,21 +12,40 @@
 
 #include "../../includes/minishell.h"
 
-bool	reduce_shell_level(char *name, char *env_var)
+bool	create_pwd_env_value(t_app *shell)
 {
-	int level;
+	char buf[MAXPATHLEN];
+	char *name;
+	char *value;
 
+	name = ft_strdup("PWD");
 	if (!name)
 		return (false);
-	if (!ft_strcmp(name, "SHLVL"))
+	value = ft_strdup(getcwd(buf, MAXPATHLEN));
+	if (!value)
 	{
-		level = ft_atoi(env_var);
-		level++;
-		free(env_var);
-		env_var = ft_itoa(level);
-		if (!env_var)
-			return (false);
+		free(name);
+		return (false);
 	}
+	add_envp_back(&shell->envp, create_new_envp(value, name));
+	return (true);
+}
+
+bool	create_shell_lvl_env_value(t_app *shell)
+{
+	char *name;
+	char *value;
+
+	name = ft_strdup("1");
+	if (!name)
+		return (false);
+	value = ft_strdup("SHLVL");
+	if (!value)
+	{
+		free(name);
+		return (false);
+	}
+	add_envp_back(&shell->envp, create_new_envp(value, name));
 	return (true);
 }
 
@@ -49,8 +68,6 @@ bool	create_env_copy(t_app *shell, char **envp, int *i)
 		name = ft_substr(s, 0, j);
 		if (!name)
 			return (false);
-		if (!reduce_shell_level(name, env_var))
-			return (false);
 		add_envp_back(&shell->envp, create_new_envp(env_var, name));
 		(*i)++;
 	}
@@ -60,8 +77,6 @@ bool	create_env_copy(t_app *shell, char **envp, int *i)
 void	copy_env(t_app *shell, char **envp)
 {
 	int i;
-	char buf[MAXPATHLEN];
-	char *dir;
 
 	if (!shell)
 		return ;
@@ -73,9 +88,7 @@ void	copy_env(t_app *shell, char **envp)
 	}
 	else
 	{
-		dir = NULL;
-		dir = getcwd(buf, MAXPATHLEN);
-		add_envp_back(&shell->envp, create_new_envp(dir, "PWD"));
-		add_envp_back(&shell->envp, create_new_envp("1", "SHLVL"));
+		if (!create_pwd_env_value(shell) && !create_shell_lvl_env_value(shell))
+			exit_with_error(shell, 1, MALLOC_FAIL);
 	}
 }
