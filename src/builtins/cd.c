@@ -77,6 +77,7 @@ int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
         ft_putstr_fd(current_dir, 1);
         ft_putstr_fd("\n", 1);
     }
+
     if (!is_child)
     {
         if (oldpwd_node)
@@ -92,9 +93,25 @@ int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
                 if (oldpwd_node->envp)
                 {
                     free(oldpwd_node->envp);
+                    oldpwd_node->envp = NULL;
                 }
                 oldpwd_node->envp = new_oldpwd;
             }
+        }
+        else
+        {
+            char *new_old_pwd = ft_strdup(pwd_node->envp);
+		    if (!new_old_pwd)
+		    {
+		    	exit_with_error(shell, 1, MALLOC_FAIL);
+		    }
+		    char *new_old_pwd_name= ft_strdup("OLDPWD");
+		    if (!new_old_pwd_name)
+		    {
+		    	free(new_old_pwd);
+		    	exit_with_error(shell, 1, MALLOC_FAIL);
+		    }
+		    add_envp_back(&shell->envp, create_new_envp(new_old_pwd, new_old_pwd_name));
         }
         if (pwd_node)
         {
@@ -103,12 +120,16 @@ int ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
             {
                 return EXIT_FAILURE;
             }
-            if (pwd_node->envp)
+            if (pwd_node->envp != NULL)
             {
                 free(pwd_node->envp);
+                pwd_node->envp = NULL;
+
             }
             pwd_node->envp = new_pwd;
+
         }
     }
+
     return (SUCCESS);
 }

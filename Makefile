@@ -36,9 +36,8 @@ SRC = 		main.c \
 			executor/executor.c \
 			lexer/lexing_inputs_data.c \
 			lexer/handle_command.c \
-			lexer/handle_quotes.c \
+			lexer/handle_heredoc.c \
 			lexer/handle_operators.c \
-			lexer/handle_single_quote.c \
 			lexer/handle_variable.c \
 			lexer/lexing_utils.c \
 			lexer/lexing_checker.c \

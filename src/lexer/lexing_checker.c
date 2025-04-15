@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexing_checker.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/17 13:07:47 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/17 13:07:47 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/17 13:07:47 by ibondarc          #+#    #+#             */
+/*   Updated: 2025/02/17 13:07:47 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ bool check_pipe(t_app *shell, t_token *token)
     {
         if (!token->prev)
         {
-            ft_putstr_fd("syntax error near unexpected token `", 2);
+            ft_putstr_fd(SERRNUT, 2);
             ft_putstr_fd(token->value, 2);
             ft_putstr_fd("'\n", 2);
             shell->last_exit_code = 2;
@@ -26,7 +26,7 @@ bool check_pipe(t_app *shell, t_token *token)
         }
         else if (token->next == NULL || token->type == token->next->type)
         {
-            ft_putstr_fd("syntax error near unexpected token `", 2);
+            ft_putstr_fd(SERRNUT, 2);
             if (token->next)
                 ft_putstr_fd(token->next->value, 2);
             ft_putstr_fd("'\n", 2);
@@ -44,14 +44,14 @@ bool check_rederections(t_app *shell, t_token *token)
     {
         if (token->next == NULL)
         {
-            ft_putstr_fd("syntax error near unexpected token `newline", 2);
+            ft_putstr_fd(SERRNUT_NEWLI, 2);
             ft_putstr_fd("'\n", 2);
             shell->last_exit_code = 2;
             return false;
         }
         else if (token->value == token->next->value || token->next->type != ARG )
         {
-            ft_putstr_fd("syntax error near unexpected token `", 2);
+            ft_putstr_fd(SERRNUT, 2);
             if (token->next)
                 ft_putstr_fd(token->next->value, 2);
             ft_putstr_fd("'\n", 2);
