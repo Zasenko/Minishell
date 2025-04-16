@@ -15,32 +15,20 @@
 char	*var_extractor(char *input, int *i)
 {
     int start = *i;
-    int is_quote = false;
     char *result;
 
-    if (input[*i] == '(')
-    {
-        (*i)++;
-        skip_spases(input, i);
-        start = *i;
-        is_quote = true;
-    }
     while (input[*i])
 	{
-        if (is_quote && input[*i] == ' ')
-        {
-            result = ft_substr(input ,start, *i - start);
-            skip_spases(input, i);
-            if (input[*i] == ')')
-                return result;
-        }
-        else if (input[*i] == ' ' || input[*i] == '\"' || input[*i] == ')' 
+        if (input[*i] == ' ' || input[*i] == '\"' || input[*i] == ')' 
             || input[*i] == '$' || input[*i] == '\'' || input[*i] == '/'
             || input[*i] == 46 || input[*i] == '?')
             break;
 		(*i)++;
 	}
-    return ft_substr(input ,start, *i - start);
+    result = ft_substr(input ,start, *i - start);
+    if (!result)
+        return NULL;
+    return result;
 }
 
 bool is_there_valid_var(char *str)
@@ -82,19 +70,6 @@ char *get_word_from_quotes(char *input)
     }
     res[i] = '\0';
     return res;
-}
-
-int	write_str_without_end(char *dest, char *src, int *i)
-{
-    int len = 0;
-
-	while (src[len])
-	{
-		dest[*i] = src[len];
-		(*i)++;
-        len++;
-	}
-	return (len);
 }
 
 char *get_status_var(int status)
@@ -152,18 +127,6 @@ char *get_env_var(t_envp *envp, char *var)
         if (!result)
             return NULL;
     }
-        
-    return result;
-}
-char *get_expanded_var(t_app *shell, char *var)
-{
-    char *result;
-
-    if (!var)
-        return NULL;
-    result = execut_subcommand(shell, var);
-    if (!result)
-        return NULL;
     return result;
 }
 
@@ -178,7 +141,15 @@ char *expand_words(t_app *shell, char *input, int *i)
     if (input[*i] == ' ' || input[*i] == '\0' ||  input[*i] == '\"' || input[*i] == '/'
         || input[*i] == '$' || input[*i] == '\t' || input[*i] == '\'')
         result = ft_substr(input, *i - 1 , 1);
-    else if (input[*i] != '(' && input[*i] != '?')
+    
+    if (input[*i] == '?')
+    {
+        (*i)++;
+        result = get_status_var(shell->last_exit_code);
+        if (!result)
+            return ft_strdup("");
+    }
+    else if ((input[*i] >= 64 && input[*i] <= 90) || (input[*i] >= 97 && input[*i] <= 122))
     {
         var = var_extractor(input, i);
         if (var)
@@ -189,24 +160,5 @@ char *expand_words(t_app *shell, char *input, int *i)
             free(var);
         }
     }
-    else if (input[*i] == '(')
-    {
-        var = var_extractor(input, i);
-        if (var)
-        {
-            result = get_expanded_var(shell, var);
-            if (!result)
-                return ft_strdup("");
-            free(var);
-            (*i)++;
-        }
-    }
-    else if (input[*i] == '?')
-    {
-        (*i)++;
-        result = get_status_var(shell->last_exit_code);
-        if (!result)
-            return ft_strdup("");
-    } 
     return result;
 }
