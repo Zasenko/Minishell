@@ -3,88 +3,77 @@
 /*                                                        :::      ::::::::   */
 /*   lexing_inputs_date.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/12 12:11:16 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/12 12:11:16 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/12 12:11:16 by ibondarc          #+#    #+#             */
+/*   Updated: 2025/02/12 12:11:16 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char *extract_quoted_string(char *input, int *i)
+bool	handle_inputs(t_app *shell, t_token **head, char *input, int *i)
 {
-    char quote = input[*i]; 
-    int start = ++(*i); 
+	t_token *last;
 
-    while (input[*i] && input[*i] != quote)
-        (*i)++;
-
-    if (input[*i] == quote) 
-        (*i)++;
-
-    return strndup(&input[start], (*i - start - 1)); 
+	while (input[*i])
+	{
+		add_token_back(head, create_new_token());
+		skip_spases(input, i);
+		if (ft_strchr("|<>", input[*i], false))
+		{
+			last = last_token_node(*head);
+			if (!handle_operators(last, input, i))
+				return (false);
+		}
+		else
+		{
+			last = last_token_node(*head);
+			if (last->prev && last->prev->type == HEREDOC)
+			{
+				if (!handle_heredoc(last, input, i))
+					return (false);
+			}
+			else if (!handle_command(shell, last, input, i))
+				return (false);
+		}
+	}
+	return (true);
 }
 
-bool handle_inputs(t_app *shell, t_token **head, char *input)
+bool	tokenize_data(t_app *shell, t_token *head, char *input)
 {
-    int     i;
-    t_token *last;
-    
-    i = 0;
-    while (input[i])
-    {
-        add_token_back(head, create_new_token());
-        skip_spases(input, &i);
-        if (ft_strchr("|<>", input[i], false))
-        {
-            last = last_token_node(*head);
-            if (!handle_operators(last, input, &i))
-                return false;
-        }
-        else 
-        {
-            last = last_token_node(*head);
-            if (last->prev && last->prev->type == HEREDOC)
-            {
-                int start = i;
-                while (input[i] && input[i] != ' ' && input[i] != '|' 
-                    && input[i] != '>' && input[i] != '<')
-                    i++;
-                last->value = ft_substr(input, start, i - start);
-                last->type = ARG;
-            }
-            else if (!handle_command(shell, last, input, &i))
-                return false;
-        }
-    }
-    return true;
+	char *str;
+	bool err;
+	int i;
+
+	i = 0;
+	shell->is_valid_syntax = true;
+	str = ft_strtrim(input, " \t");
+	free(input);
+	err = handle_inputs(shell, &head, str, &i);
+	free(str);
+	if (!err)
+		return (false);
+	shell->tokens = head;
+	if (!lexing_checker(shell))
+		shell->is_valid_syntax = false;
+	return (true);
 }
 
-bool lexing_inputs_data(t_app *shell, char *input)
+void	lexing_inputs_data(t_app *shell, char *input)
 {
-    t_token *head = NULL;
-    // t_token *token = NULL;
-    char    *str;
+	t_token *head;
 
-
-    if (!shell)
-        return false;
-    shell->is_valid_syntax = true;
-    str = ft_strtrim(input, " \t");
-    if (!define_valid_string(str))
-    {
-        print_message(QUOTE_ERR, false);
-        return false;
-    }
-    if (!handle_inputs(shell, &head, str))
-        return false;
-    free(input);
-    shell->tokens = head;
-    if (!lexing_checker(shell))
-    {
-        shell->is_valid_syntax = false;
-        return false;
-    }
-    return true;
+	if (!shell)
+		return ;
+	head = NULL;
+	if (!define_valid_string(input))
+	{
+		exit_with_error(shell, 1, QUOTE_ERR);
+	}
+	if (!tokenize_data(shell, head, input))
+	{
+		exit_with_error(shell, 1, MALLOC_FAIL);
+	}
 }
