@@ -105,6 +105,7 @@ void read_input_line(t_app *shell)
         return ;
     while (1)
     {
+        // handle_signal();
         build_env_into_2d_arr(shell);
         create_prompt_path(shell);
         input = readline(shell->prompt);
@@ -121,7 +122,10 @@ void read_input_line(t_app *shell)
             free_list(shell);
         }
         else 
+        {
+            // printf("%d\n", last_signal_status());
             break;
+        }
 	}
 	exit_with_error(shell, shell->last_exit_code, NULL);
 }

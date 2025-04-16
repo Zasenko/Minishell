@@ -93,5 +93,7 @@ char    *get_word_from_quotes(char *input);
 int	access_checking(char *path);
 char	**copy_into_2d_arr(t_envp *envp);
 char *find_path(t_app *shell);
+int last_signal_status(void);
+void handle_child_signal(void);
 
 #endif

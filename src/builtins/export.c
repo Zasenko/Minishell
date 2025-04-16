@@ -157,7 +157,6 @@ void    sort_2d_env(char **env)
     }
 }
 
-
 int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
 {
     struct s_envp *envp = shell->envp;

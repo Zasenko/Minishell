@@ -24,10 +24,13 @@ int	close_all_redirs_fds(t_redir *redir)
 		if (temp->fd != -1)
 		{
 			close(temp->fd);
+			temp->fd = -1;
 		}
-		if (temp->type == HEREDOC)
+		if (temp->type == HEREDOC && temp->value)
 		{
 			unlink(temp->value);
+			free(temp->value);
+			temp->value = NULL;
 		}
 		temp = temp->next;
 
@@ -50,7 +53,7 @@ int	close_all_cmnds_fds(t_cmd *cmd)
 	return (1);
 }
 
-int	redirect(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
+int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 {
 	(void) shell;
 	if (prev_pipe != -1)
@@ -58,11 +61,8 @@ int	redirect(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 		dup2(prev_pipe, 0);
 		close(prev_pipe);
 	}
-
 	if (cmd->next != NULL)
-	{
 		dup2(pipe_fd[1], 1);
-	}
 	
 	t_redir *redir = cmd->redirs;
 	while (redir)
@@ -142,7 +142,7 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 {
 	int exit_status;
 
-	redirect(shell, cmd, prev_pipe, pipe_fd);
+	redirect_in_child(shell, cmd, prev_pipe, pipe_fd);
 	close_all_cmnds_fds(shell->cmd);
 	
 	if (!cmd->args)
@@ -183,12 +183,19 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 				{
 					free_2d_array(shell->env_var);
 					shell->env_var = NULL;
+					shell->env_var = new_2d_env;
 				}
-				shell->env_var = new_2d_env;
 			}
 		}
-		
-		execve(cmd->cmd, cmd->args, shell->env_var);
+		if (cmd->cmd == NULL)
+		{
+			execve(cmd->args[0], cmd->args, shell->env_var);
+
+		}
+		else
+		{
+			execve(cmd->cmd, cmd->args, shell->env_var);
+		}
 		if (find_path(shell) == NULL)
 		{
 			ft_putstr_fd(cmd->args[0], 2);
@@ -234,7 +241,7 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 	return (1);
 }
 
-int	ft_wait_child(t_cmd *cmd, t_app *shell)
+int	ft_wait_child(t_cmd *cmd, t_app *shell, int *print_sig_error)
 {
 	int		status;
 	pid_t	child_pid;
@@ -250,6 +257,20 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell)
 		shell->last_exit_code = WEXITSTATUS(status);
 		return (SUCCESS);
 	}
+	else if (WIFSIGNALED(status))
+	{
+		shell->last_exit_code = 128 + WTERMSIG(status);
+		if (WTERMSIG(status) == SIGQUIT)
+			*print_sig_error = 1;
+		t_cmd *temp_cmd = shell->cmd;
+		while (temp_cmd)
+		{
+			if (kill(temp_cmd->pid, 0) == 0)
+				kill(temp_cmd->pid, SIGINT);
+			temp_cmd = temp_cmd->next;
+		}
+		return (SUCCESS);
+	}
 	return (SUCCESS);
 }
 
@@ -258,11 +279,12 @@ int ft_wait_children(t_app *shell)
 	t_cmd	*cmd;
 
 	cmd = shell->cmd;
+	int print_sig_error = 0;
 	while (cmd != NULL)
 	{
 		if (cmd->pid != -1)
 		{
-			ft_wait_child(cmd, shell);
+			ft_wait_child(cmd, shell, &print_sig_error); //todo return int
 		}
 		cmd = cmd->next;
 	}
@@ -294,12 +316,14 @@ int readline_event_hook() {
     }
     return 0; // Keep readline running otherwise
 }
+
 int readline_event_hook2() {
     if (got_sigint) {
         rl_done = 0; // Tell readline to return
     }
     return 0; // Keep readline running otherwise
 }
+
 int	ft_execute(t_app *shell)
 {
 	t_cmd	*cmd;
@@ -345,17 +369,17 @@ int	ft_execute(t_app *shell)
 					break;
 				}
 				 // Set up sigaction for SIGINT
-				 struct sigaction sa;
-				 sa.sa_handler = sigint_handler;
-				 sigemptyset(&sa.sa_mask);
-				 sa.sa_flags = 0;
-				 sigaction(SIGINT, &sa, NULL);
-			 
+				struct sigaction sa;
+				sa.sa_handler = sigint_handler;
+				sigemptyset(&sa.sa_mask);
+				sa.sa_flags = 0;
+				sigaction(SIGINT, &sa, NULL);
+			 	signal(SIGQUIT, SIG_IGN);
 				 // Set the event hook so readline checks the flag
-				 rl_event_hook = readline_event_hook;
+				rl_event_hook = readline_event_hook;
+				
 				while (1)
 				{
-			
 					got_sigint = 0;
 					char *input = readline("> ");
 					if (got_sigint) {
@@ -487,7 +511,6 @@ int	ft_execute(t_app *shell)
 			}
 			redir = redir->next;
 		}
-
 		cmd = cmd->next;
 	}
 	
@@ -547,6 +570,7 @@ int	ft_execute(t_app *shell)
 	}
 	else
 	{
+		handle_child_signal();
 		while (cmd != NULL)
 		{
 			ft_execute_command(shell, cmd, &prev_pipe);
@@ -554,6 +578,7 @@ int	ft_execute(t_app *shell)
 		}
 	}
 	ft_wait_children(shell);
+	handle_signal();
 	if (prev_pipe != -1)
 		close(prev_pipe);
 	close_all_cmnds_fds(shell->cmd);
