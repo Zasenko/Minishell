@@ -61,7 +61,6 @@ char **extract_arguments(t_token *token)
     int     i = 0;
     
     args_count = count_types(token, ARG)  + 1;
-    // printf("args_count: %d\n", args_count);
     result = ft_calloc(args_count,  sizeof(char*));
     if (!result)
         return NULL;

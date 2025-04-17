@@ -60,9 +60,9 @@ void signal_hendler(int sig)
 void handle_signal_main(void)
 {
     g_signal = 0;
+    rl_event_hook = NULL;
     signal(SIGINT, &signal_hendler);
 	signal(SIGQUIT, SIG_IGN);
-
 }
 
 void signal_hendler_in_child(int sig)
@@ -98,11 +98,11 @@ void sigint_heredoc_handler(int sig)
 void handle_signal_heredoc(void)
 {
     g_signal = 0;
-    struct sigaction sa;
-	sa.sa_handler = sigint_heredoc_handler;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sigaction(SIGINT, &sa, NULL);
+    // struct sigaction sa;
+	// sa.sa_handler = sigint_heredoc_handler;
+	// sigemptyset(&sa.sa_mask);
+	// sa.sa_flags = 0;
+	signal(SIGINT, &sigint_heredoc_handler);
 	signal(SIGQUIT, SIG_IGN);
 	rl_event_hook = readline_event_hook;
 }

@@ -518,6 +518,7 @@ int	ft_execute(t_app *shell)
 		cmd = cmd->next;
 	}
 	//EXE
+	handle_signal_main();
 
 	cmd = shell->cmd;
 	if (!cmd)

@@ -18,19 +18,7 @@ void 	exit_with_error(t_app *shell, int status, char *message)
 {
     if (message)
         print_message(message, false);
-    // free_envp_list(&shell->envp);
+    free_envp_list(&shell->envp);
     free_list(shell);
     exit(status);
 }
-
-// void 	exit_with_error(t_app *shell, int status, char *message)
-// {
-//     if (message)
-//     {
-//         ft_putstr_fd(message, 2);
-//         ft_putstr_fd("\n", 2);
-//     }
-//     free_envp_list(&shell->envp);
-//     free_list(shell);
-//     exit(status);
-// }
