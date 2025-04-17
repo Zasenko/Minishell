@@ -12,35 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-// char **extract_arguments(t_token *token, char *cmd)
-// {
-//     char    **result;
-//     int     args_count;
-//     int     i = 0;
-    
-//     args_count = count_types(token, ARG) + 2;
-//     result = (char**)malloc(args_count * sizeof(char*));
-//     if (!result)
-//         return NULL;
-//     while (token && i < args_count - 1)
-//     {
-//         if (i == 0 && token->type == ARG)
-//         {
-//             result[i] = ft_strdup(cmd);
-//             if (!result[i])
-//                 return NULL;
-//             i++;
-//         }
-//         result[i] = ft_strdup(token->value);
-//         if (!result[i])
-//             return NULL;
-//         token = token->next;
-//         i++;
-//     }
-//     result[i] = NULL;
-//     return result;
-// }
-
 char **create_expanded_args(char *cmd, char *args, int len)
 {
     int     i;
