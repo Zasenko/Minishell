@@ -12,11 +12,27 @@
 
 #include "../../includes/minishell.h"
 
-static int g_signal = 0;
+volatile sig_atomic_t g_signal = 0;//DELETE
 
 int last_signal_status(void)
 {
     return (g_signal);
+}
+
+int readline_event_hook(void)
+{
+    if (g_signal) {
+        rl_done = 1;
+    }
+    return 0;
+}
+
+int readline_event_hook2(void)
+{
+    if (g_signal) {
+        rl_done = 0;
+    }
+    return 0;
 }
 
 void signal_new_line(void)
@@ -41,11 +57,12 @@ void signal_hendler(int sig)
     }
 }
 
-void handle_signal(void)
+void handle_signal_main(void)
 {
     g_signal = 0;
     signal(SIGINT, &signal_hendler);
-    signal(SIGQUIT, &signal_hendler);
+	signal(SIGQUIT, SIG_IGN);
+
 }
 
 void signal_hendler_in_child(int sig)
@@ -68,4 +85,24 @@ void handle_child_signal(void)
     signal(SIGQUIT, &signal_hendler_in_child);
     // signal(SIGPIPE, SIG_IGN); // иначе сигналы от мёртвых пайпов валят всю цепь
 
+}
+
+
+// Signal handler using sigaction
+void sigint_heredoc_handler(int sig) 
+{
+	(void)sig;
+    g_signal = 1;
+}
+
+void handle_signal_heredoc(void)
+{
+    g_signal = 0;
+    struct sigaction sa;
+	sa.sa_handler = sigint_heredoc_handler;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
+	rl_event_hook = readline_event_hook;
 }

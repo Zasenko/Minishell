@@ -105,27 +105,24 @@ void read_input_line(t_app *shell)
         return ;
     while (1)
     {
-        // handle_signal();
+        handle_signal_main();
         build_env_into_2d_arr(shell);
         create_prompt_path(shell);
         input = readline(shell->prompt);
-        if (input)
+        if (input == NULL)
         {
-            add_history(input);
-            lexing_inputs_data(shell, input);
-            parse_tokens(shell);
-            ft_execute(shell);
-            // print_tokens(shell);
-            // print_cmd(&shell);
-            // print_envp(shell->envp);
-            // print_env_var(shell->env_var);
-            free_list(shell);
-        }
-        else 
-        {
-            // printf("%d\n", last_signal_status());
+            printf("exit\n");
             break;
         }
+        add_history(input);
+        lexing_inputs_data(shell, input);
+        parse_tokens(shell);
+        ft_execute(shell);
+        // print_tokens(shell);
+        // print_cmd(&shell);
+        // print_envp(shell->envp);
+        // print_env_var(shell->env_var);
+        free_list(shell);
 	}
 	exit_with_error(shell, shell->last_exit_code, NULL);
 }

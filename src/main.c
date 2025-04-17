@@ -19,7 +19,7 @@ int main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
     initialize_shell(&shell, envp);
-    handle_signal();
+    handle_signal_main();
     read_input_line(&shell);
     // todo: free schall + close all fds
     return 0;

@@ -38,7 +38,7 @@ void	add_token_back(t_token **token, t_token *new);
 t_token *create_new_token(void);
 int	    token_len(t_token *token);
 t_token *last_token_node(t_token *node);
-void    handle_signal(void);
+void    handle_signal_main(void);
 int     ft_execute(t_app *app);
 int	    cmd_len(t_cmd *cmd);
 void    lexing_inputs_data(t_app *shell, char *input);
@@ -94,5 +94,7 @@ char	**copy_into_2d_arr(t_envp *envp);
 char *find_path(t_app *shell);
 int last_signal_status(void);
 void handle_child_signal(void);
-
+void handle_signal_heredoc(void);
+int readline_event_hook2(void);
+void print_fd_err(char *val, char *err_msg);
 #endif
