@@ -53,7 +53,6 @@ int	close_all_cmnds_fds(t_cmd *cmd)
 	return (1);
 }
 
-
 int	close_all_redirs_fds_child(t_redir *redir)
 {
 	t_redir	*temp;
@@ -228,11 +227,12 @@ void handle_execve_error(t_cmd *cmd)
 
 void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 {
+
 	int exit_status;
 
 	handle_child_signal();
 	redirect_in_child(shell, cmd, prev_pipe, pipe_fd);
-	// close_all_cmnds_fds(shell->cmd);
+	// free_cmd_list_child(&shell->cmd);
 	if (!cmd->args)
 	{
 		free_list_in_child(shell);
@@ -289,6 +289,7 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 		{
 			ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": No such file or directory\n", 2);
+			free_list_in_child(shell);
             exit(127);
 		}
 		handle_execve_error(cmd);
@@ -339,7 +340,7 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell, int *print_sig_error)
 		shell->last_exit_code = errno;
 		return (strerror(errno), errno);
 	}
-	if (WIFEXITED(status))
+	if (WIFEXITED(status)) //exit (1)
 	{
 		shell->last_exit_code = WEXITSTATUS(status);
 		return (SUCCESS);
@@ -351,13 +352,13 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell, int *print_sig_error)
 		if (WTERMSIG(status) == SIGINT)
 		{
 			*print_sig_error = 2;
-			t_cmd *temp_cmd = shell->cmd;
-			while (temp_cmd)
-			{
-				if (kill(temp_cmd->pid, 0) == 0)
-					kill(temp_cmd->pid, SIGINT);
-				temp_cmd = temp_cmd->next;
-			}
+			// t_cmd *temp_cmd = shell->cmd->next;
+			// while (temp_cmd)
+			// {
+			// 	if (kill(temp_cmd->pid, 0) == 0)
+			// 		kill(temp_cmd->pid, SIGUSR1);
+			// 	temp_cmd = temp_cmd->next;
+			// }
 		}
 		else if (WTERMSIG(status) == SIGQUIT)
 			*print_sig_error = 3;
@@ -455,6 +456,10 @@ int	ft_execute(t_app *shell)
 				{
 					char *input = readline("> ");
 					if (last_signal_status()) {
+						if (input)
+						{
+							free(input);
+						}
 						shell->last_exit_code = 130;
 						rl_event_hook = readline_event_hook2;
 						return 0;   // back to prompt

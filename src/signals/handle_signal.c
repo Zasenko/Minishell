@@ -61,29 +61,46 @@ void handle_signal_main(void)
 {
     g_signal = 0;
     rl_event_hook = NULL;
-    signal(SIGINT, &signal_hendler);
+    signal(SIGINT, signal_hendler);
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void signal_hendler_in_child(int sig)
-{
-    if (sig == SIGINT)
-    {
-        g_signal = SIGINT;  
-        ft_putstr_fd("\n", 1);
-    }
-    else if (sig == SIGQUIT)
-    {
-        g_signal = SIGQUIT;
-    }
-}
+// void signal_hendler_in_child(int sig)
+// {
+//     printf("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\n");
+
+//     if (sig == SIGINT)
+//     {
+//         g_signal = SIGINT;
+        
+//         ft_putstr_fd("73 ------------\n", 2);
+//     }
+//     else if (sig == SIGQUIT)
+//     {
+//         ft_putstr_fd("78 ------------\n", 2);
+
+//         g_signal = SIGQUIT;
+//     }
+// }
 
 void handle_child_signal(void)
 {
+    // printf("ttttttttttttttttt\n");
+
     g_signal = 0;
-    signal(SIGINT, &signal_hendler_in_child);
-    signal(SIGQUIT, &signal_hendler_in_child);
+    signal(SIGINT, SIG_DFL);
+    signal(SIGQUIT, SIG_DFL);
     // signal(SIGPIPE, SIG_IGN); // иначе сигналы от мёртвых пайпов валят всю цепь
+
+    // struct sigaction sa;
+	// sa.sa_handler = signal_hendler_in_child;
+	// sigemptyset(&sa.sa_mask);
+	// sa.sa_flags = SA_SIGINFO;
+
+    // sigaction(SIGINT, &sa, NULL);
+
+    // sigaction(SIGQUIT, &sa, NULL);
+
 
 }
 
@@ -102,7 +119,7 @@ void handle_signal_heredoc(void)
 	// sa.sa_handler = sigint_heredoc_handler;
 	// sigemptyset(&sa.sa_mask);
 	// sa.sa_flags = 0;
-	signal(SIGINT, &sigint_heredoc_handler);
+	signal(SIGINT, sigint_heredoc_handler);
 	signal(SIGQUIT, SIG_IGN);
 	rl_event_hook = readline_event_hook;
 }
