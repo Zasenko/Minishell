@@ -116,7 +116,7 @@ void handle_execve_error(t_cmd *cmd)
             ft_putstr_fd(": Is a directory\n", 2);
             exit(126);
         }
-        else if (access(cmd->cmd, X_OK) == -1)
+        else if ( access(cmd->cmd, X_OK) == -1)
         {
             ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": Permission denied\n", 2);
@@ -187,14 +187,19 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 				shell->env_var = new_2d_env;
 			}
 		}
-		
 		execve(cmd->cmd, cmd->args, shell->env_var);
-		if (find_path(shell) == NULL)
+		if (find_path(shell) && !*find_path(shell))
 		{
 			ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": No such file or directory\n", 2);
             exit(127);
 		}
+		if (!find_path(shell) && !cmd->is_valid_cmd )
+        {
+            ft_putstr_fd(cmd->args[0], 2);
+            ft_putstr_fd(": Permission denied\n", 2);
+            exit(126);
+        }
 		handle_execve_error(cmd);
 	}
 }
@@ -224,7 +229,6 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 	}
 	if (cmd->pid == 0)
 		child_process(shell, cmd, *prev_pipe, pipe_fd);
-	
 	close_all_redirs_fds(cmd->redirs);
 	if (*prev_pipe != -1)
 		close(*prev_pipe);

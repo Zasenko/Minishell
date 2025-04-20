@@ -42,8 +42,8 @@ void	handle_signal(void);
 int	ft_execute(t_app *app);
 int	cmd_len(t_cmd *cmd);
 void	lexing_inputs_data(t_app *shell, char *input);
-bool	parse_tokens(t_app *shell);
-char	*parse_command(t_app *shell, char *value);
+void	parse_tokens(t_app *shell);
+char	*parse_command(t_app *shell, t_cmd *cmd, char *value);
 int	count_types(t_token *token, t_type type);
 void	free_cmd_list(t_cmd **cmd);
 void	free_token_list(t_token **tokens);
@@ -98,5 +98,9 @@ char	*divide_into_parts(char *input, int *i);
 void	skip_all_beafor_variable(char *input, int *j);
 bool	handle_non_expansion(char **dest, char *input, int *j, int start);
 bool	handle_expansion(char **dest, char *expanded, bool *do_split);
+char 	**extract_arguments(t_token *token);
+bool is_there_quote(char *str);
+char *extract_word_from_quotes(char *input);
+bool parse_arguments(t_app *shell, t_cmd *cmd, t_token *token, bool *iswriten);
 
 #endif

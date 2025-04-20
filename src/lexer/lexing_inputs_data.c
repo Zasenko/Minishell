@@ -44,17 +44,15 @@ bool	handle_inputs(t_app *shell, t_token **head, char *input, int *i)
 bool	tokenize_data(t_app *shell, t_token *head, char *input)
 {
 	char *str;
-	bool err;
 	int i;
 
 	i = 0;
 	shell->is_valid_syntax = true;
 	str = ft_strtrim(input, " \t");
 	free(input);
-	err = handle_inputs(shell, &head, str, &i);
+	if (!handle_inputs(shell, &head, str, &i))
+		return (free(str), false);
 	free(str);
-	if (!err)
-		return (false);
 	shell->tokens = head;
 	if (!lexing_checker(shell))
 		shell->is_valid_syntax = false;

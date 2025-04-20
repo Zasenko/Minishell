@@ -41,18 +41,16 @@ char *find_path(t_app *shell)
 	return NULL;
 }
 
-char	*extract_full_path(char **paths, char *cmd)
+char	*extract_full_path(char **paths, t_cmd *err, char *cmd)
 {
 	char	*full_path;
 	char	*temp_path;
 	int		i;
 
 	i = 0;
-	full_path = NULL;
-	temp_path = NULL;
 	while (paths[i])
 	{
-		temp_path = ft_strjoin(paths[i], "/");
+		temp_path = ft_strjoin(paths[i++], "/");
 		if (!temp_path)
 			return (NULL);
 		full_path = ft_strjoin(temp_path, cmd);
@@ -63,19 +61,64 @@ char	*extract_full_path(char **paths, char *cmd)
 			break ;
 		free(full_path);
 		full_path = NULL;
-		i++;
+	}
+	if (!full_path)
+	{
+		err->is_valid_cmd = false;
+		return (ft_strdup(""));
 	}
 	return (full_path);
 }
 
-char *parse_command(t_app *shell, char *value)
-{   
-    char    *result;
-    char    *env_path;
+char *handle_cmd_without_env(t_app *shell, t_cmd *cmd, char *value)
+{
+	char *full_path;
+	char *temp_path;
+
+	temp_path = ft_strjoin(shell->pwd, "/");
+	if (!temp_path)
+		return (NULL);
+	full_path = ft_strjoin(temp_path, value);
+	free(temp_path);
+	if (!full_path)
+		return (NULL);
+	if (!access_checking(full_path))
+	{
+		cmd->is_valid_cmd = false;
+	}
+	return full_path;
+}
+char *handle_cmd_path(t_app *shell, t_cmd *cmd, char *value)
+{
+	char    *env_path;
     char    **paths;
+	char	*result;
 
 	env_path = NULL;
-	result = NULL;
+	env_path = find_path(shell);
+	if (env_path && *env_path)
+	{
+		paths = ft_split(env_path, ':');
+		if (!paths)
+			return (NULL);
+		result = extract_full_path(paths, cmd, value);
+		free_2d_array(paths);
+		if (!result)
+			return (NULL);
+	}
+	else
+	{
+		result = handle_cmd_without_env(shell, cmd, value);
+		if (!result)
+			return (NULL);
+	}
+	return result;
+}
+
+char *parse_command(t_app *shell, t_cmd *cmd, char *value)
+{   
+    char    *result;
+
     if (ft_strchr(value, '/', false) || value[0] == '\0')
     {
         result = ft_strdup(value);
@@ -92,33 +135,9 @@ char *parse_command(t_app *shell, char *value)
 		}
 		else
 		{
-        	env_path = find_path(shell);
-        	if (env_path)
-        	{
-        	    paths = ft_split(env_path, ':');
-        	    if (!paths)
-        		{
-					shell->last_exit_code = 1;
-					return (NULL);
-				}
-        	    result = extract_full_path(paths, value);
-        	    free_2d_array(paths);
-				if (!result)
-					return (NULL);
-        	}
-			else
-			{
-				char *temp_path = ft_strjoin(shell->pwd, "/");
-				if (!temp_path)
-					return (NULL);
-				char *full_path = ft_strjoin(temp_path, value);
-				free(temp_path);
-				if (!full_path)
-					return (NULL);
-				if (!access_checking(full_path))
-					return NULL;
-				return full_path;
-			}
+        	result = handle_cmd_path(shell, cmd, value);
+			if (!result)
+            	return NULL;
 		}
     }
     return result;
