@@ -79,8 +79,6 @@ bool	handle_token_parsing(t_app *shell, t_cmd **head, t_cmd **cmd,
 {
 	t_token *token;
 
-	if (!shell->tokens)
-		return (false);
 	token = shell->tokens;
 	while (token != NULL)
 	{
