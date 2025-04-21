@@ -64,6 +64,7 @@ bool	handle_heredoc_parsing(t_cmd **cmd, t_token **token, t_type type)
 	*token = (*token)->next;
 	return (true);
 }
+
 bool	handle_pipe(t_cmd **head, t_cmd **cmd, bool *iswriten)
 {
 	add_cmd_back(head, *cmd);
@@ -76,29 +77,32 @@ bool	handle_pipe(t_cmd **head, t_cmd **cmd, bool *iswriten)
 bool	handle_token_parsing(t_app *shell, t_cmd **head, t_cmd **cmd,
 		bool *iswriten)
 {
+	t_token *token;
+
 	if (!shell->tokens)
 		return (false);
-	while (shell->tokens != NULL)
+	token = shell->tokens;
+	while (token != NULL)
 	{
-		if (shell->tokens->type == ARG && *iswriten)
-			if (!parse_arguments(shell, *cmd, shell->tokens, iswriten))
+		if (token->type == ARG && *iswriten)
+			if (!parse_arguments(shell, *cmd, token, iswriten))
 				return (false);
-		if (shell->tokens->type == PIPE && shell->tokens->next)
+		if (token->type == PIPE && token->next)
 			if (!handle_pipe(head, cmd, iswriten))
 				return (false);
-		if (shell->tokens->type == REDIR_IN && shell->tokens->next)
-			if (!handle_redir_parsing(cmd, &shell->tokens, REDIR_IN))
+		if (token->type == REDIR_IN && token->next)
+			if (!handle_redir_parsing(cmd, &token, REDIR_IN))
 				return (false);
-		if (shell->tokens->type == REDIR_OUT && shell->tokens->next)
-			if (!handle_redir_parsing(cmd, &shell->tokens, REDIR_OUT))
+		if (token->type == REDIR_OUT && token->next)
+			if (!handle_redir_parsing(cmd, &token, REDIR_OUT))
 				return (false);
-		if (shell->tokens->type == APPEND)
-			if (!handle_redir_parsing(cmd, &shell->tokens, APPEND))
+		if (token->type == APPEND)
+			if (!handle_redir_parsing(cmd, &token, APPEND))
 				return (false);
-		if (shell->tokens->type == HEREDOC)
-			if (!handle_heredoc_parsing(cmd, &shell->tokens, HEREDOC))
+		if (token->type == HEREDOC)
+			if (!handle_heredoc_parsing(cmd, &token, HEREDOC))
 				return false;
-		shell->tokens = shell->tokens->next;
+		token = token->next;
 	}
 	return true;
 }

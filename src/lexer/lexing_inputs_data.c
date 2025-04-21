@@ -18,12 +18,12 @@ bool	handle_inputs(t_app *shell, t_token **head, char *input, int *i)
 
 	while (input[*i])
 	{
-		add_token_back(head, create_new_token());
+		if (!add_token_back(head, create_new_token()))
+			return (false);
 		skip_spases(input, i);
 		if (ft_strchr("|<>", input[*i], false))
 		{
-			last = last_token_node(*head);
-			if (!handle_operators(last, input, i))
+			if (!handle_operators(last_token_node(*head), input, i))
 				return (false);
 		}
 		else
@@ -50,6 +50,8 @@ bool	tokenize_data(t_app *shell, t_token *head, char *input)
 	shell->is_valid_syntax = true;
 	str = ft_strtrim(input, " \t");
 	free(input);
+	if (!str)
+		return (false);
 	if (!handle_inputs(shell, &head, str, &i))
 		return (free(str), false);
 	free(str);

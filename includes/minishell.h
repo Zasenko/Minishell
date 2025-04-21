@@ -34,7 +34,7 @@ t_cmd	*last_cmd_node(t_cmd *node);
 void	add_envp_back(t_envp **envp, t_envp *new);
 t_envp	*create_new_envp(char *envp, char *name);
 t_envp	*last_envp_node(t_envp *node);
-void	add_token_back(t_token **token, t_token *new);
+bool	add_token_back(t_token **token, t_token *new);
 t_token	*create_new_token(void);
 int	token_len(t_token *token);
 t_token	*last_token_node(t_token *node);

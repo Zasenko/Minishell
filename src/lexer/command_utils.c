@@ -14,7 +14,9 @@
 
 void	write_value(t_token *token, char *value, int type)
 {
-	token->value = value;
+	token->value = ft_strdup(value);
+	if (!token->value)
+		return ;
 	token->type = type;
 }
 
@@ -81,7 +83,7 @@ bool	handle_expansion(char **dest, char *expanded, bool *do_split)
 	char *temp;
 
 	if (ft_strchr(expanded, ' ', false))
-		*do_split = !(*do_split);
+		*do_split = true;
 	temp = ft_strjoin(*dest, expanded);
     free(expanded);
 	if (!temp)

@@ -12,18 +12,19 @@
 
 #include "../includes/minishell.h"
 
-void	add_token_back(t_token **token, t_token *new)
+bool	add_token_back(t_token **token, t_token *new)
 {
 	t_token	*last;
 
 	if (!new)
-		return ;
+		return (false);
 	if (*token == NULL)
 	{
 		*token = new;
-		return ;
+		return (true);
 	}
 	last = last_token_node(*token);
 	last->next = new;
 	new->prev = last;
+	return (true);
 }

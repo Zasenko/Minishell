@@ -62,7 +62,7 @@ void free_token_list(t_token **tokens)
 {
     t_token *temp;
 
-    if (!tokens)
+    if (!(*tokens))
         return ;
     while (*tokens != NULL)
     {
@@ -126,6 +126,6 @@ void free_list(t_app *shell)
         free(shell->prompt);
         shell->prompt = NULL;
     }
-    free_cmd_list(&shell->cmd);
     free_token_list(&shell->tokens); 
+    free_cmd_list(&shell->cmd);
 }

@@ -51,7 +51,7 @@ bool	handle_redir_outfile(t_app *shell, t_token *token, char *input,
 	j = 0;
 	result = NULL;
 	if (!join_partitions(shell, &result, input, do_split))
-		return (free(input), false);
+		return (free(input), free(result), false);
 	temp = ft_split(result, ' ');
 	if (!temp)
 		return (free(input), false);
@@ -65,6 +65,7 @@ bool	handle_redir_outfile(t_app *shell, t_token *token, char *input,
 	}
 	token->value = result;
 	token->type = ARG;
+	free_2d_array(temp);
     free(input);
 	return (true);
 }
@@ -85,12 +86,13 @@ bool	add_expanded_value_into_node(t_token *token, char **input)
 		{
 			new = create_new_token();
 			if (!new)
-				return false;
+				return (free_2d_array(input), false);
 			write_value(new, input[j], ARG);
 			add_token_back(&token, new);
 		}
 		j++;
 	}
+	free_2d_array(input);
 	return true;
 }
 
@@ -103,19 +105,19 @@ bool	handle_quotes_case(t_app *shell, t_token *token, char *part)
 	if (define_valid_string(part))
 	{
 		if (!join_partitions(shell, &token->value, part, &do_split))
-            return (free(part), false);
+            return (false);
 		if (do_split)
 		{
 			temp = ft_split(token->value, ' ');
 			if (!add_expanded_value_into_node(token, temp))
-                return (free(part), false);
+                return (false);
 		}
 	}
 	else
 	{
 		token->value = ft_strdup(part);
 		if (!token->value)
-			return (free(part), false);
+			return (false);
 	}
 	token->type = ARG;
     free(part);
@@ -127,6 +129,7 @@ bool	handle_command(t_app *shell, t_token *token, char *input, int *i)
 	char *part;
 	char *result;
 	bool do_split;
+	char **temp;
 
 	do_split = false;
 	result = NULL;
@@ -134,14 +137,16 @@ bool	handle_command(t_app *shell, t_token *token, char *input, int *i)
 	if (!part)
 		return false;
 	if (!ft_strchr(part, '$', false))
-		return (write_value(token, part, ARG), true);
+		return (write_value(token, part, ARG), free(part), true);
 	else if (ft_strchr(part, '\"', false) || ft_strchr(part, '\'', false))
 		return (handle_quotes_case(shell, token, part));
 	else if (token->prev && token->prev->type == REDIR_OUT)
 		return (handle_redir_outfile(shell, token, part, &do_split));
 	else if (!join_partitions(shell, &result, part, &do_split))
-		return (free(part), false);
-	else if (!add_expanded_value_into_node(token, ft_split(result, ' ')))
+		return (free(part), free(result), false);
+	temp = ft_split(result, ' ');
+	free(result);
+	if (!add_expanded_value_into_node(token, temp))
 		return (free(part), false);
 	free(part);
 	return true;
