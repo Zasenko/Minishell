@@ -97,7 +97,7 @@ int	redirect(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	return (1);
 }
 
-void handle_execve_error(t_cmd *cmd)
+void handle_execve_error(t_app *shell, t_cmd *cmd)
 {
     struct stat buffer;
 
@@ -106,6 +106,8 @@ void handle_execve_error(t_cmd *cmd)
     {
         ft_putstr_fd(cmd->args[0], 2);
         ft_putstr_fd(": command not found\n", 2);
+		free_list(shell);
+		// free_envp_list(&shell->envp);
         exit(127);
     }
     else if (stat(cmd->cmd, &buffer) == 0)
@@ -114,12 +116,16 @@ void handle_execve_error(t_cmd *cmd)
         {
             ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": Is a directory\n", 2);
+			free_list(shell);
+			// free_envp_list(&shell->envp);
             exit(126);
         }
         else if ( access(cmd->cmd, X_OK) == -1)
         {
             ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": Permission denied\n", 2);
+			free_list(shell);
+			// free_envp_list(&shell->envp);
             exit(126);
         }
     }
@@ -129,12 +135,16 @@ void handle_execve_error(t_cmd *cmd)
         {
             ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": No such file or directory\n", 2);
+			free_list(shell);
+			// free_envp_list(&shell->envp);
             exit(127);
         }
     }
 
     ft_putstr_fd(cmd->args[0], 2);
     ft_putstr_fd(": command not found\n", 2);
+	free_list(shell);
+	// free_envp_list(&shell->envp);
     exit(127);
 }
 
@@ -192,15 +202,19 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 		{
 			ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": No such file or directory\n", 2);
+			free_list(shell);
+			// free_envp_list(&shell->envp);
             exit(127);
 		}
 		if (!find_path(shell) && !cmd->is_valid_cmd )
         {
             ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": Permission denied\n", 2);
+			free_list(shell);
+			// free_envp_list(&shell->envp);
             exit(126);
         }
-		handle_execve_error(cmd);
+		handle_execve_error(shell, cmd);
 	}
 }
 

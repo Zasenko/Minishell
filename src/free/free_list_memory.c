@@ -21,8 +21,10 @@ void free_redir_list(t_redir **redir)
     while (*redir != NULL)
     {
         temp = (*redir)->next;
-        free((*redir)->value);
-        free((*redir)->stop_word);
+        if ((*redir)->value)
+            free((*redir)->value);
+        if ((*redir)->stop_word)
+            free((*redir)->stop_word);
         free(*redir);
         *redir = temp;
     }
