@@ -78,4 +78,11 @@ typedef struct s_app
 	struct s_token *tokens;
 } t_app;
 
+typedef struct s_pwd
+{
+	t_envp *home;
+    t_envp *oldpwd;
+    t_envp *pwd;
+} t_pwd;
+
 #endif

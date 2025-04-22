@@ -222,6 +222,7 @@ void handle_execve_error(t_cmd *cmd)
 
     ft_putstr_fd(cmd->args[0], 2);
     ft_putstr_fd(": command not found\n", 2);
+	
     exit(127);
 }
 
