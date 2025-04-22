@@ -14,7 +14,7 @@
 
 bool	handle_heredoc(t_token *prev, char *input, int *i)
 {
-	int start;
+	int	start;
 
 	start = *i;
 	while (input[*i] && input[*i] != ' ' && input[*i] != '|' && input[*i] != '>'

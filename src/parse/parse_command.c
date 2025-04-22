@@ -3,49 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/14 14:50:02 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/14 14:50:02 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/14 14:50:02 by ibondarc          #+#    #+#             */
+/*   Updated: 2025/02/14 14:50:02 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	access_checking(char *path)
-{
-	int	res;
-
-	if (!path)
-		return (0);
-	if (access(path, F_OK | R_OK | X_OK) == 0)
-		res = 1;
-	else
-		res = 0;
-	return (res);
-}
-
-char *find_path(t_app *shell)
+char	*find_path(t_app *shell)
 {
 	t_envp	*envp;
 
-    envp = shell->envp;
+	envp = shell->envp;
 	while (envp != NULL)
 	{
 		if (ft_strncmp(envp->name, "PATH", 4) == 0)
 		{
-			return envp->envp;
+			return (envp->envp);
 		}
 		envp = envp->next;
 	}
-	return NULL;
+	return (NULL);
 }
 
 char	*extract_full_path(char **paths, t_cmd *err, char *cmd)
 {
+	int		i;
 	char	*full_path;
 	char	*temp_path;
-	int		i;
 
 	i = 0;
 	while (paths[i])
@@ -70,10 +57,10 @@ char	*extract_full_path(char **paths, t_cmd *err, char *cmd)
 	return (full_path);
 }
 
-char *handle_cmd_without_env(t_app *shell, t_cmd *cmd, char *value)
+char	*handle_cmd_without_env(t_app *shell, t_cmd *cmd, char *value)
 {
-	char *full_path;
-	char *temp_path;
+	char	*full_path;
+	char	*temp_path;
 
 	temp_path = ft_strjoin(shell->pwd, "/");
 	if (!temp_path)
@@ -86,12 +73,13 @@ char *handle_cmd_without_env(t_app *shell, t_cmd *cmd, char *value)
 	{
 		cmd->is_valid_cmd = false;
 	}
-	return full_path;
+	return (full_path);
 }
-char *handle_cmd_path(t_app *shell, t_cmd *cmd, char *value)
+
+char	*handle_cmd_path(t_app *shell, t_cmd *cmd, char *value)
 {
-	char    *env_path;
-    char    **paths;
+	char	*env_path;
+	char	**paths;
 	char	*result;
 
 	env_path = NULL;
@@ -112,33 +100,33 @@ char *handle_cmd_path(t_app *shell, t_cmd *cmd, char *value)
 		if (!result)
 			return (NULL);
 	}
-	return result;
+	return (result);
 }
 
-char *parse_command(t_app *shell, t_cmd *cmd, char *value)
-{   
-    char    *result;
+char	*parse_command(t_app *shell, t_cmd *cmd, char *value)
+{
+	char	*result;
 
-    if (ft_strchr(value, '/', false) || value[0] == '\0')
-    {
-        result = ft_strdup(value);
-        if (!result)
-            return NULL;
-    }
-    else
-    {
+	if (ft_strchr(value, '/', false) || value[0] == '\0')
+	{
+		result = ft_strdup(value);
+		if (!result)
+			return (NULL);
+	}
+	else
+	{
 		if (is_builtin_func(value) == true)
 		{
 			result = ft_strdup(value);
-        	if (!result)
-            	return NULL;
+			if (!result)
+				return (NULL);
 		}
 		else
 		{
-        	result = handle_cmd_path(shell, cmd, value);
+			result = handle_cmd_path(shell, cmd, value);
 			if (!result)
-            	return NULL;
+				return (NULL);
 		}
-    }
-    return result;
+	}
+	return (result);
 }

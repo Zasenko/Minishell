@@ -14,9 +14,9 @@
 
 int	join_partitions(t_app *shell, char **dest, char *input, bool *do_split)
 {
-	char *expanded;
-	int j;
-	int start;
+	int		j;
+	int		start;
+	char	*expanded;
 
 	j = 0;
 	*dest = ft_strdup("");
@@ -44,9 +44,9 @@ int	join_partitions(t_app *shell, char **dest, char *input, bool *do_split)
 bool	handle_redir_outfile(t_app *shell, t_token *token, char *input,
 		bool *do_split)
 {
-	int j;
-	char **temp;
-	char *result;
+	int		j;
+	char	**temp;
+	char	*result;
 
 	j = 0;
 	result = NULL;
@@ -66,14 +66,14 @@ bool	handle_redir_outfile(t_app *shell, t_token *token, char *input,
 	token->value = result;
 	token->type = ARG;
 	free_2d_array(temp);
-    free(input);
+	free(input);
 	return (true);
 }
 
 bool	add_expanded_value_into_node(t_token *token, char **input)
 {
-	int j;
-	t_token *new;
+	int		j;
+	t_token	*new;
 
 	j = 0;
 	if (!input)
@@ -93,24 +93,24 @@ bool	add_expanded_value_into_node(t_token *token, char **input)
 		j++;
 	}
 	free_2d_array(input);
-	return true;
+	return (true);
 }
 
 bool	handle_quotes_case(t_app *shell, t_token *token, char *part)
 {
-	bool do_split;
-	char **temp;
+	bool	do_split;
+	char	**temp;
 
 	do_split = false;
 	if (define_valid_string(part))
 	{
 		if (!join_partitions(shell, &token->value, part, &do_split))
-            return (false);
+			return (false);
 		if (do_split)
 		{
 			temp = ft_split(token->value, ' ');
 			if (!add_expanded_value_into_node(token, temp))
-                return (false);
+				return (false);
 		}
 	}
 	else
@@ -120,22 +120,22 @@ bool	handle_quotes_case(t_app *shell, t_token *token, char *part)
 			return (false);
 	}
 	token->type = ARG;
-    free(part);
-	return true;
+	free(part);
+	return (true);
 }
 
 bool	handle_command(t_app *shell, t_token *token, char *input, int *i)
 {
-	char *part;
-	char *result;
-	bool do_split;
-	char **temp;
+	char	*part;
+	char	*result;
+	char	**temp;
+	bool	do_split;	
 
 	do_split = false;
 	result = NULL;
 	part = divide_into_parts(input, i);
 	if (!part)
-		return false;
+		return (false);
 	if (!ft_strchr(part, '$', false))
 		return (write_value(token, part, ARG), free(part), true);
 	else if (ft_strchr(part, '\"', false) || ft_strchr(part, '\'', false))
@@ -149,5 +149,5 @@ bool	handle_command(t_app *shell, t_token *token, char *input, int *i)
 	if (!add_expanded_value_into_node(token, temp))
 		return (free(part), false);
 	free(part);
-	return true;
+	return (true);
 }

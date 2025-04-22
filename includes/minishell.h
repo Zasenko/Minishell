@@ -27,7 +27,7 @@ void	exit_with_error(t_app *shell, int status, char *message);
 void	free_list(t_app *shell);
 bool	get_env_info(t_app *shell);
 void	ft_lstadd_back(t_app **shell, t_app *new);
-bool	create_prompt_path(t_app *shell);
+void	create_prompt_path(t_app *shell);
 void	add_cmd_back(t_cmd **cmd, t_cmd *new);
 t_cmd	*create_new_cmd(void);
 t_cmd	*last_cmd_node(t_cmd *node);
@@ -72,7 +72,6 @@ bool	ft_strstr(char *str, char *to_find);
 char	**create_expanded_args(char *cmd, char *args, int len);
 char	**extract_arguments(t_token *token);
 char	*execut_subcommand(t_app *shell, char *value);
-bool	is_valid_brackets(char *str, char c);
 char	*extract_subcommand(const char *str);
 int	ft_exit(t_cmd *cmd, t_app *shell, int is_parent);
 int	close_all_cmnds_fds(t_cmd *cmd);
@@ -98,9 +97,11 @@ char	*divide_into_parts(char *input, int *i);
 void	skip_all_beafor_variable(char *input, int *j);
 bool	handle_non_expansion(char **dest, char *input, int *j, int start);
 bool	handle_expansion(char **dest, char *expanded, bool *do_split);
-char 	**extract_arguments(t_token *token);
-bool is_there_quote(char *str);
-char *extract_word_from_quotes(char *input);
-bool parse_arguments(t_app *shell, t_cmd *cmd, t_token *token, bool *iswriten);
+char	**extract_arguments(t_token *token);
+bool	is_there_quote(char *str);
+char	*extract_word_from_quotes(char *input);
+bool	parse_arguments(t_app *shell, t_cmd *cmd, t_token *token,
+		bool *iswriten);
+void	free_prompt(t_app *shell);
 
 #endif

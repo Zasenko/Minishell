@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/13 10:21:50 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/13 10:21:50 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/13 10:21:50 by ibondarc          #+#    #+#             */
+/*   Updated: 2025/02/13 10:21:50 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool	handle_redir_parsing(t_cmd **cmd, t_token **token, t_type type)
 {
-	t_redir *redir;
+	t_redir	*redir;
 
 	redir = create_new_redir();
 	if (!redir)
@@ -40,7 +40,7 @@ bool	handle_redir_parsing(t_cmd **cmd, t_token **token, t_type type)
 
 bool	handle_heredoc_parsing(t_cmd **cmd, t_token **token, t_type type)
 {
-	t_redir *redir;
+	t_redir	*redir;
 
 	redir = create_new_redir();
 	if (!redir)
@@ -65,19 +65,23 @@ bool	handle_heredoc_parsing(t_cmd **cmd, t_token **token, t_type type)
 	return (true);
 }
 
-bool	handle_pipe(t_cmd **head, t_cmd **cmd, bool *iswriten)
+bool	handle_pipe(t_cmd **head, t_token *token, t_cmd **cmd, bool *iswriten)
 {
-	add_cmd_back(head, *cmd);
-	*cmd = create_new_cmd();
-	if (!(*cmd))
-		return (false);
-	*iswriten = true;
+	if (token->type == PIPE && token->next)
+	{
+		add_cmd_back(head, *cmd);
+		*cmd = create_new_cmd();
+		if (!(*cmd))
+			return (false);
+		*iswriten = true;
+	}
 	return (true);
 }
+
 bool	handle_token_parsing(t_app *shell, t_cmd **head, t_cmd **cmd,
 		bool *iswriten)
 {
-	t_token *token;
+	t_token	*token;
 
 	token = shell->tokens;
 	while (token != NULL)
@@ -85,9 +89,8 @@ bool	handle_token_parsing(t_app *shell, t_cmd **head, t_cmd **cmd,
 		if (token->type == ARG && *iswriten)
 			if (!parse_arguments(shell, *cmd, token, iswriten))
 				return (false);
-		if (token->type == PIPE && token->next)
-			if (!handle_pipe(head, cmd, iswriten))
-				return (false);
+		if (!handle_pipe(head, token, cmd, iswriten))
+			return (false);
 		if (token->type == REDIR_IN && token->next)
 			if (!handle_redir_parsing(cmd, &token, REDIR_IN))
 				return (false);
@@ -99,17 +102,17 @@ bool	handle_token_parsing(t_app *shell, t_cmd **head, t_cmd **cmd,
 				return (false);
 		if (token->type == HEREDOC)
 			if (!handle_heredoc_parsing(cmd, &token, HEREDOC))
-				return false;
+				return (false);
 		token = token->next;
 	}
-	return true;
+	return (true);
 }
 
 void	parse_tokens(t_app *shell)
 {
-	t_cmd *head;
-	t_cmd *cmd;
-	bool iswriten;
+	t_cmd	*head;
+	t_cmd	*cmd;
+	bool	iswriten;
 
 	if (!shell)
 		return ;

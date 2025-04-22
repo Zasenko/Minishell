@@ -20,9 +20,9 @@ void	skip_spases(char *input, int *i)
 
 char	*ft_devide_string(char *input, int *i, char delim, bool *is_open_q)
 {
-	char *res;
-	int j;
-	int len;
+	char	*res;
+	int		j;
+	int		len;
 
 	if (!input)
 		return (NULL);
@@ -46,10 +46,13 @@ char	*ft_devide_string(char *input, int *i, char delim, bool *is_open_q)
 
 bool	define_valid_string(char *input)
 {
-	int i = 0;
-	bool sing_quote = true;
-	bool doub_quote = true;
+	int		i;
+	bool	sing_quote;
+	bool	doub_quote;
 
+	i = 0;
+	sing_quote = true;
+	doub_quote = true;
 	while (input[i])
 	{
 		if (input[i] == '\"')

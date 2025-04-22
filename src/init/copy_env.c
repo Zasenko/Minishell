@@ -14,9 +14,9 @@
 
 bool	create_pwd_env_value(t_app *shell)
 {
-	char buf[MAXPATHLEN];
-	char *name;
-	char *value;
+	char	buf[MAXPATHLEN];
+	char	*name;
+	char	*value;
 
 	name = ft_strdup("PWD");
 	if (!name)
@@ -33,8 +33,8 @@ bool	create_pwd_env_value(t_app *shell)
 
 bool	create_shell_lvl_env_value(t_app *shell)
 {
-	char *name;
-	char *value;
+	char	*name;
+	char	*value;
 
 	name = ft_strdup("1");
 	if (!name)
@@ -51,10 +51,10 @@ bool	create_shell_lvl_env_value(t_app *shell)
 
 bool	create_env_copy(t_app *shell, char **envp, int *i)
 {
-	int j;
-	char *name;
-	char *env_var;
-	char *s;
+	int		j;
+	char	*name;
+	char	*env_var;
+	char	*s;
 
 	while (envp[*i] != NULL)
 	{
@@ -76,7 +76,7 @@ bool	create_env_copy(t_app *shell, char **envp, int *i)
 
 void	copy_env(t_app *shell, char **envp)
 {
-	int i;
+	int	i;
 
 	if (!shell)
 		return ;
