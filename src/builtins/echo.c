@@ -29,10 +29,10 @@ void	echo_check_args(char **args, int *i, bool *with_new_line)
 				*i = *i + 1;
 			}
 			else
-				break;
+				break ;
 		}
 		else
-			break;
+			break ;
 	}
 }
 

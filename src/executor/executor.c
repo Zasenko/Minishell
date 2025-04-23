@@ -135,14 +135,14 @@ void handle_execve_error(t_app *shell, t_cmd *cmd)
 
         }
 
-	if (find_path(shell) == NULL)
+	else if (find_path(shell) == NULL)
 	{
 		ft_putstr_fd(cmd->args[0], 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
 		exit_child(shell, 127, NULL);
 	}
 
-	if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' || 
+	else if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' || 
         !ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
     {
         ft_putstr_fd(cmd->args[0], 2);

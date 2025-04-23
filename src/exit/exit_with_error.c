@@ -23,9 +23,9 @@ void	exit_with_error(t_app *shell, int status, char *message)
 
 void	exit_child(t_app *shell, int status, char *message)
 {
-    if (message)
-        print_message(message, false);
-    free_envp_list(&shell->envp);
-    free_list_in_child(shell);
-    exit(status);
+	if (message)
+		print_message(message, false);
+	free_envp_list(&shell->envp);
+	free_list_in_child(shell);
+	exit(status);
 }

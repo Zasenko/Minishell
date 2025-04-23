@@ -6,7 +6,7 @@
 /*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:31:12 by ibondarc          #+#    #+#             */
-/*   Updated: 2025/02/28 13:27:00 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:11:57 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strdup(const char *s)
 	int		s_len;
 
 	if (!s)
-		return NULL;
+		return (NULL);
 	s_len = ft_strlen(s) + 1;
 	result = (char *)malloc(sizeof(char) * s_len);
 	if (!result)

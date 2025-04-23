@@ -32,6 +32,7 @@ SRC = 		main.c \
 			free/free_list_memory.c \
 			free/free_child.c \
 			signals/handle_signal.c \
+			signals/signal_parts_two.c \
 			exit/exit_with_error.c \
 			exit/print_message.c \
 			executor/executor.c \

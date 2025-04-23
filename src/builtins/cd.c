@@ -43,7 +43,7 @@ int	cd_get_dir(t_cmd *cmd, t_envp *home_node, t_envp *oldpwd_node, char **dir)
 int	cd_change_dir(char *dir, char **changed_dir)
 {
 	char	buf[MAXPATHLEN];
-	int	result;
+	int		result;
 
 	result = chdir(dir);
 	if (result == -1)
