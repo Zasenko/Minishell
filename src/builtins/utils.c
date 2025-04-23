@@ -46,7 +46,7 @@ int	exec_buildin(t_cmd *cmd, t_app *shell, bool is_child, int fd)
 	if (ft_strstr(cmd->args[0], "cd"))
 		return (ft_cd(cmd, shell, is_child));
 	if (ft_strstr(cmd->args[0], "exit"))
-		return (ft_exit(cmd, shell, 0));
+		return (ft_exit(cmd, shell, is_child));
 	if (ft_strstr(cmd->args[0], "export"))
 		return (ft_export(cmd, shell, is_child));
 	if (ft_strstr(cmd->args[0], "unset"))

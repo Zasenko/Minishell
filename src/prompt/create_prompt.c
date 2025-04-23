@@ -50,6 +50,7 @@ void	create_prompt_path(t_app *shell)
 	parts[7] = "$ ";
 	if (!handle_creating_prompt(&prompt, parts))
 	{
+		free(prompt);
 		exit_with_error(shell, 1, QUOTE_ERR);
 	}
 	shell->prompt = prompt;

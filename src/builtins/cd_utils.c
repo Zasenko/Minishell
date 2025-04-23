@@ -6,13 +6,13 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:25:00 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/22 14:12:08 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:28:31 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	cd_change_old_pwd(t_app *shell, t_pwd *pwd, char *dir, char *current, bool is_child)
+void	cd_change_old_pwd(t_app *shell, t_pwd *pwd, char *current, bool is_child)
 {
 	char	*new_oldpwd;
 
@@ -22,8 +22,6 @@ void	cd_change_old_pwd(t_app *shell, t_pwd *pwd, char *dir, char *current, bool 
 		new_oldpwd = ft_strdup(pwd->pwd->envp);
 		if (!new_oldpwd)
 		{
-			if (dir)
-				free(dir);
 			if (current)
 				free(current);
 			if (is_child)
@@ -39,7 +37,7 @@ void	cd_change_old_pwd(t_app *shell, t_pwd *pwd, char *dir, char *current, bool 
 	}
 }
 
-void	cd_set_old_pwd(t_app *shell, t_pwd *pwd, char *dir, char *current_dir, bool is_child)
+void	cd_set_old_pwd(t_app *shell, t_pwd *pwd, char *current_dir, bool is_child)
 {
 	char	*new_old_pwd;
 	char	*new_old_pwd_name;
@@ -66,8 +64,6 @@ void	cd_set_old_pwd(t_app *shell, t_pwd *pwd, char *dir, char *current_dir, bool
 	{
 		free(new_old_pwd);
 		free(new_old_pwd_name);
-		if (dir)
-			free(dir);
 		if (current_dir)
 			free(current_dir);
 		if (is_child)
@@ -77,15 +73,15 @@ void	cd_set_old_pwd(t_app *shell, t_pwd *pwd, char *dir, char *current_dir, bool
 	add_envp_back(&shell->envp, node);
 }
 
-void	cd_change_pwd(t_app *shell, t_pwd *pwd, char *dir, char *current_dir, bool is_child)
+void	cd_change_pwd(t_app *shell, t_pwd *pwd, char *current_dir, bool is_child)
 {
 	char	*new_pwd;
-
+	
+	new_pwd = NULL;
 	new_pwd = ft_strdup(current_dir);
+
 	if (!new_pwd)
 	{
-		if (dir)
-			free(dir);
 		if (current_dir)
 			free(current_dir);
 		if (is_child)
@@ -100,13 +96,13 @@ void	cd_change_pwd(t_app *shell, t_pwd *pwd, char *dir, char *current_dir, bool 
 	pwd->pwd->envp = new_pwd;
 }
 
-int	cd_change_env(t_app *shell, t_pwd *pwd, char *current_dir, char *dir, bool is_child)
+int	cd_change_env(t_app *shell, t_pwd *pwd, char *changed_dir, bool is_child)
 {
 	if (pwd->oldpwd)
-		cd_change_old_pwd(shell, pwd, dir, current_dir, is_child);
+		cd_change_old_pwd(shell, pwd, changed_dir, is_child);
 	else
-		cd_set_old_pwd(shell, pwd, dir, current_dir, is_child);
+		cd_set_old_pwd(shell, pwd, changed_dir, is_child);
 	if (pwd->pwd)
-		cd_change_pwd(shell, pwd, dir, current_dir, is_child);
+		cd_change_pwd(shell, pwd, changed_dir, is_child);
 	return (EXIT_SUCCESS);
 }

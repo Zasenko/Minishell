@@ -73,7 +73,7 @@ char	**create_expanded_args(char *cmd, char *args, int len);
 char	**extract_arguments(t_token *token);
 char	*execut_subcommand(t_app *shell, char *value);
 char	*extract_subcommand(const char *str);
-int	ft_exit(t_cmd *cmd, t_app *shell, int is_parent);
+int	ft_exit(t_cmd *cmd, t_app *shell, int is_child);
 int	close_all_cmnds_fds(t_cmd *cmd);
 bool	define_valid_string(char *input);
 int	ft_export(t_cmd *cmd, t_app *shell, bool is_child);
@@ -108,7 +108,8 @@ void handle_child_signal(void);
 void handle_signal_heredoc(void);
 int readline_event_hook2(void);
 void print_fd_err(char *val, char *err_msg);
-int	cd_change_env(t_app *shell, t_pwd *pwd, char *current_dir, char *dir, bool is_child);
+int	cd_change_env(t_app *shell, t_pwd *pwd, char *current_dir, bool is_child);
 void free_list_in_child(t_app *shell);
 void	exit_child(t_app *shell, int status, char *message);
+void		free_redir_list(t_redir **redir);
 #endif

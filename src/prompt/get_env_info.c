@@ -47,13 +47,13 @@ bool	get_env_info(t_app *shell)
 	envp = shell->envp;
 	while (envp != NULL)
 	{
-		if (ft_strncmp(envp->name, "USER", 4) == 0)
+		if (ft_strcmp(envp->name, "USER") == 0)
 		{
 			shell->user = ft_strdup(envp->envp);
 			if (!shell->user)
 				return (false);
 		}
-		else if (ft_strncmp(envp->name, "NAME", 4) == 0)
+		else if (ft_strcmp(envp->name, "NAME") == 0)
 		{
 			shell->name = ft_strdup(envp->envp);
 			if (!shell->name)

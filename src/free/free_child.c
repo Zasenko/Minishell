@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:52:33 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/22 13:53:38 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/04/23 12:24:31 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,18 @@ void free_cmd_list_child(t_cmd **cmd)
     while (*cmd != NULL)
     {
         temp = (*cmd)->next;
+        if ((*cmd)->cmd)
+		{
+			free((*cmd)->cmd);
+			(*cmd)->cmd = NULL;
+		}
         if ((*cmd)->args)
         {
             free_2d_array((*cmd)->args);
             (*cmd)->args = NULL;
         }
         close_all_redirs_fds_child((*cmd)->redirs);
+        free_redir_list(&(*cmd)->redirs);
         free(*cmd);
         *cmd = temp;
     }
@@ -63,26 +69,7 @@ void free_list_in_child(t_app *shell)
         free_2d_array(shell->env_var);
         shell->env_var = NULL;
     }
-    if (shell->user)
-    {
-        free(shell->user);
-        shell->user = NULL;
-    }
-    if (shell->name) 
-    {
-        free(shell->name);
-        shell->name = NULL;
-    }
-    if (shell->pwd)
-    {
-        free(shell->pwd);
-        shell->pwd = NULL;
-    }
-    if (shell->prompt)
-    {
-        free(shell->prompt);
-        shell->prompt = NULL;
-    }
+    free_prompt(shell);
     free_cmd_list_child(&shell->cmd);
     free_token_list(&shell->tokens); 
 }

@@ -118,9 +118,11 @@ void handle_execve_error(t_app *shell, t_cmd *cmd)
 		{
 			ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": No such file or directory\n", 2);
-			free_list(shell);
-			free_envp_list(&shell->envp);
-            exit(127);
+			// free_list(shell);
+			// free_envp_list(&shell->envp);
+            // exit(127);
+			exit_child(shell, 127, NULL);
+
 		}
 		if (!find_path(shell) && !cmd->is_valid_cmd )
         {
@@ -129,6 +131,8 @@ void handle_execve_error(t_app *shell, t_cmd *cmd)
 			free_list(shell);
 			free_envp_list(&shell->envp);
             exit(126);
+			// exit_child(shell, 126, NULL);
+
         }
 
 	if (find_path(shell) == NULL)
@@ -344,15 +348,12 @@ int	ft_execute(t_app *shell)
 	int		cmd_count;
 	int		prev_pipe;
 
-	
-
 	cmd_count = cmd_len(shell->cmd);
 	prev_pipe = -1;
 	if (!cmd_count || !shell->is_valid_syntax)
 		return (0);
 	
 	//HEREDOC
-
 	cmd = shell->cmd;
 	while (cmd != NULL)
 	{
@@ -458,9 +459,7 @@ int	ft_execute(t_app *shell)
 
 	cmd = shell->cmd;
 	if (!cmd)
-	{
 		return 0;
-	}
 	if (cmd->next == NULL && cmd->args && is_builtin_func(cmd->args[0]))
 	{
 
@@ -470,15 +469,9 @@ int	ft_execute(t_app *shell)
 		dup_0 = dup(0);
 		dup_1 = dup(1);
 
-		// printf("Redirection 0 - 1: %d | %d\n", dup_0, dup_1);
-
-		// ft_putstr_fd("no child\n", 1);
-		//todo double code
 		t_redir *redir = cmd->redirs;
 		while (redir)
 		{
-			// printf("Redirection type: %d, fd: %d\n", redir->type, redir->fd);
-
 			if (redir->type == REDIR_IN || redir->type == HEREDOC)
 			{
 				redir->fd = open(redir->value, O_RDONLY);
