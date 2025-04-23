@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:25:00 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/23 14:28:31 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/04/23 20:15:37 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 void	cd_change_old_pwd(t_app *shell, t_pwd *pwd, char *current, bool is_child)
 {

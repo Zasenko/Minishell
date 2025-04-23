@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 int	cd_get_dir(t_cmd *cmd, t_envp *home_node, t_envp *oldpwd_node, char **dir)
 {
