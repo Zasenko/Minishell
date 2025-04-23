@@ -42,34 +42,17 @@ int	my_whitespace(const char *str, int *idx)
 	return (sign);
 }
 
-long long	ft_my_atoi(const char *nptr)
-{
-	int	i;
-	int	sign;
-	long long result;
-
-	result = 0;
-	sign = my_whitespace(nptr, &i);
-	while (nptr[i] >= 48 && nptr[i] <= 57)
-	{
-		result = result * 10 + (nptr[i] - 48);
-		i++;
-	}
-	return (long long)(sign * result);
-}
-
 int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
 {
-    printf("exit\n");
+	if (is_parent)
+		ft_putstr_fd("exit\n", 1);
+    
     if (arr2d_len(cmd->args) == 1)
     {
         if (is_parent)
-        {
-            free_list(shell);
-            exit(shell->last_exit_code);
-        }
+			exit_with_error(shell, shell->last_exit_code, NULL);
         else
-            exit(shell->last_exit_code);
+            return (shell->last_exit_code);
     }
 
     int f = 1;
@@ -78,28 +61,16 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
         if (f == 2)
         {
             if (arr2d_len(cmd->args) > 2)
-            {
-                ft_putstr_fd("exit: too many arguments\n", 2);
-                if (is_parent)
-                {
-                    shell->last_exit_code = 1;
-                    return 1;
-                }
-                else
-                    exit(1);
-            }
+                return (ft_putstr_fd("exit: too many arguments\n", 2), 1);
         }
 
         char *trimmed = ft_strtrim(cmd->args[f], " \t");  
         if (!trimmed)
         {
             if (is_parent)
-            {
-                free_list(shell);
-                exit(1);
-            }
+                exit_with_error(shell, 1, NULL);
             else
-                exit(1);
+				return (1);
         }
         int i = 0;
         if (trimmed[i] == '+' || trimmed[i] == '-')
@@ -111,12 +82,9 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
             ft_putstr_fd(": numeric argument required\n", 2);
             free(trimmed);
             if (is_parent)
-            {
-                free_list(shell);
-                exit(2);
-            }
+				exit_with_error(shell, 2, NULL);
             else
-                exit(2);
+                return (2);
         }
 
         while (trimmed[i])
@@ -128,12 +96,9 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
                 ft_putstr_fd(": numeric argument required\n", 2);
                 free(trimmed);
                 if (is_parent)
-                {
-                    free_list(shell);
-                    exit(2);
-                }
+                    exit_with_error(shell, 2, NULL);
                 else
-                    exit(2);
+                    return (2);
             }
             i++;
         }
@@ -164,12 +129,9 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
                 ft_putstr_fd(cmd->args[1], 2);
                 ft_putstr_fd(": numeric argument required\n", 2);
                 if (is_parent)
-                {
-                    free_list(shell);
-                    exit(2);
-                }
+                    exit_with_error(shell, 2, NULL);
                 else
-                    exit(2);
+                    return (2);
             }
 	    	i++;
 	    }
@@ -177,10 +139,6 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
         f++;
     }
     if (is_parent)
-    {
-        free_list(shell);
-        exit(exit_code);
-    }
-    else
-        exit(exit_code);
+		exit_with_error(shell, exit_code, NULL);
+	return (exit_code);
 }

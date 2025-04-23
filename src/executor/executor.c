@@ -53,80 +53,6 @@ int	close_all_cmnds_fds(t_cmd *cmd)
 	return (1);
 }
 
-int	close_all_redirs_fds_child(t_redir *redir)
-{
-	t_redir	*temp;
-
-	temp = redir;
-	if (!temp)
-		return (0);
-	while (temp != NULL)
-	{
-		if (temp->fd > -1)
-		{
-			close(temp->fd);
-			temp->fd = -1;
-		}
-		temp = temp->next;
-
-	}
-	return (1);
-}
-
-void free_cmd_list_child(t_cmd **cmd)
-{
-    t_cmd *temp;
-
-    if (!cmd)
-        return ;
-    while (*cmd != NULL)
-    {
-        temp = (*cmd)->next;
-        if ((*cmd)->args)
-        {
-            free_2d_array((*cmd)->args);
-            (*cmd)->args = NULL;
-        }
-        close_all_redirs_fds_child((*cmd)->redirs);
-        free(*cmd);
-        *cmd = temp;
-    }
-    free(*cmd);
-    *cmd = NULL;
-}
-
-void free_list_in_child(t_app *shell)
-{
-    if (!shell)
-        return ;
-    if (shell->env_var)
-    {
-        free_2d_array(shell->env_var);
-        shell->env_var = NULL;
-    }
-    if (shell->user)
-    {
-        free(shell->user);
-        shell->user = NULL;
-    }
-    if (shell->name) 
-    {
-        free(shell->name);
-        shell->name = NULL;
-    }
-    if (shell->pwd)
-    {
-        free(shell->pwd);
-        shell->pwd = NULL;
-    }
-    if (shell->prompt)
-    {
-        free(shell->prompt);
-        shell->prompt = NULL;
-    }
-    free_cmd_list_child(&shell->cmd);
-    free_token_list(&shell->tokens); 
-}
 
 int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 {
@@ -148,7 +74,7 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 			if (redir->fd < 0)
 			{
 				print_fd_err(redir->value, strerror(errno));
-				exit (1);
+				exit_child(shell, 1, NULL);
 			}
 			dup2(redir->fd, 0);
 			close(redir->fd);
@@ -159,7 +85,7 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 			if (redir->fd < 0)
 			{
 				print_fd_err(redir->value, strerror(errno));
-				exit (1);
+				exit_child(shell, 1, NULL);
 			}
 			dup2(redir->fd, 1);
 			close(redir->fd);
@@ -170,7 +96,7 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 			if (redir->fd < 0)
 			{
 				print_fd_err(redir->value, strerror(errno));
-				exit (1);
+				exit_child(shell, 1, NULL);
 			}
 			dup2(redir->fd, 1);
 			close(redir->fd);
@@ -184,16 +110,23 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	return (1);
 }
 
-void handle_execve_error(t_cmd *cmd)
+void handle_execve_error(t_app *shell, t_cmd *cmd)
 {
     struct stat buffer;
+
+	if (find_path(shell) == NULL)
+	{
+		ft_putstr_fd(cmd->args[0], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		exit_child(shell, 127, NULL);
+	}
 
 	if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' || 
         !ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
     {
         ft_putstr_fd(cmd->args[0], 2);
         ft_putstr_fd(": command not found\n", 2);
-        exit(127);
+        exit_child(shell, 127, NULL);
     }
     else if (stat(cmd->cmd, &buffer) == 0)
     {
@@ -201,13 +134,13 @@ void handle_execve_error(t_cmd *cmd)
         {
             ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": Is a directory\n", 2);
-            exit(126);
+            exit_child(shell, 126, NULL);
         }
         else if (access(cmd->cmd, X_OK) == -1)
         {
             ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": Permission denied\n", 2);
-            exit(126);
+            exit_child(shell, 126, NULL);
         }
     }
     else
@@ -216,14 +149,12 @@ void handle_execve_error(t_cmd *cmd)
         {
             ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": No such file or directory\n", 2);
-            exit(127);
+			exit_child(shell, 127, NULL);
         }
     }
-
     ft_putstr_fd(cmd->args[0], 2);
     ft_putstr_fd(": command not found\n", 2);
-	
-    exit(127);
+	exit_child(shell, 127, NULL);
 }
 
 void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
@@ -233,23 +164,16 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 
 	handle_child_signal();
 	redirect_in_child(shell, cmd, prev_pipe, pipe_fd);
-	// free_cmd_list_child(&shell->cmd);
 	if (!cmd->args)
-	{
-		free_list_in_child(shell);
-		exit(0);
-	}
-
+		exit_child(shell, 0, NULL);
 	if (is_builtin_func(cmd->args[0]))
 	{
 		signal(SIGPIPE, SIG_IGN);
 		exit_status = exec_buildin(cmd, shell, true, 1);
-		free_list_in_child(shell);
-		exit(exit_status);
+		exit_child(shell, exit_status, NULL);
 	}
 	else
 	{
-		
 		if (ft_strstr(cmd->args[0], "/minishell"))
 		{
 			t_envp *node = find_envp_node(shell->envp, "SHLVL");
@@ -279,21 +203,10 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 			}
 		}
 		if (cmd->cmd == NULL)
-		{
 			execve(cmd->args[0], cmd->args, shell->env_var);
-		}
 		else
-		{
 			execve(cmd->cmd, cmd->args, shell->env_var);
-		}
-		if (find_path(shell) == NULL)
-		{
-			ft_putstr_fd(cmd->args[0], 2);
-            ft_putstr_fd(": No such file or directory\n", 2);
-			free_list_in_child(shell);
-            exit(127);
-		}
-		handle_execve_error(cmd);
+		handle_execve_error(shell, cmd);
 	}
 }
 

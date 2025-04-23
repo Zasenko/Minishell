@@ -81,6 +81,6 @@ int	ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
 		ft_putstr_fd("\n", 1);
 	}
 	if (!is_child)
-		cd_change_env(shell, &pwd, current_dir, dir);
+		cd_change_env(shell, &pwd, current_dir, dir, is_child);
 	return (SUCCESS);
 }

@@ -30,6 +30,7 @@ SRC = 		main.c \
 			prompt/create_prompt.c \
 			free/free_memory.c \
 			free/free_list_memory.c \
+			free/free_child.c \
 			signals/handle_signal.c \
 			exit/exit_with_error.c \
 			exit/print_message.c \

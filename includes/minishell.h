@@ -103,5 +103,7 @@ void handle_child_signal(void);
 void handle_signal_heredoc(void);
 int readline_event_hook2(void);
 void print_fd_err(char *val, char *err_msg);
-int cd_change_env(t_app *shell, t_pwd *pwd, char *current_dir, char *dir);
+int	cd_change_env(t_app *shell, t_pwd *pwd, char *current_dir, char *dir, bool is_child);
+void free_list_in_child(t_app *shell);
+void	exit_child(t_app *shell, int status, char *message);
 #endif
