@@ -12,7 +12,7 @@
 
 #include "../includes/minishell.h"
 
-t_envp *find_envp_node(t_envp *envp, char *key)
+t_envp	*find_envp_node(t_envp *envp, char *key)
 {
 	t_envp	*temp;
 
@@ -21,12 +21,10 @@ t_envp *find_envp_node(t_envp *envp, char *key)
 		return (NULL);
 	while (temp != NULL)
 	{
-		// printf("--temp->name-- %s\n", temp->name);
-		// printf("--key-- %s\n", key);
-        if (!ft_strcmp(temp->name, key))
-        {
-            return (temp);
-        }
+		if (!ft_strcmp(temp->name, key))
+		{
+			return (temp);
+		}
 		temp = temp->next;
 	}
 	return (NULL);

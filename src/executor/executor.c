@@ -115,30 +115,30 @@ void handle_execve_error(t_app *shell, t_cmd *cmd)
     struct stat buffer;
 
 	if (find_path(shell) && !*find_path(shell))
-		{
-			ft_putstr_fd(cmd->args[0], 2);
-            ft_putstr_fd(": No such file or directory\n", 2);
-			free_list(shell);
-			free_envp_list(&shell->envp);
-            exit(127);
-		}
-		if (!find_path(shell) && !cmd->is_valid_cmd )
-        {
-            ft_putstr_fd(cmd->args[0], 2);
-            ft_putstr_fd(": Permission denied\n", 2);
-			free_list(shell);
-			free_envp_list(&shell->envp);
-            exit(126);
-        }
+	{
+		ft_putstr_fd(cmd->args[0], 2);
+        ft_putstr_fd(": No such file or directory\n", 2);
+		free_list(shell);
+		free_envp_list(&shell->envp);
+        exit(127);
+	}
+	else if (!find_path(shell) && !cmd->is_valid_cmd )
+    {
+        ft_putstr_fd(cmd->args[0], 2);
+        ft_putstr_fd(": Permission denied\n", 2);
+		free_list(shell);
+		free_envp_list(&shell->envp);
+        exit(126);
+    }
 
-	if (find_path(shell) == NULL)
+	else if (find_path(shell) == NULL)
 	{
 		ft_putstr_fd(cmd->args[0], 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
 		exit_child(shell, 127, NULL);
 	}
 
-	if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' || 
+	else if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' || 
         !ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
     {
         ft_putstr_fd(cmd->args[0], 2);

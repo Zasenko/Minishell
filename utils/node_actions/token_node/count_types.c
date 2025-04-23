@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   count_types.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/14 15:10:25 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/14 15:10:25 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/14 15:10:25 by ibondarc          #+#    #+#             */
+/*   Updated: 2025/02/14 15:10:25 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ int	count_types(t_token *token, t_type type)
 		return (i);
 	while (temp && temp->type != PIPE)
 	{
-		if (temp->type == REDIR_IN || temp->type == REDIR_OUT 
+		if (temp->type == REDIR_IN || temp->type == REDIR_OUT
 			|| temp->type == APPEND || token->type == HEREDOC)
 		{
-                token = token->next;
+			token = token->next;
 		}
 		else if (temp->type == type)
-        	i++;
+			i++;
 		temp = temp->next;
 	}
 	return (i);

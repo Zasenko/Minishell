@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   create_list.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/05 19:36:07 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/05 19:36:07 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/05 19:36:07 by ibondarc          #+#    #+#             */
+/*   Updated: 2025/02/05 19:36:07 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_cmd *create_new_cmd(void)
+t_cmd	*create_new_cmd(void)
 {
-	t_cmd *new;
-	
+	t_cmd	*new;
+
 	new = malloc(sizeof(t_cmd));
 	if (!new)
-		return NULL;
+		return (NULL);
 	new->cmd = NULL;
 	new->args = NULL;
 	new->is_build = false;
@@ -26,5 +26,5 @@ t_cmd *create_new_cmd(void)
 	new->prev = NULL;
 	new->next = NULL;
 	new->pid = -1;
-	return new;
+	return (new);
 }
