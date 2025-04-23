@@ -1,211 +1,132 @@
-//* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parse_tokens.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/13 10:21:50 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/13 10:21:50 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/13 10:21:50 by ibondarc          #+#    #+#             */
+/*   Updated: 2025/02/13 10:21:50 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-bool is_there_quote(char *str)
+bool	handle_redir_parsing(t_cmd **cmd, t_token **token, t_type type)
 {
-    while (*str)
-    {
-        if (*str == '\'' || *str == '\"')
-            return true;
-        str++;
-    }
-    return false;
+	t_redir	*redir;
+
+	redir = create_new_redir();
+	if (!redir)
+		return (false);
+	if (is_there_quote((*token)->next->value))
+	{
+		redir->type = type;
+		redir->value = extract_word_from_quotes((*token)->next->value);
+		if (!redir->value)
+			return (false);
+	}
+	else
+	{
+		redir->type = type;
+		redir->value = ft_strdup((*token)->next->value);
+		if (!redir->value)
+			return (false);
+	}
+	add_redir_back(&(*cmd)->redirs, redir);
+	*token = (*token)->next;
+	return (true);
 }
 
-char *extract_word_from_quotes(char *input) 
+bool	handle_heredoc_parsing(t_cmd **cmd, t_token **token, t_type type)
 {
-    int   i = 0, j = 0;
-    int   len;
-    char  *res;
-    char  quote = 0;
+	t_redir	*redir;
 
-    if (!input)
-        return NULL;
-
-    len = ft_strlen(input);
-    res = (char *)malloc((len + 1) * sizeof(char));
-    if (!res)
-        return NULL;
-
-    while (input[i])
-    {
-        if (!quote && (input[i] == '\'' || input[i] == '\"')) 
-            quote = input[i];  
-        else if (quote && input[i] == quote) 
-            quote = 0; 
-        else
-            res[j++] = input[i];
-        
-        i++;
-    }
-    res[j] = '\0';
-    return res;
+	redir = create_new_redir();
+	if (!redir)
+		return (false);
+	if (is_there_quote((*token)->next->value))
+	{
+		redir->type = type;
+		redir->heredock_with_quotes = true;
+		redir->stop_word = extract_word_from_quotes((*token)->next->value);
+		if (!redir->stop_word)
+			return (false);
+	}
+	else
+	{
+		redir->type = type;
+		redir->stop_word = ft_strdup((*token)->next->value);
+		if (!redir->stop_word)
+			return (false);
+	}
+	add_redir_back(&(*cmd)->redirs, redir);
+	*token = (*token)->next;
+	return (true);
 }
 
-
-char **extract_arguments(t_token *token)
+bool	handle_pipe(t_cmd **head, t_token *token, t_cmd **cmd, bool *iswriten)
 {
-    char    **result;
-    int     args_count;
-    int     i = 0;
-    
-    args_count = count_types(token, ARG)  + 1;
-    result = ft_calloc(args_count,  sizeof(char*));
-    if (!result)
-        return NULL;
-    while (token && i < args_count)
-    {
-        if (token->type == PIPE)
-            break;
-        else if (token->type == REDIR_IN || token->type == REDIR_OUT
-            || token->type == APPEND || token->type == HEREDOC)
-        {
-                token = token->next;
-        }
-        else if (token->type == ARG)
-        {
-            if (token->next && !ft_strlen(token->value))
-            {
-                printf("nothing");
-                result[i] = ft_strdup(token->next->value);
-                if (!result[i])
-                    return NULL;
-                token = token->next;
-            }
-            else
-            {
-                result[i] = extract_word_from_quotes(token->value);
-                if (!result[i])
-                    return false;
-            }
-            i++;
-        }
-        token = token->next;
-    }
-    return result;
+	if (token->type == PIPE && token->next)
+	{
+		add_cmd_back(head, *cmd);
+		*cmd = create_new_cmd();
+		if (!(*cmd))
+			return (false);
+		*iswriten = true;
+	}
+	return (true);
 }
 
-bool parse_tokens(t_app *shell)
+bool	handle_token_parsing(t_app *shell, t_cmd **head, t_cmd **cmd,
+		bool *iswriten)
 {
-    t_token *token;
-    bool    iswriten;
-    t_cmd   *head = NULL;
-    t_cmd   *cmd = NULL;
-    t_redir *redir = NULL;
+	t_token	*token;
 
-    if (!shell || !shell->tokens)
-        return false;
-    iswriten = true;
-    token = shell->tokens;
-    cmd = create_new_cmd();
-    if (!cmd || !shell->is_valid_syntax)
-        return false;
-    while (token != NULL)
-    {
-        if (token->type == ARG && iswriten)
-        {
-            cmd->is_valid_cmd = true;
-            cmd->args = extract_arguments(token);
-            cmd->cmd = parse_command(shell, cmd->args[0]);
-            if (!cmd->cmd)
-            {
-                cmd->is_valid_cmd = false;
-            }
-            iswriten = false;
-        }
-        else if (token->type == PIPE && token->next)
-        {
-            add_cmd_back(&head, cmd);
-            cmd = create_new_cmd();
-            iswriten = true;
-        }
-        else if (token->type == REDIR_IN && token->next)
-        {
-            redir = create_new_redir();
-            if (!redir)
-                return false;
-            if (is_there_quote(token->next->value))
-            {
-                redir->type = REDIR_IN;
-                redir->value = extract_word_from_quotes(token->next->value);
-            }
-            else
-            {
-                redir->type = REDIR_IN;
-                redir->value = ft_strdup(token->next->value);
-            }
-            add_redir_back(&cmd->redirs, redir);
-            token = token->next;
-        }
-        else if (token->type == REDIR_OUT && token->next)
-        {
-            redir = create_new_redir();
-            if (!redir)
-                return false;
-            if (is_there_quote(token->next->value))
-            {
-                redir->type = REDIR_OUT;
-                redir->value = extract_word_from_quotes(token->next->value);
-            }
-            else
-            {
-                redir->type = REDIR_OUT;
-                redir->value = ft_strdup(token->next->value);
-            }
-            add_redir_back(&cmd->redirs, redir);
-            token = token->next;
-        }
-        else if (token->type == APPEND)
-        {
-            redir = create_new_redir();
-            if (!redir)
-                return false;
-            if (is_there_quote(token->next->value))
-            {
-                redir->type = APPEND;
-                redir->value = extract_word_from_quotes(token->next->value);
-            }
-            else
-            {
-                redir->type = APPEND;
-                redir->value = ft_strdup(token->next->value);
-            }
-            add_redir_back(&cmd->redirs, redir);
-            token = token->next;
-        }
-        else if (token->type == HEREDOC)
-        {
-            redir = create_new_redir();
-            if (!redir)
-                return false;
-            if (is_there_quote(token->next->value))
-            {
-                redir->type = HEREDOC;
-                redir->heredock_with_quotes = true;
-                redir->stop_word = extract_word_from_quotes(token->next->value);
-            }
-            else
-            {
-                redir->type = HEREDOC;
-                redir->stop_word = ft_strdup(token->next->value);
-            }
-            add_redir_back(&cmd->redirs, redir);
-            token = token->next;
-        }
-        token = token->next;
-    }
-    add_cmd_back(&head, cmd);
-    shell->cmd = head;
-    return true;
+	token = shell->tokens;
+	while (token != NULL)
+	{
+		if (token->type == ARG && *iswriten)
+			if (!parse_arguments(shell, *cmd, token, iswriten))
+				return (false);
+		if (!handle_pipe(head, token, cmd, iswriten))
+			return (false);
+		if (token->type == REDIR_IN && token->next)
+			if (!handle_redir_parsing(cmd, &token, REDIR_IN))
+				return (false);
+		if (token->type == REDIR_OUT && token->next)
+			if (!handle_redir_parsing(cmd, &token, REDIR_OUT))
+				return (false);
+		if (token->type == APPEND)
+			if (!handle_redir_parsing(cmd, &token, APPEND))
+				return (false);
+		if (token->type == HEREDOC)
+			if (!handle_heredoc_parsing(cmd, &token, HEREDOC))
+				return (false);
+		token = token->next;
+	}
+	return (true);
+}
+
+void	parse_tokens(t_app *shell)
+{
+	t_cmd	*head;
+	t_cmd	*cmd;
+	bool	iswriten;
+
+	if (!shell)
+		return ;
+	head = NULL;
+	cmd = NULL;
+	iswriten = true;
+	if (shell->is_valid_syntax)
+	{
+		cmd = create_new_cmd();
+		if (!cmd)
+			exit_with_error(shell, 1, MALLOC_FAIL);
+		if (!handle_token_parsing(shell, &head, &cmd, &iswriten))
+			exit_with_error(shell, 1, MALLOC_FAIL);
+		add_cmd_back(&head, cmd);
+		shell->cmd = head;
+	}
 }

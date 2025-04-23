@@ -14,8 +14,8 @@
 
 char	*var_extractor(char *input, int *i)
 {
-	int start;
-	char *result;
+	int		start;
+	char	*result;
 
 	start = *i;
 	while (input[*i])
@@ -34,7 +34,7 @@ char	*var_extractor(char *input, int *i)
 
 char	*get_status_var(int status)
 {
-	char *result;
+	char	*result;
 
 	result = ft_itoa(status);
 	if (!result)
@@ -44,9 +44,9 @@ char	*get_status_var(int status)
 
 char	*wrap_in_quotes(char *str)
 {
-	int i;
-	int len;
-	char *result;
+	int		i;
+	int		len;
+	char	*result;
 
 	if (!str)
 		return (NULL);
@@ -67,9 +67,9 @@ char	*wrap_in_quotes(char *str)
 
 char	*get_env_var(t_envp *envp, char *input, int *i)
 {
-	char *var;
-	char *result;
-	t_envp *var_val;
+	char	*var;
+	char	*result;
+	t_envp	*var_val;
 
 	var = var_extractor(input, i);
 	if (!var)
@@ -95,7 +95,7 @@ char	*get_env_var(t_envp *envp, char *input, int *i)
 
 char	*expand_words(t_app *shell, char *input, int *i)
 {
-	char *result;
+	char	*result;
 
 	if (!shell || !input)
 		return (NULL);

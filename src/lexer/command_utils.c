@@ -14,17 +14,21 @@
 
 void	write_value(t_token *token, char *value, int type)
 {
-	token->value = value;
+	token->value = ft_strdup(value);
+	if (!token->value)
+		return ;
 	token->type = type;
 }
 
 char	*divide_into_parts(char *input, int *i)
 {
-	bool is_dq_open = false;
-	bool is_sq_open = false;
-	int start;
+	bool	is_dq_open;
+	bool	is_sq_open;
+	int		start;
 
 	start = *i;
+	is_dq_open = false;
+	is_sq_open = false;
 	while (input[*i])
 	{
 		if (input[*i] == '\'' && !is_dq_open)
@@ -42,8 +46,8 @@ char	*divide_into_parts(char *input, int *i)
 
 void	skip_all_beafor_variable(char *input, int *j)
 {
-	bool sing_quote;
-	bool doub_quote;
+	bool	sing_quote;
+	bool	doub_quote;
 
 	sing_quote = false;
 	doub_quote = false;
@@ -61,8 +65,8 @@ void	skip_all_beafor_variable(char *input, int *j)
 
 bool	handle_non_expansion(char **dest, char *input, int *j, int start)
 {
-	char *temp;
-	char *res;
+	char	*temp;
+	char	*res;
 
 	temp = ft_substr(input, start, *j - start);
 	if (!temp)
@@ -78,12 +82,12 @@ bool	handle_non_expansion(char **dest, char *input, int *j, int start)
 
 bool	handle_expansion(char **dest, char *expanded, bool *do_split)
 {
-	char *temp;
+	char	*temp;
 
 	if (ft_strchr(expanded, ' ', false))
-		*do_split = !(*do_split);
+		*do_split = true;
 	temp = ft_strjoin(*dest, expanded);
-    free(expanded);
+	free(expanded);
 	if (!temp)
 		return (false);
 	free(*dest);

@@ -3,40 +3,72 @@
 /*                                                        :::      ::::::::   */
 /*   parse_arguments.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/23 16:35:06 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/23 16:35:06 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/23 16:35:06 by ibondarc          #+#    #+#             */
+/*   Updated: 2025/02/23 16:35:06 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char **create_expanded_args(char *cmd, char *args, int len)
+bool	handle_arguments(char **result, t_token **token, int *i)
 {
-    int     i;
-    char    **result;
+	if ((*token)->type == REDIR_IN || (*token)->type == REDIR_OUT
+		|| (*token)->type == APPEND || (*token)->type == HEREDOC)
+		*token = (*token)->next;
+	else if ((*token)->type == ARG)
+	{
+		if ((*token)->next && !ft_strlen((*token)->value))
+		{
+			result[*i] = ft_strdup((*token)->next->value);
+			if (!result[*i])
+				return (false);
+			*token = (*token)->next;
+		}
+		else
+		{
+			result[*i] = extract_word_from_quotes((*token)->value);
+			if (!result[*i])
+				return (false);
+		}
+		(*i)++;
+	}
+	return (true);
+}
 
-    if (!cmd || !args)
-        return NULL;
-    i = 0;
-    result = (char**)malloc((len + 1) * sizeof(char*));
-    while (i < len)
-    {
-        if (i == 0)
-        {
-            result[i] = ft_strdup(cmd);
-            if (!result[i])
-                return (free_2d_array(result), NULL);
-        }
-        else
-        {
-            result[i] = ft_strdup(args);
-            if (!result[i])
-                return (free_2d_array(result), NULL);
-        }
-        i++;
-    }
-    result[i] = NULL;
-    return result;
+char	**extract_arguments(t_token *token)
+{
+	int		i;
+	int		args_count;
+	char	**result;
+
+	args_count = count_types(token, ARG) + 1;
+	result = ft_calloc(args_count, sizeof(char *));
+	if (!result)
+		return (NULL);
+	i = 0;
+	while (token && i < args_count)
+	{
+		if (token->type == PIPE)
+			break ;
+		if (!handle_arguments(result, &token, &i))
+			return (false);
+		token = token->next;
+	}
+	return (result);
+}
+
+bool	parse_arguments(t_app *shell, t_cmd *cmd, t_token *token,
+		bool *iswriten)
+{
+	cmd->is_valid_cmd = true;
+	cmd->args = extract_arguments(token);
+	if (!cmd->args)
+		return (false);
+	cmd->cmd = parse_command(shell, cmd, cmd->args[0]);
+	if (!cmd->cmd)
+		return (false);
+	*iswriten = false;
+	return (true);
 }

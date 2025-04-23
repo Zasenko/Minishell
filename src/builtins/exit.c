@@ -55,6 +55,8 @@ int ft_exit(t_cmd *cmd, t_app *shell, int is_parent)
             return (shell->last_exit_code);
     }
 
+    ft_isdigit();
+
     int f = 1;
     while (cmd->args[f])
     {

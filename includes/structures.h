@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structures.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/06 12:39:35 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/06 12:39:35 by marvin           ###   ########.fr       */
+/*   Created: 2025/02/06 12:39:35 by ibondarc          #+#    #+#             */
+/*   Updated: 2025/02/06 12:39:35 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef struct s_redir
 {
 	t_type type;
 	char *value;
-	char *stop_word; 
+	char *stop_word;
 	int fd;
 	bool heredock_with_quotes;
 	struct s_redir *next;
@@ -65,12 +65,12 @@ typedef struct s_cmd
 typedef struct s_app
 {
 	char **env_var;
-	char *user;      
-	char *name;       
-	char *prompt;      
+	char *user;
+	char *name;
+	char *prompt;
 	char *pwd;
 	int last_exit_code;
-    bool is_valid_syntax;
+	bool is_valid_syntax;
 	bool is_envp_list_changed;
 	int heredock_num;
 	struct s_envp *envp;

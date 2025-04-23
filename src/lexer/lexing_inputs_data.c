@@ -14,16 +14,16 @@
 
 bool	handle_inputs(t_app *shell, t_token **head, char *input, int *i)
 {
-	t_token *last;
+	t_token	*last;
 
 	while (input[*i])
 	{
-		add_token_back(head, create_new_token());
+		if (!add_token_back(head, create_new_token()))
+			return (false);
 		skip_spases(input, i);
 		if (ft_strchr("|<>", input[*i], false))
 		{
-			last = last_token_node(*head);
-			if (!handle_operators(last, input, i))
+			if (!handle_operators(last_token_node(*head), input, i))
 				return (false);
 		}
 		else
@@ -43,18 +43,18 @@ bool	handle_inputs(t_app *shell, t_token **head, char *input, int *i)
 
 bool	tokenize_data(t_app *shell, t_token *head, char *input)
 {
-	char *str;
-	bool err;
-	int i;
+	char	*str;
+	int		i;
 
 	i = 0;
 	shell->is_valid_syntax = true;
 	str = ft_strtrim(input, " \t");
 	free(input);
-	err = handle_inputs(shell, &head, str, &i);
-	free(str);
-	if (!err)
+	if (!str)
 		return (false);
+	if (!handle_inputs(shell, &head, str, &i))
+		return (free(str), false);
+	free(str);
 	shell->tokens = head;
 	if (!lexing_checker(shell))
 		shell->is_valid_syntax = false;
@@ -63,7 +63,7 @@ bool	tokenize_data(t_app *shell, t_token *head, char *input)
 
 void	lexing_inputs_data(t_app *shell, char *input)
 {
-	t_token *head;
+	t_token	*head;
 
 	if (!shell)
 		return ;

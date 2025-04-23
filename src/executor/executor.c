@@ -114,6 +114,23 @@ void handle_execve_error(t_app *shell, t_cmd *cmd)
 {
     struct stat buffer;
 
+	if (find_path(shell) && !*find_path(shell))
+		{
+			ft_putstr_fd(cmd->args[0], 2);
+            ft_putstr_fd(": No such file or directory\n", 2);
+			free_list(shell);
+			free_envp_list(&shell->envp);
+            exit(127);
+		}
+		if (!find_path(shell) && !cmd->is_valid_cmd )
+        {
+            ft_putstr_fd(cmd->args[0], 2);
+            ft_putstr_fd(": Permission denied\n", 2);
+			free_list(shell);
+			free_envp_list(&shell->envp);
+            exit(126);
+        }
+
 	if (find_path(shell) == NULL)
 	{
 		ft_putstr_fd(cmd->args[0], 2);
@@ -136,7 +153,7 @@ void handle_execve_error(t_app *shell, t_cmd *cmd)
             ft_putstr_fd(": Is a directory\n", 2);
             exit_child(shell, 126, NULL);
         }
-        else if (access(cmd->cmd, X_OK) == -1)
+        else if ( access(cmd->cmd, X_OK) == -1)
         {
             ft_putstr_fd(cmd->args[0], 2);
             ft_putstr_fd(": Permission denied\n", 2);

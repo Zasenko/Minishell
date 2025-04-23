@@ -14,8 +14,8 @@
 
 char	*make_copy(t_envp *envp)
 {
-	char *temp;
-	char *res;
+	char	*temp;
+	char	*res;
 
 	if (!envp)
 		return (NULL);
@@ -41,8 +41,8 @@ char	*make_copy(t_envp *envp)
 
 char	**copy_into_2d_arr(t_envp *envp)
 {
-	int i;
-	char **env_var;
+	int		i;
+	char	**env_var;
 
 	if (!envp)
 		return (NULL);
