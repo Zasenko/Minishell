@@ -15,11 +15,11 @@
 int	cd_get_dir(t_cmd *cmd, t_pwd *pwd)
 {
 	if (arr2d_len(cmd->args) > 2)
-		return (ft_putstr_fd("cd: too many arguments\n", 2), EXIT_FAILURE);
+		return (ft_putstr_fd(CD_TMA, 2), EXIT_FAILURE);
 	if (cmd->args[1] == NULL || !ft_strcmp("~", cmd->args[1]))
 	{
 		if (!pwd->home || !pwd->home->envp)
-			return (ft_putstr_fd("cd: HOME not set\n", 2), EXIT_FAILURE);
+			return (ft_putstr_fd(CD_HNS, 2), EXIT_FAILURE);
 		pwd->dir = ft_strdup(pwd->home->envp);
 	}
 	else
@@ -28,7 +28,7 @@ int	cd_get_dir(t_cmd *cmd, t_pwd *pwd)
 		{
 			if (!pwd->oldpwd || !pwd->oldpwd->envp)
 			{
-				ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
+				ft_putstr_fd(CD_ONS, 2);
 				return (EXIT_FAILURE);
 			}
 			pwd->dir = ft_strdup(pwd->oldpwd->envp);
@@ -37,6 +37,21 @@ int	cd_get_dir(t_cmd *cmd, t_pwd *pwd)
 			pwd->dir = ft_strdup(cmd->args[1]);
 	}
 	return (SUCCESS);
+}
+
+bool	create_new_pwd_node(t_app *shell, char *old_pwd, char *new_pwd)
+{
+	t_envp	*node;
+
+	node = create_new_envp(old_pwd, new_pwd);
+	if (!node)
+	{
+		free(old_pwd);
+		free(new_pwd);
+		return (false);
+	}
+	add_envp_back(&shell->envp, node);
+	return (true);
 }
 
 int	cd_change_dir(t_pwd *pwd)
@@ -63,7 +78,7 @@ int	cd_change_dir(t_pwd *pwd)
 	return (SUCCESS);
 }
 
-void create_cd_pwd(t_pwd *pwd, t_envp *envp)
+void	create_cd_pwd(t_pwd *pwd, t_envp *envp)
 {
 	pwd->home = find_envp_node(envp, "HOME");
 	pwd->oldpwd = find_envp_node(envp, "OLDPWD");
@@ -74,10 +89,10 @@ void create_cd_pwd(t_pwd *pwd, t_envp *envp)
 
 int	ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
 {
+	int		result;
 	t_pwd	pwd;
-	int	result;
 	char	buf[MAXPATHLEN];
-	
+
 	create_cd_pwd(&pwd, shell->envp);
 	if (cd_get_dir(cmd, &pwd) == EXIT_FAILURE)
 		return (EXIT_FAILURE);

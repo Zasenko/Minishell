@@ -25,7 +25,10 @@
 # define SERRNUT_NEWLI "syntax error near unexpected token `newline"
 # define SERRNUT "syntax error near unexpected token `"
 # define EXIT_TMA "exit: too many arguments\n"
-# define EXIT_NAR": numeric argument required\n"
+# define EXIT_NAR ": numeric argument required\n"
+# define CD_TMA "cd: too many arguments\n"
+# define CD_HNS "cd: HOME not set\n"
+# define CD_ONS "minishell: cd: OLDPWD not set\n"
 # define EXIT "exit\n"
 
 #endif

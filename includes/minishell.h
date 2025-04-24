@@ -56,6 +56,7 @@ bool	get_type_existence(t_token *token, t_type type);
 bool	ft_strstr(char *str, char *to_find);
 bool	define_valid_string(char *input);
 bool	handle_non_expansion(char **dest, char *input, int *j, int start);
+bool	create_new_pwd_node(t_app *shell, char *old_pwd, char *new_pwd);
 bool	handle_expansion(char **dest, char *expanded, bool *do_split);
 bool	is_there_quote(char *str);
 bool	parse_arguments(t_app *shell, t_cmd *cmd, t_token *token,
