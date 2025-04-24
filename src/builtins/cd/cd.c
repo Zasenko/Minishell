@@ -39,53 +39,51 @@ int	cd_get_dir(t_cmd *cmd, t_pwd *pwd)
 	return (SUCCESS);
 }
 
-
-int	cd_change_dir(char *dir, char **changed_dir)
+int	cd_change_dir(t_pwd *pwd)
 {
-	char	buf[MAXPATHLEN];
-	int		result;
+	int	result;
 
-	result = chdir(dir);
+	result = chdir(pwd->dir);
 	if (result == -1)
 	{
 		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(dir, 2);
+		ft_putstr_fd(pwd->dir, 2);
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(strerror(errno), 2);
 		ft_putstr_fd("\n", 2);
+		if (pwd->dir)
+			free(pwd->dir);
 		return (EXIT_FAILURE);
 	}
-	changed_dir[0] = getcwd(buf, MAXPATHLEN);
+	if (pwd->dir)
+	{
+		free(pwd->dir);
+		pwd->dir = NULL;
+	}
 	return (SUCCESS);
+}
+
+void create_cd_pwd(t_pwd *pwd, t_envp *envp)
+{
+	pwd->home = find_envp_node(envp, "HOME");
+	pwd->oldpwd = find_envp_node(envp, "OLDPWD");
+	pwd->pwd = find_envp_node(envp, "PWD");
+	pwd->dir = NULL;
+	pwd->changed_dir = NULL;
 }
 
 int	ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
 {
 	t_pwd	pwd;
-
-	pwd.home = find_envp_node(shell->envp, "HOME");
-	pwd.oldpwd = find_envp_node(shell->envp, "OLDPWD");
-	pwd.pwd = find_envp_node(shell->envp, "PWD");
-	pwd.dir = NULL;
-	pwd.changed_dir = NULL;
-
+	int	result;
+	char	buf[MAXPATHLEN];
+	
+	create_cd_pwd(&pwd, shell->envp);
 	if (cd_get_dir(cmd, &pwd) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-
-	char	buf[MAXPATHLEN];
-	int	result;
-	result = chdir(pwd.dir);
-	if (result == -1)
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(pwd.dir, 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd("\n", 2);
-		if (pwd.dir)
-			free(pwd.dir);
+	result = cd_change_dir(&pwd);
+	if (result == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	}
 	if (pwd.dir)
 		free(pwd.dir);
 	pwd.changed_dir = getcwd(buf, MAXPATHLEN);

@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:25:00 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/24 11:36:54 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:53:07 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	cd_change_old_pwd(t_app *shell, t_pwd *pwd, bool is_child)
 				free(pwd->changed_dir);
 			if (is_child)
 				exit_child(shell, 1, NULL);
-			exit_with_error(shell, 1, "malloc error");
+			exit_with_error(shell, 1, MALLOC_FAIL);
 		}
 		if (pwd->oldpwd->envp)
 		{
