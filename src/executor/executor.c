@@ -52,7 +52,7 @@ int	close_all_cmnds_fds(t_cmd *cmd)
 	}
 	return (1);
 }
-
+// #include <libgen.h>
 
 int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 {
@@ -73,6 +73,8 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 			redir->fd = open(redir->value, O_RDONLY, 0644);
 			if (redir->fd < 0)
 			{
+				close(pipe_fd[0]);
+				close(pipe_fd[1]);
 				print_fd_err(redir->value, strerror(errno));
 				exit_child(shell, 1, NULL);
 			}
@@ -84,6 +86,8 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 			redir->fd = open(redir->value, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
 			if (redir->fd < 0)
 			{
+				close(pipe_fd[0]);
+				close(pipe_fd[1]);
 				print_fd_err(redir->value, strerror(errno));
 				exit_child(shell, 1, NULL);
 			}
@@ -95,6 +99,8 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 			redir->fd = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (redir->fd < 0)
 			{
+				close(pipe_fd[0]);
+				close(pipe_fd[1]);
 				print_fd_err(redir->value, strerror(errno));
 				exit_child(shell, 1, NULL);
 			}
@@ -422,7 +428,9 @@ int	ft_execute(t_app *shell)
 								j++;
 							if (start != j)
 							{
-								temp = ft_strjoin(dest, ft_substr(input, start, j - start));
+								char *sub_str = ft_substr(input, start, j - start);
+								temp = ft_strjoin(dest, sub_str);
+								free(sub_str);
 								free(dest);
 								dest = temp;
 							}
@@ -430,6 +438,7 @@ int	ft_execute(t_app *shell)
 							{
 								expanded = expand_words(shell, input, &j);
 								temp = ft_strjoin(dest, expanded);
+								free(expanded);
 								free(dest);
 								dest = temp;
 							}

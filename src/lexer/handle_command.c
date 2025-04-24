@@ -109,6 +109,7 @@ bool	handle_quotes_case(t_app *shell, t_token *token, char *part)
 		if (do_split)
 		{
 			temp = ft_split(token->value, ' ');
+			free(token->value);
 			if (!add_expanded_value_into_node(token, temp))
 				return (false);
 		}
