@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   validation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 22:05:24 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/23 22:05:24 by marvin           ###   ########.fr       */
+/*   Created: 2025/04/23 22:05:24 by dzasenko          #+#    #+#             */
+/*   Updated: 2025/04/23 22:05:24 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-int hadle_checking_digit(char *trimmed, char *arg, int is_child, int *i)
+int	hadle_checking_digit(char *trimmed, char *arg, int is_child, int *i)
 {
 	while (trimmed[*i])
 	{
@@ -23,14 +23,14 @@ int hadle_checking_digit(char *trimmed, char *arg, int is_child, int *i)
 		}
 		(*i)++;
 	}
-	return 0;
+	return (0);
 }
 
-int check_is_digits(t_app *shell, char *arg, int is_child, int *i)
+int	check_is_digits(t_app *shell, char *arg, int is_child, int *i)
 {
 	char	*trimmed;
 
-	trimmed = ft_strtrim(arg, " \t");  
+	trimmed = ft_strtrim(arg, " \t");
 	if (!trimmed)
 	{
 		if (!is_child)
@@ -50,10 +50,11 @@ int check_is_digits(t_app *shell, char *arg, int is_child, int *i)
 	return (free(trimmed), 0);
 }
 
-int validate_input_arguments(t_app *shell, t_cmd *cmd, int args_c, int is_child)
+int	validate_input_arguments(t_app *shell, t_cmd *cmd, int args_c,
+		int is_child)
 {
-	int i;
-	int res;
+	int	i;
+	int	res;
 
 	i = 0;
 	if (args_c == 1)
@@ -70,9 +71,9 @@ int validate_input_arguments(t_app *shell, t_cmd *cmd, int args_c, int is_child)
 	{
 		res = check_is_digits(shell, cmd->args[1], is_child, &i);
 		if (res && is_child)
-			return res;
+			return (res);
 		else if (res == 2 && !is_child)
 			exit_with_error(shell, 2, NULL);
 	}
-	return 0;
+	return (0);
 }

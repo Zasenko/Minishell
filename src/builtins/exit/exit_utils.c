@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 22:06:59 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/23 22:06:59 by marvin           ###   ########.fr       */
+/*   Created: 2025/04/23 22:06:59 by dzasenko          #+#    #+#             */
+/*   Updated: 2025/04/23 22:06:59 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ int	my_whitespace(const char *str, int *idx)
 	return (sign);
 }
 
-long long custom_atoi(t_app *shell, t_cmd *cmd, char *arg, int is_child)
+long long	custom_atoi(t_app *shell, t_cmd *cmd, char *arg, int is_child)
 {
-	int i;
-	int	sign;
-	size_t res;
+	int		i;
+	int		sign;
+	size_t	res;
 
 	i = 0;
 	res = 0;
@@ -44,7 +44,8 @@ long long custom_atoi(t_app *shell, t_cmd *cmd, char *arg, int is_child)
 	while (arg[i] >= 48 && arg[i] <= 57)
 	{
 		res = res * 10 + (arg[i] - 48);
-		if ((sign > 0 && res > LLONG_MAX) || (sign < 0 && res > -(size_t)(LLONG_MIN)))
+		if ((sign > 0 && res > LLONG_MAX)
+			|| (sign < 0 && res > -(size_t)(LLONG_MIN)))
 		{
 			print_exit_error(cmd->args[1], !is_child);
 			if (!is_child)
