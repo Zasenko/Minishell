@@ -12,98 +12,89 @@
 
 #include "../../../includes/minishell.h"
 
-int	cd_get_dir(t_cmd *cmd, t_envp *home_node, t_envp *oldpwd_node, char **dir)
+int	cd_get_dir(t_cmd *cmd, t_pwd *pwd)
 {
 	if (arr2d_len(cmd->args) > 2)
 		return (ft_putstr_fd("cd: too many arguments\n", 2), EXIT_FAILURE);
 	if (cmd->args[1] == NULL || !ft_strcmp("~", cmd->args[1]))
 	{
-		if (!home_node || !home_node->envp)
+		if (!pwd->home || !pwd->home->envp)
 			return (ft_putstr_fd("cd: HOME not set\n", 2), EXIT_FAILURE);
-		dir[0] = ft_strdup(home_node->envp);
+		pwd->dir = ft_strdup(pwd->home->envp);
 	}
 	else
 	{
 		if (!ft_strcmp("-", cmd->args[1]))
 		{
-			if (!oldpwd_node || !oldpwd_node->envp)
+			if (!pwd->oldpwd || !pwd->oldpwd->envp)
 			{
 				ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
 				return (EXIT_FAILURE);
 			}
-			dir[0] = ft_strdup(oldpwd_node->envp);
+			pwd->dir = ft_strdup(pwd->oldpwd->envp);
 		}
 		else
-			dir[0] = ft_strdup(cmd->args[1]);
+			pwd->dir = ft_strdup(cmd->args[1]);
 	}
 	return (SUCCESS);
 }
 
-
-int	cd_change_dir(char *dir, char **changed_dir)
+int	cd_change_dir(t_pwd *pwd)
 {
-	char	buf[MAXPATHLEN];
-	int		result;
+	int	result;
 
-	result = chdir(dir);
+	result = chdir(pwd->dir);
 	if (result == -1)
 	{
 		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(dir, 2);
+		ft_putstr_fd(pwd->dir, 2);
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(strerror(errno), 2);
 		ft_putstr_fd("\n", 2);
+		if (pwd->dir)
+			free(pwd->dir);
 		return (EXIT_FAILURE);
 	}
-	changed_dir[0] = getcwd(buf, MAXPATHLEN);
+	if (pwd->dir)
+	{
+		free(pwd->dir);
+		pwd->dir = NULL;
+	}
 	return (SUCCESS);
+}
+
+void create_cd_pwd(t_pwd *pwd, t_envp *envp)
+{
+	pwd->home = find_envp_node(envp, "HOME");
+	pwd->oldpwd = find_envp_node(envp, "OLDPWD");
+	pwd->pwd = find_envp_node(envp, "PWD");
+	pwd->dir = NULL;
+	pwd->changed_dir = NULL;
 }
 
 int	ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
 {
-	char	*dir;
-	char	*changed_dir;
 	t_pwd	pwd;
-
-	pwd.home = find_envp_node(shell->envp, "HOME");
-	pwd.oldpwd = find_envp_node(shell->envp, "OLDPWD");
-	pwd.pwd = find_envp_node(shell->envp, "PWD");
-
-	dir = NULL;
-	changed_dir = NULL;
-
-	if (cd_get_dir(cmd, pwd.home, pwd.oldpwd, &dir) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
-
-	char	buf[MAXPATHLEN];
 	int	result;
-
-	result = chdir(dir);
-	if (result == -1)
-	{
-		if (dir)
-			free(dir);
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(dir, 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd("\n", 2);
+	char	buf[MAXPATHLEN];
+	
+	create_cd_pwd(&pwd, shell->envp);
+	if (cd_get_dir(cmd, &pwd) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	}
-	if (dir)
-		free(dir);
-	changed_dir = getcwd(buf, MAXPATHLEN);
-	if (!changed_dir)
+	result = cd_change_dir(&pwd);
+	if (result == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (pwd.dir)
+		free(pwd.dir);
+	pwd.changed_dir = getcwd(buf, MAXPATHLEN);
+	if (!pwd.changed_dir)
 		return (perror("getcwd"), errno);
-
 	if (cmd->args[1] != NULL && !ft_strcmp("-", cmd->args[1]))
 	{
-		ft_putstr_fd(changed_dir, 1);
+		ft_putstr_fd(pwd.changed_dir, 1);
 		ft_putstr_fd("\n", 1);
 	}
-	
 	if (!is_child)
-		cd_change_env(shell, &pwd, changed_dir, is_child);
-
+		cd_change_env(shell, &pwd, is_child);
 	return (SUCCESS);
 }
