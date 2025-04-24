@@ -25,7 +25,7 @@
 # define SERRNUT_NEWLI "syntax error near unexpected token `newline"
 # define SERRNUT "syntax error near unexpected token `"
 # define EXIT_TMA "exit: too many arguments\n"
-# define EXIT_NAR": numeric argument required\n"
+# define EXIT_NAR ": numeric argument required\n"
 # define EXIT "exit\n"
 
 #endif

@@ -47,7 +47,7 @@ int check_export_key(char *str)
     return (1);
 }
 
-t_lib *check_export_arg(char *str, int *exit_code)
+t_lib *check_export_arg(char *str, int *exit_code, t_app *shell, bool is_child)
 {
     char *temp = str;
 
@@ -64,13 +64,18 @@ t_lib *check_export_arg(char *str, int *exit_code)
 
         t_lib *lib = ft_calloc(sizeof(t_lib), 1);
         if (!lib)
-            return (NULL);
+        {
+            if (is_child)
+				exit_child(shell, 1, NULL);
+			exit_with_error(shell, 1, MALLOC_FAIL);
+        }
         char *new_key = ft_strdup(str);
         if (!new_key)
         {
-            printf("check_export_arg ft_strdup error\n");
             free(lib);
-            return NULL;
+            if (is_child)
+				exit_child(shell, 1, NULL);
+			exit_with_error(shell, 1, MALLOC_FAIL);
         }
         lib->key = new_key;
         lib->value = NULL;
@@ -83,8 +88,9 @@ t_lib *check_export_arg(char *str, int *exit_code)
     char *key = (char *)ft_calloc(sizeof(char), i + 1);
     if (!key)
     {
-        printf("malloc error\n");
-        return (NULL);
+        if (is_child)
+			exit_child(shell, 1, NULL);
+		exit_with_error(shell, 1, MALLOC_FAIL);
     }
     ft_strlcpy(key, str, i + 1);
     if (!check_export_key(key))
@@ -104,8 +110,9 @@ t_lib *check_export_arg(char *str, int *exit_code)
         if (!value)
         {
             free(key);
-            printf("ft_strdup error\n");
-            return (NULL); 
+            if (is_child)
+				exit_child(shell, 1, NULL);
+			exit_with_error(shell, 1, MALLOC_FAIL);
         }
     }
     else {
@@ -113,8 +120,9 @@ t_lib *check_export_arg(char *str, int *exit_code)
         if (!value)
         {
             free(key);
-            printf("ft_strdup error\n");
-            return (NULL);
+            if (is_child)
+				exit_child(shell, 1, NULL);
+			exit_with_error(shell, 1, MALLOC_FAIL);
         }
     }
     t_lib *lib = ft_calloc(sizeof(t_lib), 1);
@@ -122,8 +130,9 @@ t_lib *check_export_arg(char *str, int *exit_code)
     {
         free(key);
         free(value);
-        printf("ft_calloc error\n");
-        return (NULL);            
+        if (is_child)
+			exit_child(shell, 1, NULL);
+		exit_with_error(shell, 1, MALLOC_FAIL);    
     }
     lib->key = key;
     lib->value = value;
@@ -170,9 +179,8 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
         if (!new_2d_env)
         {
             if (is_child)
-                exit(1);
-            else
-                return(1);
+                exit_child(shell, 1, NULL);
+            exit_with_error(shell, 1, MALLOC_FAIL);
         }
         sort_2d_env(new_2d_env);
 
@@ -207,10 +215,9 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
     {
         while (cmd->args[n] != NULL)
         {
-            t_lib *lib = check_export_arg(cmd->args[n], &exit_code);
+            t_lib *lib = check_export_arg(cmd->args[n], &exit_code, shell, is_child);
             if (!lib)
             {
-                
                 shell->last_exit_code = exit_code;
                 n++;
                 continue;                
@@ -236,7 +243,9 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
                     if (lib->value)
                         free(lib->value);
                     free(lib);
-                    return (EXIT_FAILURE);
+                    if (is_child)
+                        exit_child(shell, 1, NULL);
+                    exit_with_error(shell, 1, MALLOC_FAIL);
                 }
                 free(lib);
                 add_envp_back(&shell->envp, new);
@@ -249,22 +258,15 @@ int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
                     node->envp = NULL;
                 }
                 node->envp = lib->value;
-
                 if (lib->key)
                     free(lib->key);
                 free(lib);
             }
-
             shell->is_envp_list_changed = true;
             n++;
         }
     }
     if (is_child)
-    {
-        exit(exit_code);
-    }
-    else
-    {
-        return(exit_code);
-    }
+        exit_child(shell, exit_code, NULL);
+    return(exit_code);
 }
