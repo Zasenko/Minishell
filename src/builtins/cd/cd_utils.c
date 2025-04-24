@@ -6,11 +6,11 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:25:00 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/24 11:32:43 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/04/24 11:36:54 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
 
 void	cd_change_old_pwd(t_app *shell, t_pwd *pwd, bool is_child)
 {

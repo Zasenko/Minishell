@@ -53,9 +53,11 @@ SRC = 		main.c \
 			builtins/pwd.c \
 			builtins/env.c \
 			builtins/echo.c \
-			builtins/cd.c \
-			builtins/cd_utils.c \
-			builtins/exit.c \
+			builtins/cd/cd.c \
+			builtins/cd/cd_utils.c \
+			builtins/exit/exit.c \
+			builtins/exit/exit_utils.c \
+			builtins/exit/validation.c \
 			builtins/export.c \
 
 UTILS_SRC = node_actions/cmd_node/add_cmd_back.c \
