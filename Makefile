@@ -48,11 +48,11 @@ SRC = 		main.c \
 			parse/parse_command.c \
 			parse/parse_arguments.c \
 			parse/parse_utils.c \
-			builtins/unset.c \
+			builtins/unset/unset.c \
 			builtins/utils.c \
-			builtins/pwd.c \
-			builtins/env.c \
-			builtins/echo.c \
+			builtins/pwd/pwd.c \
+			builtins/env/env.c \
+			builtins/echo/echo.c \
 			builtins/cd/cd.c \
 			builtins/cd/cd_utils.c \
 			builtins/exit/exit.c \
