@@ -61,7 +61,7 @@ int	validate_input_arguments(t_app *shell, t_cmd *cmd, int args_c,
 	{
 		if (!is_child)
 		{
-			ft_putstr_fd("exit\n", 1);
+			ft_putstr_fd(EXIT, 1);
 			exit_with_error(shell, shell->last_exit_code, NULL);
 		}
 		else

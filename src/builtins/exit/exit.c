@@ -27,10 +27,10 @@ int	arr2d_len(char **arr)
 void	print_exit_error(char *str, bool is_child)
 {
 	if (!is_child)
-		ft_putstr_fd("exit\n", 2);
+		ft_putstr_fd(EXIT, 2);
 	ft_putstr_fd("exit: ", 2);
 	ft_putstr_fd(str, 2);
-	ft_putstr_fd(": numeric argument required\n", 2);
+	ft_putstr_fd(EXIT_NAR, 2);
 }
 
 int	ft_exit(t_cmd *cmd, t_app *shell, int is_child)
@@ -46,15 +46,15 @@ int	ft_exit(t_cmd *cmd, t_app *shell, int is_child)
 	if (args_c > 2)
 	{
 		// if (!is_child)
-		// 	ft_putstr_fd("exit\n", 2);
-		return (ft_putstr_fd("exit: too many arguments\n", 2), 1);
+		// 	ft_putstr_fd(EXIT, 2);
+		return (ft_putstr_fd(EXIT_TMA, 2), 1);
 	}
 	exit_code = custom_atoi(shell, cmd, cmd->args[1], is_child);
 	if (exit_code > 256)
 		exit_code = exit_code % 256;
 	if (!is_child)
 	{
-		ft_putstr_fd("exit\n", 1);
+		ft_putstr_fd(EXIT, 1);
 		exit_with_error(shell, exit_code, NULL);
 	}
 	return (exit_code);
