@@ -41,7 +41,7 @@ int		access_checking(char *path);
 int		readline_event_hook2(void);
 int		get_envp_len(t_envp *envp);
 int		last_signal_status(void);
-int		cd_change_env(t_app *shell, t_pwd *pwd, char *current_dir, bool is_child);
+int		cd_change_env(t_app *shell, t_pwd *pwd, bool is_child);
 int		ft_pwd(void);
 bool	add_token_back(t_token **token, t_token *new);
 bool	is_builtin_func(char *cmd);

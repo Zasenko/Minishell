@@ -83,6 +83,8 @@ typedef struct s_pwd
 	t_envp *home;
 	t_envp *oldpwd;
 	t_envp *pwd;
+	char	*dir;
+	char	*changed_dir;
 } t_pwd;
 
 #endif
