@@ -434,68 +434,8 @@ int	ft_execute(t_app *shell)
 		return 0;
 	if (cmd->next == NULL && cmd->args && is_builtin_func(cmd->args[0]))
 	{
-
-		int dup_0 = -1;
-		int dup_1 = -1;
-
-		dup_0 = dup(0);
-		dup_1 = dup(1);
-
-		t_redir *redir = cmd->redirs;
-		while (redir)
-		{
-			if (redir->type == REDIR_IN || redir->type == HEREDOC)
-			{
-				redir->fd = open(redir->value, O_RDONLY);
-				if (redir->fd < 0)
-				{
-					print_fd_err(redir->value, strerror(errno));
-					shell->last_exit_code = 1;
-					if (dup_0 >= 0)
-						close(dup_0);
-					if (dup_1 >= 0)
-						close(dup_1);
-					return 1;
-				}
-				dup2(redir->fd, dup_0);
-				close(redir->fd);
-			} 
-			else if (redir->type == REDIR_OUT)
-			{
-				redir->fd = open(redir->value, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
-				if (redir->fd < 0)
-				{
-					if (dup_0 >= 0)
-						close(dup_0);
-					if (dup_1 >= 0)
-						close(dup_1);
-					print_fd_err(redir->value, strerror(errno));
-					return (1);
-				}
-				dup2(redir->fd, dup_1);
-				close(redir->fd);
-			} 
-			else if (redir->type == APPEND)
-			{
-				redir->fd = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-				if (redir->fd < 0)
-				{
-					if (dup_0 >= 0)
-						close(dup_0);
-					if (dup_1 >= 0)
-						close(dup_1);
-					print_fd_err(redir->value, strerror(errno));
-					return (1);
-				}
-				dup2(redir->fd, dup_1);
-				close(redir->fd);
-			}
-			redir = redir->next;
-		}
-
-		shell->last_exit_code = exec_buildin(cmd, shell, false, dup_1);
-		close(dup_0);
-		close(dup_1);
+		if (exe_singl_buildin(shell, cmd) == EXIT_FAILURE)
+			return (EXIT_FAILURE);
 	}
 	else
 	{
