@@ -24,11 +24,13 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd)
 	{
 		dup2(shell->prev_pipe, 0);
 		close(shell->prev_pipe);
+		shell->prev_pipe = -1;
 	}
 	if (cmd->next != NULL)
 	{
 		dup2(cmd->pipe_fd[1], 1);
-		close_file_descriptors(cmd);
+		close(cmd->pipe_fd[1]);
+		cmd->pipe_fd[1] = -1;
 	}
 	t_redir *redir = cmd->redirs;
 	while (redir)
@@ -43,6 +45,7 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd)
 			}
 			dup2(redir->fd, 0);
 			close(redir->fd);
+			redir->fd = -1;
 		}
 		else if (redir->type == REDIR_OUT)
 		{
@@ -54,6 +57,7 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd)
 			}
 			dup2(redir->fd, 1);
 			close(redir->fd);
+			redir->fd = -1;
 		}
 		else if (redir->type == APPEND)
 		{
@@ -65,10 +69,13 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd)
 			}
 			dup2(redir->fd, 1);
 			close(redir->fd);
+			redir->fd = -1;
 		}
 		redir = redir->next;
 	}
-	close_file_descriptors(cmd);
+	
+	close_all_redirs_fds_child(cmd->redirs);
+    close_file_descriptors(cmd);
 	return (1);
 }
 
@@ -215,10 +222,17 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd)
 	if (cmd->pid == 0)
 		child_process(shell, cmd);
 	if (shell->prev_pipe != -1)
+	{
 		close(shell->prev_pipe);
+		shell->prev_pipe = -1;
+	}
 	if (cmd->pipe_fd[1] != -1)
+	{
 		close(cmd->pipe_fd[1]);
+		cmd->pipe_fd[1] = -1;
+	}
 	shell->prev_pipe = cmd->pipe_fd[0];
+	cmd->pipe_fd[0] = -1;
 	return (1);
 }
 
@@ -496,7 +510,11 @@ int	ft_execute(t_app *shell)
 	ft_wait_children(shell);
 	handle_signal_main();
 	if (shell->prev_pipe != -1)
+	{
 		close(shell->prev_pipe);
+		shell->prev_pipe = -1;
+
+	}
 	// close_all_redirs_fds(cmd->redirs);
 	// close_all_cmnds_fds(shell->cmd);
 	return (1);
