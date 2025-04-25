@@ -12,6 +12,62 @@
 
 #include "../../includes/minishell.h"
 
+void	close_file_descriptors(t_cmd *cmd)
+{
+	if (cmd->pipe_fd[0] >= 0)
+	{
+		close(cmd->pipe_fd[0]);
+		cmd->pipe_fd[0] = -1;
+	}
+	if (cmd->pipe_fd[1] >= 0)
+	{
+		close(cmd->pipe_fd[1]);
+		cmd->pipe_fd[1] = -1;
+	}
+}
+
+int	close_all_redirs_fds(t_redir *redir)
+{
+	t_redir	*temp;
+
+	temp = redir;
+	if (!temp)
+		return (0);
+	while (temp != NULL)
+	{
+		if (temp->fd > -1)
+		{
+			close(temp->fd);
+			temp->fd = -1;
+		}
+		if (temp->type == HEREDOC && temp->value)
+		{
+			unlink(temp->value);
+			free(temp->value);
+			temp->value = NULL;
+		}
+		temp = temp->next;
+
+	}
+	return (1);
+}
+
+int	close_all_cmnds_fds(t_cmd *cmd)
+{
+	t_cmd	*temp;
+
+	temp = cmd;
+	if (!temp)
+		return (0);
+	while (temp != NULL)
+	{
+		close_file_descriptors(temp);
+		close_all_redirs_fds(temp->redirs);
+		temp = temp->next;
+	}
+	return (1);
+}
+
 void	free_2d_array(char **arr)
 {
 	int	i;

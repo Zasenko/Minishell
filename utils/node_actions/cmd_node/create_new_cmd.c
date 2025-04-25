@@ -21,6 +21,8 @@ t_cmd	*create_new_cmd(void)
 		return (NULL);
 	new->cmd = NULL;
 	new->args = NULL;
+	new->pipe_fd[0] = -1;
+	new->pipe_fd[1] = -1;
 	new->is_build = false;
 	new->redirs = NULL;
 	new->prev = NULL;

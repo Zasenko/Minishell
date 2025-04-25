@@ -53,6 +53,7 @@ void	free_cmd_list(t_cmd **cmd)
 		}
 		close_all_redirs_fds((*cmd)->redirs);
 		free_redir_list(&(*cmd)->redirs);
+		close_file_descriptors(*cmd);
 		free(*cmd);
 		*cmd = temp;
 	}
@@ -107,6 +108,11 @@ void	free_list(t_app *shell)
 	{
 		free_2d_array(shell->env_var);
 		shell->env_var = NULL;
+	}
+	if (shell->prev_pipe >= 0)
+	{
+		close(shell->prev_pipe);
+		shell->prev_pipe = -1;
 	}
 	free_prompt(shell);
 	free_token_list(&shell->tokens);

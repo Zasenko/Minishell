@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_child.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:52:33 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/23 12:24:31 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/04/25 12:27:07 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void free_cmd_list_child(t_cmd **cmd)
         }
         close_all_redirs_fds_child((*cmd)->redirs);
         free_redir_list(&(*cmd)->redirs);
+        close_file_descriptors(*cmd);
         free(*cmd);
         *cmd = temp;
     }
@@ -69,6 +70,11 @@ void free_list_in_child(t_app *shell)
         free_2d_array(shell->env_var);
         shell->env_var = NULL;
     }
+    if (shell->prev_pipe >= 0)
+	{
+		close(shell->prev_pipe);
+		shell->prev_pipe = -1;
+	}
     free_prompt(shell);
     free_cmd_list_child(&shell->cmd);
     free_token_list(&shell->tokens); 
