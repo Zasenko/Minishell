@@ -285,7 +285,6 @@ int ft_wait_children(t_app *shell)
 		{
 			printf("Quit (core dumped)\n");
 		}
-
 	}
 	return (1);
 }

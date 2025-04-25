@@ -52,8 +52,8 @@ void	free_cmd_list(t_cmd **cmd)
 			(*cmd)->args = NULL;
 		}
 		close_all_redirs_fds((*cmd)->redirs);
-		free_redir_list(&(*cmd)->redirs);
 		close_file_descriptors(*cmd);
+		free_redir_list(&(*cmd)->redirs);
 		free(*cmd);
 		*cmd = temp;
 	}

@@ -36,6 +36,7 @@ SRC = 		main.c \
 			exit/exit_with_error.c \
 			exit/print_message.c \
 			executor/executor.c \
+			executor/exe_single_buildin.c \
 			lexer/lexing_inputs_data.c \
 			lexer/handle_command.c \
 			lexer/handle_heredoc.c \

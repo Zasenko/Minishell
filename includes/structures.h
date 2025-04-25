@@ -67,6 +67,7 @@ typedef struct s_app
 {
 	int				last_exit_code;
 	int				prev_pipe;
+	int 			dup_fd[2];
 	int				heredock_num;
 	bool			is_valid_syntax;
 	bool			is_envp_list_changed;
