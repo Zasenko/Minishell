@@ -76,6 +76,7 @@ typedef struct s_app
 	struct s_envp *envp;
 	struct s_cmd *cmd;
 	struct s_token *tokens;
+	int dup_fd[2];
 } t_app;
 
 typedef struct s_pwd

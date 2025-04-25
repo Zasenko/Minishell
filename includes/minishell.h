@@ -44,6 +44,7 @@ int		last_signal_status(void);
 int		cd_change_env(t_app *shell, t_pwd *pwd, bool is_child);
 int 	validate_input_arguments(t_app *shell, t_cmd *cmd, int args_c, int is_child);
 int		ft_pwd(void);
+int		exe_singl_buildin(t_app *shell, t_cmd *cmd);
 bool	add_token_back(t_token **token, t_token *new);
 bool	is_builtin_func(char *cmd);
 bool	lexing_checker(t_app *shell);
