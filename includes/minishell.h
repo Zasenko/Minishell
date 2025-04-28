@@ -97,6 +97,8 @@ void	free_list_in_child(t_app *shell);
 void	exit_child(t_app *shell, int status, char *message);
 void	change_signal_status(int status);
 void	free_redir_list(t_redir **redir);
+void	close_fd(int *fd);
+void	close_child_fds(t_app *shell);
 char	*expand_words(t_app *shell, char *input, int *i);
 char	*get_word_from_quotes(char *input);
 char	**copy_into_2d_arr(t_envp *envp);

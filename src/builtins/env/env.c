@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:02:48 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/24 22:03:57 by marvin           ###   ########.fr       */
+/*   Updated: 2025/04/28 14:00:13 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ int	ft_env(char **env)
 	i = 0;
 	while (env[i])
 	{
-		printf("%s\n", env[i]);
+		ft_putstr_fd(env[i], 1);
+		ft_putstr_fd("\n", 1);
+		// printf("%s\n", env[i]);
 		i++;
 	}
 	return (EXIT_SUCCESS);

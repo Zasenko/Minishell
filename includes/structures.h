@@ -13,6 +13,14 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
+typedef struct s_child_fds
+{
+	int prev_pipe;
+	int pipe[2];
+	int dup2_in;
+	int dup2_out;
+} t_child_fds;
+
 typedef enum
 {
 	ARG,
@@ -77,6 +85,7 @@ typedef struct s_app
 	struct s_cmd *cmd;
 	struct s_token *tokens;
 	int dup_fd[2];
+	struct s_child_fds child_fds;
 } t_app;
 
 typedef struct s_pwd

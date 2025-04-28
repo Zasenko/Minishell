@@ -12,6 +12,13 @@
 
 #include "../../includes/minishell.h"
 
+void close_child_fds(t_app *shell)
+{
+	close_fd(&shell->child_fds.prev_pipe);
+	close_fd(&shell->child_fds.pipe[0]);
+	close_fd(&shell->child_fds.pipe[1]);
+}
+
 int	close_all_redirs_fds(t_redir *redir)
 {
 	t_redir	*temp;
@@ -54,23 +61,22 @@ int	close_all_cmnds_fds(t_cmd *cmd)
 }
 // #include <libgen.h>
 
-int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
+int	redirect_in_child(t_app *shell, t_cmd *cmd)
 {
 	(void) shell;
-	if (prev_pipe != -1)
+	if (shell->child_fds.prev_pipe != -1)
 	{
-		dup2(prev_pipe, 0);
-		close(prev_pipe);
-		prev_pipe = -1;
+		close_fd(&shell->child_fds.dup2_in);
+		shell->child_fds.dup2_in = dup2(shell->child_fds.prev_pipe, 0);
+		close_fd(&shell->child_fds.prev_pipe);
 	}
 	if (cmd->next != NULL)
 	{
-		dup2(pipe_fd[1], 1);
-		close(pipe_fd[1]);
-		pipe_fd[1] = -1;
-		close(pipe_fd[0]);
-		pipe_fd[0] = -1;
+		close_fd(&shell->child_fds.dup2_out);
+		shell->child_fds.dup2_out = dup2(shell->child_fds.pipe[1], 1);
+		close_fd(&shell->child_fds.pipe[1]);
 	}
+
 	t_redir *redir = cmd->redirs;
 	while (redir)
 	{
@@ -82,8 +88,9 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 				print_fd_err(redir->value, strerror(errno));
 				exit_child(shell, 1, NULL);
 			}
-			dup2(redir->fd, 0);
-			close(redir->fd);
+			close_fd(&shell->child_fds.dup2_in);
+			shell->child_fds.dup2_in = dup2(redir->fd, 0);
+			close_fd(&redir->fd);
 		}
 		else if (redir->type == REDIR_OUT)
 		{
@@ -93,8 +100,9 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 				print_fd_err(redir->value, strerror(errno));
 				exit_child(shell, 1, NULL);
 			}
-			dup2(redir->fd, 1);
-			close(redir->fd);
+			close_fd(&shell->child_fds.dup2_out);
+			shell->child_fds.dup2_out = dup2(redir->fd, 1);
+			close_fd(&redir->fd);
 		}
 		else if (redir->type == APPEND)
 		{
@@ -104,15 +112,13 @@ int	redirect_in_child(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 				print_fd_err(redir->value, strerror(errno));
 				exit_child(shell, 1, NULL);
 			}
-			dup2(redir->fd, 1);
-			close(redir->fd);
+			close_fd(&shell->child_fds.dup2_out);
+			shell->child_fds.dup2_out = dup2(redir->fd, 1);
+			close_fd(&redir->fd);
 		}
 		redir = redir->next;
 	}
-	if (pipe_fd[0] != -1)
-		close(pipe_fd[0]);
-	if (pipe_fd[1] != -1)
-		close(pipe_fd[1]);
+	close_child_fds(shell);
 	return (1);
 }
 
@@ -184,15 +190,17 @@ void handle_execve_error(t_app *shell, t_cmd *cmd)
 	exit_child(shell, 127, NULL);
 }
 
-void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
+void	child_process(t_app *shell, t_cmd *cmd)
 {
 
 	int exit_status;
 
 	handle_child_signal();
-	redirect_in_child(shell, cmd, prev_pipe, pipe_fd);
+	redirect_in_child(shell, cmd);
 	if (!cmd->args)
+	{
 		exit_child(shell, 0, NULL);
+	}
 	if (is_builtin_func(cmd->args[0]))
 	{
 		signal(SIGPIPE, SIG_IGN);
@@ -237,17 +245,13 @@ void	child_process(t_app *shell, t_cmd *cmd, int prev_pipe, int pipe_fd[2])
 	}
 }
 
-int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
+int	ft_execute_command(t_app *shell, t_cmd *cmd)
 {
-	int	pipe_fd[2];
-
-	pipe_fd[0] = -1;
-	pipe_fd[1] = -1;
 	if (cmd->next != NULL)
 	{
-		if (pipe(pipe_fd) != 0)
+		if (pipe(shell->child_fds.pipe) != 0)
 		{
-			// check
+			close_child_fds(shell);
 			perror("pipe");
 			shell->last_exit_code = errno;
 			return (EXIT_FAILURE); // todo? break and waitpid?
@@ -256,17 +260,18 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd, int *prev_pipe)
 	cmd->pid = fork();
 	if (cmd->pid < 0)
 	{
+		close_child_fds(shell);
 		perror("fork");
 		shell->last_exit_code = errno;
 		return (EXIT_FAILURE);
 	}
 	if (cmd->pid == 0)
-		child_process(shell, cmd, *prev_pipe, pipe_fd);
-	if (*prev_pipe != -1)
-		close(*prev_pipe);
-	if (pipe_fd[1] != -1)
-		close(pipe_fd[1]);
-	*prev_pipe = pipe_fd[0];
+		child_process(shell, cmd);
+
+	close_fd(&shell->child_fds.pipe[1]);
+	close_fd(&shell->child_fds.prev_pipe);
+	shell->child_fds.prev_pipe = shell->child_fds.pipe[0];
+	shell->child_fds.pipe[0] = -1;
 	return (1);
 }
 
@@ -351,10 +356,8 @@ int	ft_execute(t_app *shell)
 {
 	t_cmd	*cmd;
 	int		cmd_count;
-	int		prev_pipe;
 
 	cmd_count = cmd_len(shell->cmd);
-	prev_pipe = -1;
 	if (!cmd_count || !shell->is_valid_syntax)
 		return (0);
 	
@@ -468,6 +471,7 @@ int	ft_execute(t_app *shell)
 	cmd = shell->cmd;
 	if (!cmd)
 		return 0;
+
 	if (cmd->next == NULL && cmd->args && is_builtin_func(cmd->args[0]))
 	{
 		if (exe_singl_buildin(shell, cmd) == EXIT_FAILURE)
@@ -479,14 +483,13 @@ int	ft_execute(t_app *shell)
 		signal(SIGQUIT, SIG_IGN);
 		while (cmd != NULL)
 		{
-			ft_execute_command(shell, cmd, &prev_pipe);
+			ft_execute_command(shell, cmd);
 			cmd = cmd->next;
 		}
 	}
 	ft_wait_children(shell);
 	handle_signal_main();
-	if (prev_pipe != -1)
-		close(prev_pipe);
+	close_child_fds(shell);
 	// close_all_redirs_fds(cmd->redirs);
 	// close_all_cmnds_fds(shell->cmd);
 	return (1);
