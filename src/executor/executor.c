@@ -63,7 +63,6 @@ int	close_all_cmnds_fds(t_cmd *cmd)
 
 int	redirect_in_child(t_app *shell, t_cmd *cmd)
 {
-	(void) shell;
 	if (shell->child_fds.prev_pipe != -1)
 	{
 		close_fd(&shell->child_fds.dup2_in);
