@@ -19,48 +19,6 @@ void close_child_fds(t_app *shell)
 	close_fd(&shell->child_fds.pipe[1]);
 }
 
-int	close_all_redirs_fds(t_redir *redir)
-{
-	t_redir	*temp;
-
-	temp = redir;
-	if (!temp)
-		return (0);
-	while (temp != NULL)
-	{
-		if (temp->fd > -1)
-		{
-			close(temp->fd);
-			temp->fd = -1;
-		}
-		if (temp->type == HEREDOC && temp->value)
-		{
-			unlink(temp->value);
-			free(temp->value);
-			temp->value = NULL;
-		}
-		temp = temp->next;
-
-	}
-	return (1);
-}
-
-int	close_all_cmnds_fds(t_cmd *cmd)
-{
-	t_cmd	*temp;
-
-	temp = cmd;
-	if (!temp)
-		return (0);
-	while (temp != NULL)
-	{
-		close_all_redirs_fds(temp->redirs);
-		temp = temp->next;
-	}
-	return (1);
-}
-// #include <libgen.h>
-
 int	redirect_in_child(t_app *shell, t_cmd *cmd)
 {
 	if (shell->child_fds.prev_pipe != -1)
@@ -153,14 +111,14 @@ void handle_execve_error(t_app *shell, t_cmd *cmd)
 		exit_child(shell, 127, NULL);
 	}
 
-	else if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' || 
+	else if (!cmd->is_valid_cmd || (cmd->cmd && cmd->cmd[0] == '\0') || 
         !ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
     {
         ft_putstr_fd(cmd->args[0], 2);
         ft_putstr_fd(": command not found\n", 2);
         exit_child(shell, 127, NULL);
     }
-    else if (stat(cmd->cmd, &buffer) == 0)
+    else if (cmd->cmd && stat(cmd->cmd, &buffer) == 0)
     {
         if (S_ISDIR(buffer.st_mode))
         {

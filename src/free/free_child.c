@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_child.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:52:33 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/25 13:20:56 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/04/29 12:58:48 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,6 @@ void free_list_in_child(t_app *shell)
         free_2d_array(shell->env_var);
         shell->env_var = NULL;
     }
-    if (shell->prev_pipe >= 0)
-	{
-		close(shell->prev_pipe);
-		shell->prev_pipe = -1;
-	}
     free_prompt(shell);
     free_token_list(&shell->tokens); 
     free_cmd_list_child(&shell->cmd);

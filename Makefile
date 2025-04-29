@@ -59,7 +59,8 @@ SRC = 		main.c \
 			builtins/exit/exit.c \
 			builtins/exit/exit_utils.c \
 			builtins/exit/validation.c \
-			builtins/export.c \
+			builtins/export/export.c \
+			builtins/export/export_utils.c \
 
 UTILS_SRC = node_actions/cmd_node/add_cmd_back.c \
 			node_actions/cmd_node/create_new_cmd.c \
