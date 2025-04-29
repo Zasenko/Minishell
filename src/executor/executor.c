@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-void close_child_fds(t_app *shell)
+void	close_child_fds(t_app *shell)
 {
 	close_fd(&shell->child_fds.prev_pipe);
 	close_fd(&shell->child_fds.pipe[0]);
@@ -288,13 +288,9 @@ int ft_wait_children(t_app *shell)
 	if (print_sig_error)
 	{
 		if (print_sig_error == 2)
-		{
 			printf("\n");
-		}
 		if (print_sig_error == 3 && shell->last_exit_code == 131)
-		{
 			printf("Quit (core dumped)\n");
-		}
 	}
 	return (1);
 }
@@ -316,7 +312,7 @@ int	ft_execute(t_app *shell)
 
 	cmd_count = cmd_len(shell->cmd);
 	if (!cmd_count || !shell->is_valid_syntax)
-		return (0);
+		return (EXIT_FAILURE);
 	
 	//HEREDOC
 	cmd = shell->cmd;
@@ -428,7 +424,6 @@ int	ft_execute(t_app *shell)
 	cmd = shell->cmd;
 	if (!cmd)
 		return 0;
-
 	if (cmd->next == NULL && cmd->args && is_builtin_func(cmd->args[0]))
 	{
 		if (exe_singl_buildin(shell, cmd) == EXIT_FAILURE)
@@ -443,11 +438,8 @@ int	ft_execute(t_app *shell)
 			ft_execute_command(shell, cmd);
 			cmd = cmd->next;
 		}
+		ft_wait_children(shell);
+		handle_signal_main();
 	}
-	ft_wait_children(shell);
-	handle_signal_main();
-	close_child_fds(shell);
-	// close_all_redirs_fds(cmd->redirs);
-	// close_all_cmnds_fds(shell->cmd);
-	return (1);
+	return (SUCCESS);
 }

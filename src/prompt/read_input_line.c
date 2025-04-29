@@ -122,6 +122,9 @@ void read_input_line(t_app *shell)
         // print_cmd(&shell);
         // print_envp(shell->envp);
         // print_env_var(shell->env_var);
+        close_child_fds(shell);
+        close_fd(&shell->child_fds.dup2_in);
+        close_fd(&shell->child_fds.dup2_out);
         free_list(shell);
 	}
 	exit_with_error(shell, shell->last_exit_code, NULL);

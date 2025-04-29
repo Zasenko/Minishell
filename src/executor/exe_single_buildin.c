@@ -6,13 +6,13 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 11:56:07 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/29 11:29:54 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/04/29 14:55:09 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void close_fd(int *fd)
+void	close_fd(int *fd)
 {
 	if(fd && *fd != -1)
 	{
@@ -21,61 +21,64 @@ void close_fd(int *fd)
 	}
 }
 
-void close_dup_fds(t_app *shell)
+int	check_redir(t_app *shell, t_redir *redir, int *dup_fd, int *fd)
 {
-	close_fd(&shell->dup_fd[0]);
-	close_fd(&shell->dup_fd[1]);
+	if (redir->fd < 0)
+	{
+		print_fd_err(redir->value, strerror(errno));
+		shell->last_exit_code = 1;
+		return (EXIT_FAILURE);
+	}
+	close_fd(dup_fd);
+	*dup_fd = dup2(redir->fd, *fd);
+	if (*dup_fd == -1)
+	{
+		print_fd_err("dup2", strerror(errno));
+		shell->last_exit_code = 1;
+		return (EXIT_FAILURE);
+	}
+	close_fd(&redir->fd);
+	return (SUCCESS);
+}
+
+int	make_redir_builtin(t_app *shell, t_redir *redir)
+{
+	if (!redir)
+		return (EXIT_FAILURE);
+	if (redir->type == REDIR_IN || redir->type == HEREDOC)
+	{
+		redir->fd = open(redir->value, O_RDONLY);
+		if (check_redir(shell, redir, &shell->child_fds.dup2_in, &shell->child_fds.pipe[0]) == EXIT_FAILURE)
+			return (EXIT_FAILURE);
+	}
+	else if (redir->type == REDIR_OUT)
+	{
+		redir->fd = open(redir->value, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
+		if (check_redir(shell, redir, &shell->child_fds.dup2_out, &shell->child_fds.pipe[1]) == EXIT_FAILURE)
+			return (EXIT_FAILURE);
+	} 
+	else if (redir->type == APPEND)
+	{
+		redir->fd = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (check_redir(shell, redir, &shell->child_fds.dup2_out, &shell->child_fds.pipe[1]) == EXIT_FAILURE)
+			return (EXIT_FAILURE);
+	}
+	return (SUCCESS);
 }
 
 int	exe_singl_buildin(t_app *shell, t_cmd *cmd)
 {
 	t_redir	*redir;
 	
-	shell->dup_fd[0] = dup(0);
-	shell->dup_fd[1] = dup(1);
+	shell->child_fds.pipe[0] = dup(0);
+	shell->child_fds.pipe[1] = dup(1);
 	redir = cmd->redirs;
 	while (redir)
 	{
-		if (redir->type == REDIR_IN || redir->type == HEREDOC)
-		{
-			redir->fd = open(redir->value, O_RDONLY);
-			if (redir->fd < 0)
-			{
-				print_fd_err(redir->value, strerror(errno));
-				shell->last_exit_code = 1;
-				close_dup_fds(shell);
-				return (EXIT_FAILURE);
-			}
-			dup2(redir->fd, shell->dup_fd[0]);
-			close_fd(&redir->fd);
-		}
-		else if (redir->type == REDIR_OUT)
-		{
-			redir->fd = open(redir->value, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
-			if (redir->fd < 0)
-			{
-				close_dup_fds(shell);
-				print_fd_err(redir->value, strerror(errno));
-				return (EXIT_FAILURE);
-			}
-			dup2(redir->fd, shell->dup_fd[1]);
-			close_fd(&redir->fd);
-		} 
-		else if (redir->type == APPEND)
-		{
-			redir->fd = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if (redir->fd < 0)
-			{
-				close_dup_fds(shell);
-				print_fd_err(redir->value, strerror(errno));
-				return (EXIT_FAILURE);
-			}
-			dup2(redir->fd, shell->dup_fd[1]);
-			close_fd(&redir->fd);
-		}
+		if (make_redir_builtin(shell, redir) == EXIT_FAILURE)
+			return (EXIT_FAILURE);
 		redir = redir->next;
 	}
-	shell->last_exit_code = exec_buildin(cmd, shell, false, shell->dup_fd[1]);
-	close_dup_fds(shell);
+	shell->last_exit_code = exec_buildin(cmd, shell, false, shell->child_fds.pipe[1]);
 	return (SUCCESS);
 }
