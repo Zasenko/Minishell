@@ -29,5 +29,10 @@ void	initialize_shell(t_app *shell, char **envp)
 	shell->is_valid_syntax = true;
 	shell->dup_fd[0] = -1;
 	shell->dup_fd[1] = -1;
+	shell->child_fds.prev_pipe = -1;
+	shell->child_fds.pipe[0] = -1;
+	shell->child_fds.pipe[1] = -1;
+	shell->child_fds.dup2_in = -1;
+	shell->child_fds.dup2_out = -1;
 	copy_env(shell, envp);
 }

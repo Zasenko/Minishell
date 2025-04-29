@@ -13,6 +13,14 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
+typedef struct s_child_fds
+{
+	int prev_pipe;
+	int pipe[2];
+	int dup2_in;
+	int dup2_out;
+} t_child_fds;
+
 typedef enum
 {
 	ARG,
@@ -65,20 +73,20 @@ typedef struct s_cmd
 
 typedef struct s_app
 {
-	int				last_exit_code;
-	int				prev_pipe;
-	int 			dup_fd[2];
-	int				heredock_num;
-	bool			is_valid_syntax;
-	bool			is_envp_list_changed;
-	char			**env_var;
-	char			*user;
-	char			*name;
-	char			*prompt;
-	char			*pwd;
-	struct s_envp	*envp;
-	struct s_cmd	*cmd;
-	struct s_token	*tokens;
+	char **env_var;
+	char *user;
+	char *name;
+	char *prompt;
+	char *pwd;
+	int last_exit_code;
+	bool is_valid_syntax;
+	bool is_envp_list_changed;
+	int heredock_num;
+	struct s_envp *envp;
+	struct s_cmd *cmd;
+	struct s_token *tokens;
+	int dup_fd[2];
+	struct s_child_fds child_fds;
 } t_app;
 
 typedef struct s_pwd

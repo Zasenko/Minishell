@@ -38,6 +38,9 @@ void	exit_child(t_app *shell, int status, char *message)
 	if (message)
 		print_message(message, false);
 
+	close_child_fds(shell);
+	close_fd(&shell->child_fds.dup2_in);
+	close_fd(&shell->child_fds.dup2_out);
 	if(shell->dup_fd[0] != -1)
 	{
 		close(shell->dup_fd[0]);
