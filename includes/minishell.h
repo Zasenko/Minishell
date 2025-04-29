@@ -43,7 +43,6 @@ int		get_envp_len(t_envp *envp);
 int		last_signal_status(void);
 int		cd_change_env(t_app *shell, t_pwd *pwd, bool is_child);
 int 	validate_input_arguments(t_app *shell, t_cmd *cmd, int args_c, int is_child);
-int		close_all_cmnds_fds(t_cmd *cmd);
 int		ft_pwd(void);
 int		close_all_redirs_fds_child(t_redir *redir);
 int		exe_singl_buildin(t_app *shell, t_cmd *cmd);

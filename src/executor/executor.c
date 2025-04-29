@@ -19,48 +19,6 @@ void close_child_fds(t_app *shell)
 	close_fd(&shell->child_fds.pipe[1]);
 }
 
-int	close_all_redirs_fds(t_redir *redir)
-{
-	t_redir	*temp;
-
-	temp = redir;
-	if (!temp)
-		return (0);
-	while (temp != NULL)
-	{
-		if (temp->fd > -1)
-		{
-			close(temp->fd);
-			temp->fd = -1;
-		}
-		if (temp->type == HEREDOC && temp->value)
-		{
-			unlink(temp->value);
-			free(temp->value);
-			temp->value = NULL;
-		}
-		temp = temp->next;
-
-	}
-	return (1);
-}
-
-int	close_all_cmnds_fds(t_cmd *cmd)
-{
-	t_cmd	*temp;
-
-	temp = cmd;
-	if (!temp)
-		return (0);
-	while (temp != NULL)
-	{
-		close_all_redirs_fds(temp->redirs);
-		temp = temp->next;
-	}
-	return (1);
-}
-// #include <libgen.h>
-
 int	redirect_in_child(t_app *shell, t_cmd *cmd)
 {
 	if (shell->child_fds.prev_pipe != -1)
