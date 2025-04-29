@@ -60,14 +60,15 @@ typedef struct s_envp
 
 typedef struct s_cmd
 {
-	char *cmd;
-	char **args;
-	pid_t pid;
-	bool is_build;
-	bool is_valid_cmd;
-	struct s_redir *redirs;
-	struct s_cmd *next;
-	struct s_cmd *prev;
+	int				pipe_fd[2];
+	pid_t			pid;
+	bool			is_build;
+	bool			is_valid_cmd;
+	char			*cmd;
+	char			**args;
+	struct s_redir	*redirs;
+	struct s_cmd	*next;
+	struct s_cmd	*prev;
 } t_cmd;
 
 typedef struct s_app

@@ -51,7 +51,6 @@ void	exit_child(t_app *shell, int status, char *message)
 		close(shell->dup_fd[1]);
 		shell->dup_fd[1] = -1;
 	}
-
 	free_envp_list(&shell->envp);
 	free_list_in_child(shell);
 	exit(status);

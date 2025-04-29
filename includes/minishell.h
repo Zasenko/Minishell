@@ -43,7 +43,9 @@ int		get_envp_len(t_envp *envp);
 int		last_signal_status(void);
 int		cd_change_env(t_app *shell, t_pwd *pwd, bool is_child);
 int 	validate_input_arguments(t_app *shell, t_cmd *cmd, int args_c, int is_child);
+int		close_all_cmnds_fds(t_cmd *cmd);
 int		ft_pwd(void);
+int		close_all_redirs_fds_child(t_redir *redir);
 int		exe_singl_buildin(t_app *shell, t_cmd *cmd);
 bool	add_token_back(t_token **token, t_token *new);
 bool	is_builtin_func(char *cmd);
@@ -63,6 +65,7 @@ bool	is_there_quote(char *str);
 bool	parse_arguments(t_app *shell, t_cmd *cmd, t_token *token,
 		bool *iswriten);
 void	initialize_shell(t_app *shell, char **envp);
+void	close_file_descriptors(t_cmd *cmd);
 void	copy_env(t_app *shell, char **envp);
 void	read_input_line(t_app *shell);
 void 	print_exit_error(char *str, bool is_child);
