@@ -31,12 +31,15 @@ SRC = 		main.c \
 			free/free_memory.c \
 			free/free_list_memory.c \
 			free/free_child.c \
+			free/close_fd.c \
 			signals/handle_signal.c \
 			signals/signal_parts_two.c \
 			exit/exit_with_error.c \
 			exit/print_message.c \
 			executor/executor.c \
 			executor/exe_single_buildin.c \
+			executor/exe_child.c \
+			executor/redirects_child.c \
 			lexer/lexing_inputs_data.c \
 			lexer/handle_command.c \
 			lexer/handle_heredoc.c \

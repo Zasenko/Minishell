@@ -85,7 +85,6 @@ typedef struct s_app
 	struct s_envp *envp;
 	struct s_cmd *cmd;
 	struct s_token *tokens;
-	int dup_fd[2];
 	struct s_child_fds child_fds;
 } t_app;
 
