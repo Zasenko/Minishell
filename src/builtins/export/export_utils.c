@@ -6,11 +6,36 @@
 /*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 13:23:25 by ibondarc          #+#    #+#             */
-/*   Updated: 2025/04/29 14:03:05 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:18:03 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
+
+void show_error_message(char *str)
+{
+	ft_putstr_fd("export: `", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd(NAVI, 2);
+}
+
+void free_lib_list(t_lib **lib)
+{
+	if (!lib)
+		return;
+	if ((*lib)->key)
+	{
+		free((*lib)->key);
+		(*lib)->key = NULL;
+	}
+	if ((*lib)->value)
+	{
+		free((*lib)->value);
+		(*lib)->value = NULL;
+	}
+	free(*lib);
+	*lib = NULL;
+}
 
 int check_export_key(char *str)
 {

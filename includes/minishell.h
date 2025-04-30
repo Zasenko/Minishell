@@ -66,6 +66,8 @@ bool	is_there_quote(char *str);
 bool	parse_arguments(t_app *shell, t_cmd *cmd, t_token *token,
 		bool *iswriten);
 void	initialize_shell(t_app *shell, char **envp);
+void	free_lib_list(t_lib **lib);
+void	show_error_message(char *str);
 void	close_file_descriptors(t_cmd *cmd);
 void	copy_env(t_app *shell, char **envp);
 void	read_input_line(t_app *shell);
@@ -120,6 +122,7 @@ char	*execut_subcommand(t_app *shell, char *value);
 char	*extract_subcommand(const char *str);
 t_cmd	*create_new_cmd(void);
 t_cmd	*last_cmd_node(t_cmd *node);
+t_lib	*check_export_arg(char *str, int *exit_code, t_app *shell, bool is_child);
 t_envp	*create_new_envp(char *envp, char *name);
 t_envp	*last_envp_node(t_envp *node);
 t_envp	*find_envp_node(t_envp *envp, char *key);
