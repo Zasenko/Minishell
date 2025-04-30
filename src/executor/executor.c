@@ -12,196 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-void close_child_fds(t_app *shell)
-{
-	close_fd(&shell->child_fds.prev_pipe);
-	close_fd(&shell->child_fds.pipe[0]);
-	close_fd(&shell->child_fds.pipe[1]);
-}
-
-int	redirect_in_child(t_app *shell, t_cmd *cmd)
-{
-	if (shell->child_fds.prev_pipe != -1)
-	{
-		close_fd(&shell->child_fds.dup2_in);
-		shell->child_fds.dup2_in = dup2(shell->child_fds.prev_pipe, 0);
-		close_fd(&shell->child_fds.prev_pipe);
-	}
-	if (cmd->next != NULL)
-	{
-		close_fd(&shell->child_fds.dup2_out);
-		shell->child_fds.dup2_out = dup2(shell->child_fds.pipe[1], 1);
-		close_fd(&shell->child_fds.pipe[1]);
-	}
-
-	t_redir *redir = cmd->redirs;
-	while (redir)
-	{
-		if (redir->type == REDIR_IN || redir->type == HEREDOC)
-		{
-			redir->fd = open(redir->value, O_RDONLY, 0644);
-			if (redir->fd < 0)
-			{
-				print_fd_err(redir->value, strerror(errno));
-				exit_child(shell, 1, NULL);
-			}
-			close_fd(&shell->child_fds.dup2_in);
-			shell->child_fds.dup2_in = dup2(redir->fd, 0);
-			close_fd(&redir->fd);
-		}
-		else if (redir->type == REDIR_OUT)
-		{
-			redir->fd = open(redir->value, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
-			if (redir->fd < 0)
-			{
-				print_fd_err(redir->value, strerror(errno));
-				exit_child(shell, 1, NULL);
-			}
-			close_fd(&shell->child_fds.dup2_out);
-			shell->child_fds.dup2_out = dup2(redir->fd, 1);
-			close_fd(&redir->fd);
-		}
-		else if (redir->type == APPEND)
-		{
-			redir->fd = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if (redir->fd < 0)
-			{
-				print_fd_err(redir->value, strerror(errno));
-				exit_child(shell, 1, NULL);
-			}
-			close_fd(&shell->child_fds.dup2_out);
-			shell->child_fds.dup2_out = dup2(redir->fd, 1);
-			close_fd(&redir->fd);
-		}
-		redir = redir->next;
-	}
-	close_child_fds(shell);
-	return (1);
-}
-
-void handle_execve_error(t_app *shell, t_cmd *cmd)
-{
-    struct stat buffer;
-
-	if (find_path(shell) && !*find_path(shell))
-		{
-			ft_putstr_fd(cmd->args[0], 2);
-            ft_putstr_fd(": No such file or directory\n", 2);
-			// free_list(shell);
-			// free_envp_list(&shell->envp);
-            // exit(127);
-			exit_child(shell, 127, NULL);
-
-		}
-		if (!find_path(shell) && !cmd->is_valid_cmd )
-        {
-            ft_putstr_fd(cmd->args[0], 2);
-            ft_putstr_fd(": Permission denied\n", 2);
-			free_list(shell);
-			free_envp_list(&shell->envp);
-            exit(126);
-			// exit_child(shell, 126, NULL);
-
-        }
-
-	else if (find_path(shell) == NULL)
-	{
-		ft_putstr_fd(cmd->args[0], 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-		exit_child(shell, 127, NULL);
-	}
-
-	else if (!cmd->is_valid_cmd || (cmd->cmd && cmd->cmd[0] == '\0') || 
-        !ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
-    {
-        ft_putstr_fd(cmd->args[0], 2);
-        ft_putstr_fd(": command not found\n", 2);
-        exit_child(shell, 127, NULL);
-    }
-    else if (cmd->cmd && stat(cmd->cmd, &buffer) == 0)
-    {
-        if (S_ISDIR(buffer.st_mode))
-        {
-            ft_putstr_fd(cmd->args[0], 2);
-            ft_putstr_fd(": Is a directory\n", 2);
-            exit_child(shell, 126, NULL);
-        }
-        else if ( access(cmd->cmd, X_OK) == -1)
-        {
-            ft_putstr_fd(cmd->args[0], 2);
-            ft_putstr_fd(": Permission denied\n", 2);
-            exit_child(shell, 126, NULL);
-        }
-    }
-    else
-    {
-        if (errno == ENOENT || errno == ENOTDIR)
-        {
-            ft_putstr_fd(cmd->args[0], 2);
-            ft_putstr_fd(": No such file or directory\n", 2);
-			exit_child(shell, 127, NULL);
-        }
-    }
-    ft_putstr_fd(cmd->args[0], 2);
-    ft_putstr_fd(": command not found\n", 2);
-	exit_child(shell, 127, NULL);
-}
-
-void	child_process(t_app *shell, t_cmd *cmd)
-{
-
-	int exit_status;
-
-	handle_child_signal();
-	redirect_in_child(shell, cmd);
-	if (!cmd->args)
-	{
-		exit_child(shell, 0, NULL);
-	}
-	if (is_builtin_func(cmd->args[0]))
-	{
-		signal(SIGPIPE, SIG_IGN);
-		exit_status = exec_buildin(cmd, shell, true, 1);
-		exit_child(shell, exit_status, NULL);
-	}
-	else
-	{
-		if (ft_strstr(cmd->args[0], "/minishell"))
-		{
-			t_envp *node = find_envp_node(shell->envp, "SHLVL");
-			if (node && node->envp)
-			{
-				int level = ft_atoi(node->envp);
-				level++;
-				char *new_lvl = ft_itoa(level);
-				if (!new_lvl)
-				{
-					//todo;
-				}
-				free(node->envp);
-				node->envp = new_lvl;
-
-				char **new_2d_env = copy_into_2d_arr(shell->envp);
-				if (!new_2d_env)
-				{
-					//todo;
-				}
-				if (shell->env_var)
-				{
-					free_2d_array(shell->env_var);
-					shell->env_var = NULL;
-					shell->env_var = new_2d_env;
-				}
-			}
-		}
-		if (cmd->cmd == NULL)
-			execve(cmd->args[0], cmd->args, shell->env_var);
-		else
-			execve(cmd->cmd, cmd->args, shell->env_var);
-		handle_execve_error(shell, cmd);
-	}
-}
-
 int	ft_execute_command(t_app *shell, t_cmd *cmd)
 {
 	if (cmd->next != NULL)
@@ -224,12 +34,11 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd)
 	}
 	if (cmd->pid == 0)
 		child_process(shell, cmd);
-
 	close_fd(&shell->child_fds.pipe[1]);
 	close_fd(&shell->child_fds.prev_pipe);
 	shell->child_fds.prev_pipe = shell->child_fds.pipe[0];
 	shell->child_fds.pipe[0] = -1;
-	return (1);
+	return (SUCCESS);
 }
 
 int	ft_wait_child(t_cmd *cmd, t_app *shell, int *print_sig_error)
@@ -243,26 +52,16 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell, int *print_sig_error)
 		shell->last_exit_code = errno;
 		return (strerror(errno), errno);
 	}
-	if (WIFEXITED(status)) //exit (1)
+	if (WIFEXITED(status))
 	{
 		shell->last_exit_code = WEXITSTATUS(status);
 		return (SUCCESS);
 	}
 	else if (WIFSIGNALED(status))
 	{
-		// printf("--- command: %s, exit status %d\n", cmd->cmd,  128 + WTERMSIG(status));
 		shell->last_exit_code = 128 + WTERMSIG(status);
 		if (WTERMSIG(status) == SIGINT)
-		{
 			*print_sig_error = 2;
-			// t_cmd *temp_cmd = shell->cmd->next;
-			// while (temp_cmd)
-			// {
-			// 	if (kill(temp_cmd->pid, 0) == 0)
-			// 		kill(temp_cmd->pid, SIGUSR1);
-			// 	temp_cmd = temp_cmd->next;
-			// }
-		}
 		else if (WTERMSIG(status) == SIGQUIT)
 			*print_sig_error = 3;
 		return (SUCCESS);
@@ -288,13 +87,9 @@ int ft_wait_children(t_app *shell)
 	if (print_sig_error)
 	{
 		if (print_sig_error == 2)
-		{
 			printf("\n");
-		}
 		if (print_sig_error == 3 && shell->last_exit_code == 131)
-		{
 			printf("Quit (core dumped)\n");
-		}
 	}
 	return (1);
 }
@@ -316,7 +111,7 @@ int	ft_execute(t_app *shell)
 
 	cmd_count = cmd_len(shell->cmd);
 	if (!cmd_count || !shell->is_valid_syntax)
-		return (0);
+		return (EXIT_FAILURE);
 	
 	//HEREDOC
 	cmd = shell->cmd;
@@ -422,13 +217,14 @@ int	ft_execute(t_app *shell)
 		}
 		cmd = cmd->next;
 	}
+	
+	
 	//EXE
 	handle_signal_main();
 
 	cmd = shell->cmd;
 	if (!cmd)
 		return 0;
-
 	if (cmd->next == NULL && cmd->args && is_builtin_func(cmd->args[0]))
 	{
 		if (exe_singl_buildin(shell, cmd) == EXIT_FAILURE)
@@ -443,11 +239,8 @@ int	ft_execute(t_app *shell)
 			ft_execute_command(shell, cmd);
 			cmd = cmd->next;
 		}
+		ft_wait_children(shell);
+		handle_signal_main();
 	}
-	ft_wait_children(shell);
-	handle_signal_main();
-	close_child_fds(shell);
-	// close_all_redirs_fds(cmd->redirs);
-	// close_all_cmnds_fds(shell->cmd);
-	return (1);
+	return (SUCCESS);
 }
