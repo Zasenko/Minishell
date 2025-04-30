@@ -12,7 +12,6 @@
 
 #include "../../includes/minishell.h"
 
-
 int	ft_execute_command(t_app *shell, t_cmd *cmd)
 {
 	if (cmd->next != NULL)
@@ -35,12 +34,11 @@ int	ft_execute_command(t_app *shell, t_cmd *cmd)
 	}
 	if (cmd->pid == 0)
 		child_process(shell, cmd);
-
 	close_fd(&shell->child_fds.pipe[1]);
 	close_fd(&shell->child_fds.prev_pipe);
 	shell->child_fds.prev_pipe = shell->child_fds.pipe[0];
 	shell->child_fds.pipe[0] = -1;
-	return (1);
+	return (SUCCESS);
 }
 
 int	ft_wait_child(t_cmd *cmd, t_app *shell, int *print_sig_error)
@@ -54,26 +52,16 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell, int *print_sig_error)
 		shell->last_exit_code = errno;
 		return (strerror(errno), errno);
 	}
-	if (WIFEXITED(status)) //exit (1)
+	if (WIFEXITED(status))
 	{
 		shell->last_exit_code = WEXITSTATUS(status);
 		return (SUCCESS);
 	}
 	else if (WIFSIGNALED(status))
 	{
-		// printf("--- command: %s, exit status %d\n", cmd->cmd,  128 + WTERMSIG(status));
 		shell->last_exit_code = 128 + WTERMSIG(status);
 		if (WTERMSIG(status) == SIGINT)
-		{
 			*print_sig_error = 2;
-			// t_cmd *temp_cmd = shell->cmd->next;
-			// while (temp_cmd)
-			// {
-			// 	if (kill(temp_cmd->pid, 0) == 0)
-			// 		kill(temp_cmd->pid, SIGUSR1);
-			// 	temp_cmd = temp_cmd->next;
-			// }
-		}
 		else if (WTERMSIG(status) == SIGQUIT)
 			*print_sig_error = 3;
 		return (SUCCESS);
@@ -229,6 +217,8 @@ int	ft_execute(t_app *shell)
 		}
 		cmd = cmd->next;
 	}
+	
+	
 	//EXE
 	handle_signal_main();
 
