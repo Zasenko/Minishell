@@ -6,20 +6,11 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 11:56:07 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/29 14:55:09 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/04/29 16:08:39 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	close_fd(int *fd)
-{
-	if(fd && *fd != -1)
-	{
-		close(*fd);
-		*fd = -1;
-	}
-}
 
 int	check_redir(t_app *shell, t_redir *redir, int *dup_fd, int *fd)
 {
