@@ -40,20 +40,24 @@ typedef enum
 
 typedef struct s_token
 {
-	t_type type;
-	char *value;
-	struct s_token *prev;
-	struct s_token *next;
+	t_type			type;
+	bool			is_ambiguous;
+	char			*err_name;
+	char			*value;
+	struct s_token	*prev;
+	struct s_token	*next;
 } t_token;
 
 typedef struct s_redir
 {
-	t_type type;
-	char *value;
-	char *stop_word;
-	int fd;
-	bool heredock_with_quotes;
-	struct s_redir *next;
+	t_type			type;
+	char			*value;
+	char			*err_name;
+	char			*stop_word;
+	int				fd;
+	bool			is_ambiguous;
+	bool			heredock_with_quotes;
+	struct s_redir	*next;
 } t_redir;
 
 typedef struct s_envp

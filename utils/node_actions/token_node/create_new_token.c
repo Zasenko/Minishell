@@ -20,7 +20,8 @@ t_token	*create_new_token(void)
 	if (!new)
 		return (NULL);
 	new->value = NULL;
-	new->type = -1;
+	new->err_name = NULL;
+ 	new->type = -1;
 	new->prev = NULL;
 	new->next = NULL;
 	return (new);
