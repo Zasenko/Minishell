@@ -62,6 +62,7 @@ SRC = 		main.c \
 			builtins/exit/exit.c \
 			builtins/exit/exit_utils.c \
 			builtins/exit/validation.c \
+			heredoc/heredoc.c \
 			builtins/export/export.c \
 			builtins/export/export_utils.c \
 			builtins/export/validate_arg.c \
