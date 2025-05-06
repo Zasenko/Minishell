@@ -47,7 +47,6 @@ int	close_all_redirs_fds(t_redir *redir)
 			temp->value = NULL;
 		}
 		temp = temp->next;
-
 	}
 	return (1);
 }

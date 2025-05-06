@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 10:05:00 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/30 10:06:38 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/06 14:05:48 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	make_child_redir_in_heredoc(t_app *shell, t_redir *redir)
 
 void	make_child_redir_out(t_app *shell, t_redir *redir)
 {
-	redir->fd = open(redir->value, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
+	redir->fd = open(redir->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (redir->fd < 0)
 	{
 		print_fd_err(redir->value, strerror(errno));
@@ -62,7 +62,6 @@ void	redirects_in_child(t_app *shell, t_cmd *cmd)
 		do_dup2(shell, &shell->child_fds.dup2_in, &shell->child_fds.prev_pipe, 0);
 	if (cmd->next != NULL)
 		do_dup2(shell, &shell->child_fds.dup2_out, &shell->child_fds.pipe[1], 1);
-
 	redir = cmd->redirs;
 	while (redir)
 	{

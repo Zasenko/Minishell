@@ -3,26 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 13:23:25 by ibondarc          #+#    #+#             */
-/*   Updated: 2025/04/30 12:18:03 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/05/06 14:09:19 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/minishell.h"
 
-void show_error_message(char *str)
+void	show_error_message(char *str)
 {
 	ft_putstr_fd("export: `", 2);
 	ft_putstr_fd(str, 2);
 	ft_putstr_fd(NAVI, 2);
 }
 
-void free_lib_list(t_lib **lib)
+void	free_lib_list(t_lib **lib)
 {
 	if (!lib)
-		return;
+		return ;
 	if ((*lib)->key)
 	{
 		free((*lib)->key);
@@ -37,58 +37,54 @@ void free_lib_list(t_lib **lib)
 	*lib = NULL;
 }
 
-int check_export_key(char *str)
+int	check_export_key(char *str)
 {
-    int i = 0;
-    int len = ft_strlen(str);
-    if (len == 0 || (len == 1 && !ft_isalpha(str[i])))
-    {
-        return (0);
-    }
-    else {
-        while (str[i])
-        {
-            if (!ft_isprint(str[i]))
-            {
-                return (0);
-            }
-            else if (i == 0 && (!ft_isalpha(str[i]) && str[i] != '_'))
-            {
-                return (0);
-            }
-            else if (!ft_isalnum(str[i]) && str[i] != '_')
-            {
-                return (0);
-            }
-            i++;
-        }   
-    }
-    return (1);
+	int	i;
+	int	len;
+
+	i = 0;
+	len = ft_strlen(str);
+	if (len == 0 || (len == 1 && !ft_isalpha(str[i])))
+		return (0);
+	else
+	{
+		while (str[i])
+		{
+			if (!ft_isprint(str[i]))
+				return (0);
+			else if (i == 0 && (!ft_isalpha(str[i]) && str[i] != '_'))
+				return (0);
+			else if (!ft_isalnum(str[i]) && str[i] != '_')
+				return (0);
+			i++;
+		}
+	}
+	return (1);
 }
 
-void    sort_2d_env(char **env)
+void	sort_2d_env(char **env)
 {
-    int     i;
-    int     sorted;
-    char    *tmp;
+	int		i;
+	int		sorted;
+	char	*tmp;
 
-    if (!env)
-        return;
-    sorted = 0;
-    while (!sorted)
-    {
-        i = 0;
-        sorted = 1;
-        while (env[i] && env[i + 1])
-        {
-            if (ft_strcmp(env[i], env[i + 1]) > 0)
-            {
-                tmp = env[i];
-                env[i] = env[i + 1];
-                env[i + 1] = tmp;
-                sorted = 0;
-            }
-            i++;
-        }
-    }
+	if (!env)
+		return ;
+	sorted = 0;
+	while (!sorted)
+	{
+		i = 0;
+		sorted = 1;
+		while (env[i] && env[i + 1])
+		{
+			if (ft_strcmp(env[i], env[i + 1]) > 0)
+			{
+				tmp = env[i];
+				env[i] = env[i + 1];
+				env[i + 1] = tmp;
+				sorted = 0;
+			}
+			i++;
+		}
+	}
 }

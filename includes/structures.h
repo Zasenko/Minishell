@@ -107,4 +107,12 @@ typedef struct s_pwd
 	char	*changed_dir;
 } t_pwd;
 
+typedef struct s_heredoc
+{
+	char	*dest;
+	char	*temp;
+	int		start;
+	int		j;
+} t_heredoc;
+
 #endif

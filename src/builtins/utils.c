@@ -15,7 +15,7 @@
 bool	is_builtin_func(char *cmd)
 {
 	if (!cmd)
-		return false;
+		return (false);
 	if (!ft_strcmp("pwd", cmd))
 		return (true);
 	if (!ft_strcmp("env", cmd))
@@ -36,7 +36,6 @@ bool	is_builtin_func(char *cmd)
 
 int	exec_buildin(t_cmd *cmd, t_app *shell, bool is_child, int fd)
 {
-	// signal(SIGPIPE, SIG_IGN);
 	if (ft_strstr(cmd->args[0], "pwd"))
 		return (ft_pwd());
 	if (ft_strstr(cmd->args[0], "env"))
@@ -76,20 +75,19 @@ bool	ft_strstr(char *str, char *to_find)
 	return (false);
 }
 
-void sort_environment(t_envp **envp)
+void	sort_environment(t_envp **envp)
 {
-	t_envp *curr;
-	t_envp *temp1;
-	t_envp *temp2;
-	bool swapped;
+	t_envp	*curr;
+	t_envp	*temp1;
+	t_envp	*temp2;
+	bool	swapped;
 
-	if (!envp || !(*envp)) 
-		return;
+	if (!envp || !(*envp))
+		return ;
 	while (1)
 	{
 		swapped = true;
 		curr = *envp;
-
 		while (curr->next)
 		{
 			if (ft_strcmp(curr->name, curr->next->name) > 0)
@@ -112,6 +110,6 @@ void sort_environment(t_envp **envp)
 				curr = curr->next;
 		}
 		if (swapped)
-			break;
+			break ;
 	}
 }

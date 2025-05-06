@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_child.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:15:59 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/05 16:01:12 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/05/06 14:05:16 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	print_child_error(t_app *shell, t_cmd *cmd, char *massage, int exit_code)
 {
 	char	*error_msg;
-	
+
 	error_msg = ft_strjoin(cmd->args[0], massage);
 	if (!error_msg)
 		exit_child(shell, 1, NULL);
@@ -30,13 +30,13 @@ void	handle_execve_error(t_app *shell, t_cmd *cmd)
 
 	if (find_path(shell) && !*find_path(shell))
 		print_child_error(shell, cmd, ": No such file or directory\n", 127);
-	if (!find_path(shell) && !cmd->is_valid_cmd )
+	if (!find_path(shell) && !cmd->is_valid_cmd)
 		print_child_error(shell, cmd, ": Permission denied\n", 126);
 	else if (!find_path(shell))
 		print_child_error(shell, cmd, ": Permission denied\n", 126);
 	else if (find_path(shell) == NULL)
 		print_child_error(shell, cmd, ": No such file or directory\n", 127);
-	else if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' || 
+	else if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' ||
 		!ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
 		print_child_error(shell, cmd, ": command not found\n", 127);
 	else if (stat(cmd->cmd, &buffer) == 0)
@@ -55,7 +55,7 @@ void	handle_execve_error(t_app *shell, t_cmd *cmd)
 void	change_shell_lvl(t_app *shell)
 {
 	t_envp	*node;
-	int level;
+	int		level;
 
 	node = find_envp_node(shell->envp, "SHLVL");
 	if (node && node->envp)
