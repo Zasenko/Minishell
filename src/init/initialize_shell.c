@@ -26,10 +26,10 @@ void	initialize_shell(t_app *shell, char **envp)
 	shell->tokens = NULL;
 	shell->heredock_num = 1;
 	shell->is_valid_syntax = true;
-	shell->child_fds.prev_pipe = -1;
-	shell->child_fds.pipe[0] = -1;
-	shell->child_fds.pipe[1] = -1;
-	shell->child_fds.dup2_in = -1;
-	shell->child_fds.dup2_out = -1;
+	shell->fds.prev_pipe = -1;
+	shell->fds.pipe[0] = -1;
+	shell->fds.pipe[1] = -1;
+	shell->fds.dup2_in = -1;
+	shell->fds.dup2_out = -1;
 	copy_env(shell, envp);
 }

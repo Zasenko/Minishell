@@ -13,21 +13,21 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
-typedef struct s_lib 
+typedef struct s_lib
 {
-    char            *key;
-    char            *value;
-} t_lib;
+	char	*key;
+	char	*value;
+}	t_lib;
 
-typedef struct s_child_fds
+typedef struct s_fds
 {
-	int prev_pipe;
-	int pipe[2];
-	int dup2_in;
-	int dup2_out;
-} t_child_fds;
+	int	prev_pipe;
+	int	pipe[2];
+	int	dup2_in;
+	int	dup2_out;
+}	t_fds;
 
-typedef enum
+typedef enum s_type
 {
 	ARG,
 	PIPE,
@@ -36,7 +36,7 @@ typedef enum
 	APPEND,
 	HEREDOC,
 	ERROR
-} t_type;
+}	t_type;
 
 typedef struct s_token
 {
@@ -46,7 +46,7 @@ typedef struct s_token
 	char			*value;
 	struct s_token	*prev;
 	struct s_token	*next;
-} t_token;
+}	t_token;
 
 typedef struct s_redir
 {
@@ -56,17 +56,17 @@ typedef struct s_redir
 	char			*stop_word;
 	int				fd;
 	bool			is_ambiguous;
-	bool			heredock_with_quotes;
+	bool			hd_with_quotes;
 	struct s_redir	*next;
-} t_redir;
+}	t_redir;
 
 typedef struct s_envp
 {
-	char *envp;
-	char *name;
-	struct s_envp *next;
-	struct s_envp *prev;
-} t_envp;
+	char			*envp;
+	char			*name;
+	struct s_envp	*next;
+	struct s_envp	*prev;
+}	t_envp;
 
 typedef struct s_cmd
 {
@@ -79,33 +79,33 @@ typedef struct s_cmd
 	struct s_redir	*redirs;
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
-} t_cmd;
+}	t_cmd;
 
 typedef struct s_app
 {
-	char **env_var;
-	char *user;
-	char *name;
-	char *prompt;
-	char *pwd;
-	int last_exit_code;
-	bool is_valid_syntax;
-	bool is_envp_list_changed;
-	int heredock_num;
-	struct s_envp *envp;
-	struct s_cmd *cmd;
-	struct s_token *tokens;
-	struct s_child_fds child_fds;
-} t_app;
+	char			**env_var;
+	char			*user;
+	char			*name;
+	char			*prompt;
+	char			*pwd;
+	int				last_exit_code;
+	bool			is_valid_syntax;
+	bool			is_envp_list_changed;
+	int				heredock_num;
+	struct s_envp	*envp;
+	struct s_cmd	*cmd;
+	struct s_token	*tokens;
+	struct s_fds	fds;
+}	t_app;
 
 typedef struct s_pwd
 {
-	t_envp *home;
-	t_envp *oldpwd;
-	t_envp *pwd;
+	t_envp	*home;
+	t_envp	*oldpwd;
+	t_envp	*pwd;
 	char	*dir;
 	char	*changed_dir;
-} t_pwd;
+}	t_pwd;
 
 typedef struct s_heredoc
 {
@@ -113,6 +113,6 @@ typedef struct s_heredoc
 	char	*temp;
 	int		start;
 	int		j;
-} t_heredoc;
+}	t_heredoc;
 
 #endif

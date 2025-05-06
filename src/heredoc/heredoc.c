@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:49:37 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/06 13:54:58 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/06 14:51:25 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	heredoc_prompt(t_app *shell, t_redir *redir)
 			return (0);
 		if (!check_delim(input, redir))
 			break ;
-		if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
+		if (ft_strchr(input, '$', false) && redir->hd_with_quotes == false)
 		{
 			dest = expand_heredoc_input(shell, input);
 			free(input);

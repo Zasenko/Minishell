@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:52:33 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/06 13:55:52 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/06 14:54:30 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	free_list_in_child(t_app *shell)
 
 void	close_child_fds(t_app *shell)
 {
-	close_fd(&shell->child_fds.prev_pipe);
-	close_fd(&shell->child_fds.pipe[0]);
-	close_fd(&shell->child_fds.pipe[1]);
+	close_fd(&shell->fds.prev_pipe);
+	close_fd(&shell->fds.pipe[0]);
+	close_fd(&shell->fds.pipe[1]);
 }

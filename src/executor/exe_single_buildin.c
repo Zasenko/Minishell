@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 11:56:07 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/06 13:57:49 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:06:52 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,19 +46,19 @@ int	make_redir_builtin(t_app *shell, t_redir *redir)
 	if (redir->type == REDIR_IN || redir->type == HEREDOC)
 	{
 		redir->fd = open(redir->value, O_RDONLY);
-		if (check_redir(shell, redir, &shell->child_fds.dup2_in, &shell->child_fds.pipe[0]) == EXIT_FAILURE)
+		if (check_redir(shell, redir, &shell->fds.dup2_in, &shell->fds.pipe[0]) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
 	}
 	else if (redir->type == REDIR_OUT)
 	{
 		redir->fd = open(redir->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (check_redir(shell, redir, &shell->child_fds.dup2_out, &shell->child_fds.pipe[1]) == EXIT_FAILURE)
+		if (check_redir(shell, redir, &shell->fds.dup2_out, &shell->fds.pipe[1]) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
 	}
 	else if (redir->type == APPEND)
 	{
 		redir->fd = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (check_redir(shell, redir, &shell->child_fds.dup2_out, &shell->child_fds.pipe[1]) == EXIT_FAILURE)
+		if (check_redir(shell, redir, &shell->fds.dup2_out, &shell->fds.pipe[1]) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
 	}
 	return (SUCCESS);
@@ -68,8 +68,8 @@ int	exe_singl_buildin(t_app *shell, t_cmd *cmd)
 {
 	t_redir	*redir;
 
-	shell->child_fds.pipe[0] = dup(0);
-	shell->child_fds.pipe[1] = dup(1);
+	shell->fds.pipe[0] = dup(0);
+	shell->fds.pipe[1] = dup(1);
 	redir = cmd->redirs;
 	while (redir)
 	{
@@ -77,6 +77,6 @@ int	exe_singl_buildin(t_app *shell, t_cmd *cmd)
 			return (EXIT_FAILURE);
 		redir = redir->next;
 	}
-	shell->last_exit_code = exec_buildin(cmd, shell, false, shell->child_fds.pipe[1]);
+	shell->last_exit_code = exec_buildin(cmd, shell, false, shell->fds.pipe[1]);
 	return (SUCCESS);
 }

@@ -6,13 +6,13 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:15:59 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/06 14:05:16 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:13:46 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	print_child_error(t_app *shell, t_cmd *cmd, char *massage, int exit_code)
+void	print_child_error(t_app *shell, t_cmd *cmd, char *massage, int code)
 {
 	char	*error_msg;
 
@@ -21,7 +21,7 @@ void	print_child_error(t_app *shell, t_cmd *cmd, char *massage, int exit_code)
 		exit_child(shell, 1, NULL);
 	ft_putstr_fd(error_msg, 2);
 	free(error_msg);
-	exit_child(shell, exit_code, NULL);
+	exit_child(shell, code, NULL);
 }
 
 void	handle_execve_error(t_app *shell, t_cmd *cmd)
@@ -36,8 +36,8 @@ void	handle_execve_error(t_app *shell, t_cmd *cmd)
 		print_child_error(shell, cmd, ": Permission denied\n", 126);
 	else if (find_path(shell) == NULL)
 		print_child_error(shell, cmd, ": No such file or directory\n", 127);
-	else if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' ||
-		!ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
+	else if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0'
+		|| !ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
 		print_child_error(shell, cmd, ": command not found\n", 127);
 	else if (stat(cmd->cmd, &buffer) == 0)
 	{
@@ -52,6 +52,30 @@ void	handle_execve_error(t_app *shell, t_cmd *cmd)
 	print_child_error(shell, cmd, ": command not found\n", 127);
 }
 
+void	change_lvl(t_app *shell, t_envp *node)
+{
+	int		level;
+	char	*new_lvl;
+	char	**new_2d_env;
+
+	level = ft_atoi(node->envp);
+	level++;
+	new_lvl = ft_itoa(level);
+	if (!new_lvl)
+		exit_child(shell, 1, NULL);
+	free(node->envp);
+	node->envp = new_lvl;
+	new_2d_env = copy_into_2d_arr(shell->envp);
+	if (!new_2d_env)
+		exit_child(shell, 1, NULL);
+	if (shell->env_var)
+	{
+		free_2d_array(shell->env_var);
+		shell->env_var = NULL;
+		shell->env_var = new_2d_env;
+	}
+}
+
 void	change_shell_lvl(t_app *shell)
 {
 	t_envp	*node;
@@ -59,24 +83,7 @@ void	change_shell_lvl(t_app *shell)
 
 	node = find_envp_node(shell->envp, "SHLVL");
 	if (node && node->envp)
-	{
-		level = ft_atoi(node->envp);
-		level++;
-		char *new_lvl = ft_itoa(level);
-		if (!new_lvl)
-			exit_child(shell, 1, NULL);
-		free(node->envp);
-		node->envp = new_lvl;
-		char **new_2d_env = copy_into_2d_arr(shell->envp);
-		if (!new_2d_env)
-			exit_child(shell, 1, NULL);
-		if (shell->env_var)
-		{
-			free_2d_array(shell->env_var);
-			shell->env_var = NULL;
-			shell->env_var = new_2d_env;
-		}
-	}
+		change_lvl(shell, node);
 }
 
 void	execve_in_child(t_app *shell, t_cmd *cmd)
