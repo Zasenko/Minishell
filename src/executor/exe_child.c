@@ -54,8 +54,11 @@ void	print_child_error(t_app *shell, t_cmd *cmd, char *massage, int exit_code)
 
 void	handle_execve_error(t_app *shell, t_cmd *cmd)
 {
-	struct stat	buffer;
+	struct stat buffer;
 
+	if (!cmd->cmd || cmd->cmd[0] == '\0'|| 
+		!ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
+		print_child_error(shell, cmd, ": command not found\n", 127);
 	if (stat(cmd->cmd, &buffer) == 0)
 	{
 		if (S_ISDIR(buffer.st_mode))
@@ -67,8 +70,12 @@ void	handle_execve_error(t_app *shell, t_cmd *cmd)
 	{
 		if (errno == ENOENT || errno == ENOTDIR)
 			print_child_error(shell, cmd, ": No such file or directory\n", 127);
+		else
+			print_child_error(shell, cmd, ": command not found\n", 127);
 	}
+	exit(127);
 }
+
 void	change_shell_lvl(t_app *shell)
 {
 	t_envp	*node;
@@ -95,23 +102,17 @@ void	change_shell_lvl(t_app *shell)
 		}
 	}
 }
-
 void	execve_in_child(t_app *shell, t_cmd *cmd)
 {
 	if (ft_strstr(cmd->args[0], "/minishell"))
 		change_shell_lvl(shell);
-	if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' ||
-		!ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
-	{
-		if (errno != EACCES)
-			print_child_error(shell, cmd, ": command not found\n", 127);
-	}
-	if (cmd->cmd == NULL)
-		execve(cmd->args[0], cmd->args, shell->env_var);
-	else
+	if (cmd->cmd)
 		execve(cmd->cmd, cmd->args, shell->env_var);
+	else
+		execve(cmd->args[0], cmd->args, shell->env_var);
 	handle_execve_error(shell, cmd);
 }
+
 
 void	child_process(t_app *shell, t_cmd *cmd)
 {
