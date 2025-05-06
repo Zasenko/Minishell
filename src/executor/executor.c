@@ -69,7 +69,7 @@ int	ft_wait_child(t_cmd *cmd, t_app *shell, int *print_sig_error)
 	return (SUCCESS);
 }
 
-int ft_wait_children(t_app *shell)
+int	ft_wait_children(t_app *shell)
 {
 	t_cmd	*cmd;
 
@@ -112,116 +112,9 @@ int	ft_execute(t_app *shell)
 	cmd_count = cmd_len(shell->cmd);
 	if (!cmd_count || !shell->is_valid_syntax)
 		return (EXIT_FAILURE);
-	
-	//HEREDOC
-	cmd = shell->cmd;
-	while (cmd != NULL)
-	{
-		t_redir *redir = cmd->redirs;
-		while (redir)
-		{
-			if (redir->type == HEREDOC)
-			{
-				char *heredoc_num = ft_itoa(shell->heredock_num);
-				if (!heredoc_num)
-				{
-					//todo error
-				}
-				redir->value = ft_strjoin("HEREDOC_", heredoc_num);
-				if (!redir->value)
-				{
-					free(heredoc_num);
-					//todo error
-				}
-				free(heredoc_num);
-
-				redir->fd = open(redir->value, O_RDWR | O_CREAT | O_APPEND, 0644);
-				if (redir->fd < 0)
-				{
-					print_fd_err(redir->value, strerror(errno));
-					shell->last_exit_code = 1;
-					break;
-				}
-				
-				handle_signal_heredoc();
-				while (1)
-				{
-					char *input = readline("> ");
-					if (last_signal_status()) {
-						if (input)
-						{
-							free(input);
-						}
-						shell->last_exit_code = 130;
-						rl_event_hook = readline_event_hook2;
-						return 0;   // back to prompt
-					}
-					if (input == NULL) { // Ctrl+D (EOF)
-						ft_putstr_fd("warning: here-document delimited by end-of-file (wanted `", 2);
-						ft_putstr_fd(redir->stop_word, 2);
-						ft_putstr_fd("')\n", 2);
-						break;
-					}
-					if (!ft_strncmp(redir->stop_word, input, ft_strlen(input)))
-					{
-						free(input);
-						break;
-					}
-					if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
-					{
-						// int test_p = 0;
-						char *dest = ft_strdup("");
-						char *temp;
-						char *expanded;
-						int j = 0;
-						int start;
-						while (input[j])
-						{
-							start = j; 
-							while (input[j] && input[j] != '$')
-								j++;
-							if (start != j)
-							{
-								char *sub_str = ft_substr(input, start, j - start);
-								temp = ft_strjoin(dest, sub_str);
-								free(sub_str);
-								free(dest);
-								dest = temp;
-							}
-							if (input[j] == '$')
-							{
-								expanded = expand_words(shell, input, &j);
-								temp = ft_strjoin(dest, expanded);
-								free(expanded);
-								free(dest);
-								dest = temp;
-							}
-						}
-						free(input);
-						input = dest;			
-					}
-
-					char *temp = ft_strjoin(input, "\n");
-					free(input);
-					if (!temp)
-					{
-							//todo
-					}
-					write(redir->fd, temp, ft_strlen(temp));
-					free(temp);
-				}
-				close(redir->fd);
-				shell->heredock_num++;
-			}
-			redir = redir->next;
-		}
-		cmd = cmd->next;
-	}
-	
-	
-	//EXE
+	if (!make_heredoc(shell))
+		return (0);
 	handle_signal_main();
-
 	cmd = shell->cmd;
 	if (!cmd)
 		return 0;
