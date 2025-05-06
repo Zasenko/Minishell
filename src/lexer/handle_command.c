@@ -54,7 +54,7 @@ bool	handle_redir_outfile(t_app *shell, t_token *token, char *input,
 		return (free(input), free(result), false);
 	temp = ft_split(result, ' ');
 	if (!temp)
-		return (free(input), false);
+		return (free_2d_array(temp), free(input), false);
 	while (temp[j])
 		j++;
 	if (j == 0 || j > 1 || !ft_strlen(temp[0]))

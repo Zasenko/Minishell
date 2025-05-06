@@ -96,12 +96,30 @@ int ft_wait_children(t_app *shell)
 
 void print_fd_err(char *val, char *err_msg)
 {
+	char *err[4];
+	char *temp;
+	char *res;
+	int i;
+
 	if (!val || !err_msg)
 		return;
-	ft_putstr_fd(val, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putstr_fd(err_msg, 2);
-	ft_putstr_fd("\n", 2);
+	i = 0;
+	err[0] = val;
+	err[1] = ": ";
+	err[2] = err_msg;
+	err[3] = "\n";
+	res = ft_strdup("");
+	while (i < 4)
+	{
+		temp = ft_strjoin(res, err[i]);
+		free(res);
+		if (!temp)
+			return ;
+		res = temp;
+		i++;
+	}
+	ft_putstr_fd(res, 2);
+	free(res);
 }
 
 int	ft_execute(t_app *shell)

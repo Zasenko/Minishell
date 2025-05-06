@@ -25,6 +25,11 @@ void	free_redir_list(t_redir **redir)
 			free((*redir)->value);
 		if ((*redir)->stop_word)
 			free((*redir)->stop_word);
+		if ((*redir)->err_name)
+		{
+			free((*redir)->err_name);
+			(*redir)->err_name = NULL;
+		}
 		free(*redir);
 		*redir = temp;
 	}
@@ -74,6 +79,11 @@ void	free_token_list(t_token **tokens)
 		{
 			free((*tokens)->value);
 			(*tokens)->value = NULL;
+		}
+		if ((*tokens)->err_name)
+		{
+			free((*tokens)->err_name);
+			(*tokens)->err_name = NULL;
 		}
 		free(*tokens);
 		*tokens = temp;

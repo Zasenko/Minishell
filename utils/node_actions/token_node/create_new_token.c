@@ -21,6 +21,7 @@ t_token	*create_new_token(void)
 		return (NULL);
 	new->value = NULL;
 	new->err_name = NULL;
+	new->is_ambiguous = false;
  	new->type = -1;
 	new->prev = NULL;
 	new->next = NULL;
