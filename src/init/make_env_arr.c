@@ -56,7 +56,7 @@ char	**copy_into_2d_arr(t_envp *envp)
 	{
 		env_var[i] = make_copy(envp);
 		if (!env_var[i])
-			return (NULL);
+			return (free_2d_array(env_var), NULL);
 		envp = envp->next;
 		i++;
 	}

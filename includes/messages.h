@@ -29,6 +29,7 @@
 # define CD_TMA "cd: too many arguments\n"
 # define CD_HNS "cd: HOME not set\n"
 # define CD_ONS "minishell: cd: OLDPWD not set\n"
+# define NAVI "': not a valid identifier\n"
 # define EXIT "exit\n"
 
 #endif

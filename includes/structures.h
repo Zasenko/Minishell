@@ -13,6 +13,12 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
+typedef struct s_lib 
+{
+    char            *key;
+    char            *value;
+} t_lib;
+
 typedef struct s_child_fds
 {
 	int prev_pipe;
