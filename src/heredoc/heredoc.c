@@ -6,131 +6,98 @@
 /*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 09:49:37 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/05 15:39:10 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/05/06 11:40:18 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void write_heredoc_line(t_redir *redir, char *input)
-{
-	char *temp = ft_strjoin(input, "\n");
-	free(input);
-	if (!temp)
-	{
-		// handle allocation failure if needed
-		return;
-	}
-	write(redir->fd, temp, ft_strlen(temp));
-	free(temp);
-}
+// int test(char *substr, char *dest, char *temp)
+// {
+// 	if (!substr)
+// 		return (free(dest), NULL);
+// 	temp = ft_strjoin(dest, substr);
+// 	free(dest);
+// 	free(substr);
+// 	if (!temp)
+// 		return (NULL);
+// 	dest = temp;
+// }
 
-char *expand_heredoc_input(t_app *shell, char *input)
+char	*expand_heredoc_input(t_app *shell, char *input)
 {
-	char *dest;
-	char *temp;
-	char *expanded;
-    int start;
+	char	*dest;
+	char	*temp;
+	int		start;
+	int		j;
 
-	int j = 0;
-    dest = ft_strdup("");
-    if (!dest)
-    {
-        free(input);
-        exit_with_error(shell, 1, "ft_strdup error");   
-    }
+	j = 0;
+	dest = ft_strdup("");
+	if (!dest)
+		return (NULL);
 	while (input[j])
 	{
 		start = j;
-		while (input[j] && input[j] != '$') j++;
+		while (input[j] && input[j] != '$')
+			j++;
 		if (start != j)
 		{
-            char *substr = ft_substr(input, start, j - start);
-            if (!substr)
-            {
-                free(input);
-                free(dest);
-                exit_with_error(shell, 1, "ft_substr error");
-            }
+			char *substr = ft_substr(input, start, j - start);
+			if (!substr)
+				return (free(dest), NULL);
 			temp = ft_strjoin(dest, substr);
-            if (!temp)
-            {
-                free(input);
-                free(dest);
-                free(substr);
-                exit_with_error(shell, 1, "ft_substr error");
-            }
-            free(dest);
-            free(substr);
+			free(dest);
+			free(substr);
+			if (!temp)
+				return (NULL);
 			dest = temp;
 		}
 		if (input[j] == '$')
 		{
-			expanded = expand_words(shell, input, &j);
-            if (!expanded)
-            {
-                free(input);
-                free(dest);
-                exit_with_error(shell, 1, "expand_words error");
-            }
+			char	*expanded = expand_words(shell, input, &j);
+			if (!expanded)
+				return (free(dest), NULL);
 			temp = ft_strjoin(dest, expanded);
-            if (!temp)
-            {
-                free(input);
-                free(dest);
-                free(expanded);
-                exit_with_error(shell, 1, "expand_words error");
-            }
 			free(dest);
-            free(expanded);
+			free(expanded);
+			if (!temp)
+				return (NULL);
 			dest = temp;
 		}
 	}
-	free(input);
 	return dest;
 }
 
-
-void heredoc_input_loop(t_app *shell, t_redir *redir)
+void	create_heredoc_num(t_app *shell, t_redir *redir)
 {
-	while (1)
-	{
-		char *input = readline("> ");
-		if (last_signal_status())
-		{
-			if (input) free(input);
-			shell->last_exit_code = 130;
-			rl_event_hook = readline_event_hook2;
-			return;
-		}
-		if (!input || !ft_strncmp(redir->stop_word, input, ft_strlen(input)))
-		{
-			if (!input)
-			{
-				ft_putstr_fd("warning: here-document delimited by end-of-file (wanted `", 2);
-				ft_putstr_fd(redir->stop_word, 2);
-				ft_putstr_fd("')\n", 2);
-			}
-			free(input);
-			break;
-		}
-		if (ft_strchr(input, '$', false) && !redir->heredock_with_quotes)
-			input = expand_heredoc_input(shell, input);
-		write_heredoc_line(redir, input);
-	}
-}
+	char	*heredoc_num;
 
-int init_heredoc_file(t_redir *redir, t_app *shell)
-{
-	char *heredoc_num;
-    
-    heredoc_num = ft_itoa(shell->heredock_num);
+	heredoc_num = ft_itoa(shell->heredock_num);
 	if (!heredoc_num)
-		return (0);
-	redir->value = ft_strjoin("HEREDOC_", heredoc_num);
+		exit_with_error(shell, EXIT_FAILURE, MALLOC_FAIL);
+	if (redir->value)
+	{
+		free(redir->value);
+		redir->value = NULL;
+	}
+	redir->value = ft_strjoin(".heredoc_", heredoc_num);
 	free(heredoc_num);
 	if (!redir->value)
-		return (0);
+		exit_with_error(shell, EXIT_FAILURE, MALLOC_FAIL);
+}
+
+int	create_heredoc_file(t_app *shell, t_redir *redir)
+{
+	int	result;
+
+	create_heredoc_num(shell, redir);
+	result = access(redir->value, F_OK);
+	while (!result)
+	{
+		shell->heredock_num++;
+		create_heredoc_num(shell, redir);
+		result = access(redir->value, F_OK);
+	}
 	redir->fd = open(redir->value, O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (redir->fd < 0)
 	{
@@ -141,36 +108,75 @@ int init_heredoc_file(t_redir *redir, t_app *shell)
 	return (1);
 }
 
-void process_heredoc_in_cmd(t_app *shell, t_cmd *cmd)
+int	heredoc_prompt(t_app *shell, t_redir *redir)
 {
-	t_redir *redir;
-    
-    redir = cmd->redirs;
-	while (redir)
+	char	*input;
+
+	while (1)
 	{
-		if (redir->type == HEREDOC)
+		input = readline("> ");
+		if (last_signal_status())
 		{
-			if (!init_heredoc_file(redir, shell))
-				return;
-			handle_signal_heredoc();
-			heredoc_input_loop(shell, redir);
-			close(redir->fd);
-			shell->heredock_num++;
+			if (input)
+				free(input);
+			shell->last_exit_code = 130;
+			rl_event_hook = readline_event_hook2;
+			return (0);   // back to prompt
 		}
-		redir = redir->next;
+		if (input == NULL)
+		{
+			ft_putstr_fd("warning: here-document delimited by end-of-file (wanted `", 2);
+			ft_putstr_fd(redir->stop_word, 2);
+			ft_putstr_fd("')\n", 2);
+			break;
+		}
+		if (!ft_strncmp(redir->stop_word, input, ft_strlen(input)))
+		{
+			free(input);
+			break;
+		}
+		if (ft_strchr(input, '$', false) && redir->heredock_with_quotes == false)
+		{
+			char *dest = expand_heredoc_input(shell, input);
+			free(input);
+			if (!dest)
+				exit_with_error(shell, 1, MALLOC_FAIL);
+			input = dest;			
+		}
+		char *temp = ft_strjoin(input, "\n");
+		free(input);
+		if (!temp)
+			exit_with_error(shell, 1, MALLOC_FAIL);
+		write(redir->fd, temp, ft_strlen(temp));
+		free(temp);
 	}
+	return (1);
 }
 
-void create_heredoc(t_app *shell)
+int	make_heredoc(t_app *shell)
 {
-    t_cmd	*cmd;
-    cmd = shell->cmd;
+	t_cmd	*cmd;
+	t_redir	*redir;
 
-    while (cmd != NULL)
+	cmd = shell->cmd;
+	while (cmd != NULL)
 	{
-		process_heredoc_in_cmd(shell, cmd);
+		redir = cmd->redirs;
+		while (redir)
+		{
+			if (redir->type == HEREDOC)
+			{
+				if (create_heredoc_file(shell, redir) == 0)
+					break;
+				handle_signal_heredoc();
+				if (!heredoc_prompt(shell, redir))
+					return (0);
+				close(redir->fd);
+				shell->heredock_num++;
+			}
+			redir = redir->next;
+		}
 		cmd = cmd->next;
 	}
-
+	return (1);
 }
-

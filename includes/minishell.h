@@ -47,6 +47,7 @@ int		check_export_key(char *str);
 int		ft_pwd(void);
 int		close_all_redirs_fds_child(t_redir *redir);
 int		exe_singl_buildin(t_app *shell, t_cmd *cmd);
+int		make_heredoc(t_app *shell);
 bool	add_token_back(t_token **token, t_token *new);
 bool	is_builtin_func(char *cmd);
 bool	lexing_checker(t_app *shell);
