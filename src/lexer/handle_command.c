@@ -54,14 +54,12 @@ bool	handle_redir_outfile(t_app *shell, t_token *token, char *input,
 		return (free(input), free(result), false);
 	temp = ft_split(result, ' ');
 	if (!temp)
-		return (free(input), false);
+		return (free_2d_array(temp), free(input), false);
 	while (temp[j])
 		j++;
 	if (j == 0 || j > 1 || !ft_strlen(temp[0]))
 	{
-		ft_putstr_fd(input, 2);
-		ft_putstr_fd(": ambiguous redirect\n", 2);
-		shell->last_exit_code = 1;
+		token->is_ambiguous = true;
 	}
 	token->value = result;
 	token->type = ARG;
@@ -137,6 +135,8 @@ bool	handle_command(t_app *shell, t_token *token, char *input, int *i)
 	part = divide_into_parts(input, i);
 	if (!part)
 		return (false);
+	if (ft_strchr(part, '$', false))
+		token->err_name = ft_strdup(part);
 	if (!ft_strchr(part, '$', false))
 		return (write_value(token, part, ARG), free(part), true);
 	else if (ft_strchr(part, '\"', false) || ft_strchr(part, '\'', false))
@@ -146,9 +146,7 @@ bool	handle_command(t_app *shell, t_token *token, char *input, int *i)
 	else if (!join_partitions(shell, &result, part, &do_split))
 		return (free(part), free(result), false);
 	temp = ft_split(result, ' ');
-	free(result);
 	if (!add_expanded_value_into_node(token, temp))
-		return (free(part), false);
-	free(part);
-	return (true);
+		return (free(part), free(result), false);
+	return (free(part), free(result), true);
 }

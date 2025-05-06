@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_single_buildin.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 11:56:07 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/29 16:08:39 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/05 14:40:05 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@ int	check_redir(t_app *shell, t_redir *redir, int *dup_fd, int *fd)
 {
 	if (redir->fd < 0)
 	{
+		if (redir->is_ambiguous) 
+		{
+			ft_putstr_fd(redir->err_name, 2);
+			ft_putstr_fd(": ambiguous redirect\n", 2);
+			shell->last_exit_code = 1;
+			return (EXIT_FAILURE);
+		}
 		print_fd_err(redir->value, strerror(errno));
 		shell->last_exit_code = 1;
 		return (EXIT_FAILURE);

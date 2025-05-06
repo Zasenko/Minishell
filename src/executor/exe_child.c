@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_child.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:15:59 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/30 11:26:59 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:01:12 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	handle_execve_error(t_app *shell, t_cmd *cmd)
 		print_child_error(shell, cmd, ": No such file or directory\n", 127);
 	if (!find_path(shell) && !cmd->is_valid_cmd )
 		print_child_error(shell, cmd, ": Permission denied\n", 126);
+	else if (!find_path(shell))
+		print_child_error(shell, cmd, ": Permission denied\n", 126);
 	else if (find_path(shell) == NULL)
 		print_child_error(shell, cmd, ": No such file or directory\n", 127);
 	else if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' || 
@@ -45,10 +47,8 @@ void	handle_execve_error(t_app *shell, t_cmd *cmd)
 			print_child_error(shell, cmd, ": Permission denied\n", 126);
 	}
 	else
-	{
 		if (errno == ENOENT || errno == ENOTDIR)
 			print_child_error(shell, cmd, ": No such file or directory\n", 127);
-	}
 	print_child_error(shell, cmd, ": command not found\n", 127);
 }
 

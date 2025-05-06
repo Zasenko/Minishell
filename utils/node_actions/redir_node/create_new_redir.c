@@ -22,6 +22,8 @@ t_redir	*create_new_redir(void)
 	new->value = NULL;
 	new->type = -1;
 	new->fd = -1;
+	new->is_ambiguous = false;
+	new->err_name = NULL;
 	new->stop_word = NULL;
 	new->next = NULL;
 	new->heredock_with_quotes = false;
