@@ -26,6 +26,6 @@ t_redir	*create_new_redir(void)
 	new->err_name = NULL;
 	new->stop_word = NULL;
 	new->next = NULL;
-	new->heredock_with_quotes = false;
+	new->hd_with_quotes = false;
 	return (new);
 }

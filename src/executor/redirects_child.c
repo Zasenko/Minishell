@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 10:05:00 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/30 10:06:38 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/06 14:55:12 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,18 @@ void	make_child_redir_in_heredoc(t_app *shell, t_redir *redir)
 		print_fd_err(redir->value, strerror(errno));
 		exit_child(shell, 1, NULL);
 	}
-	do_dup2(shell, &shell->child_fds.dup2_in, &redir->fd, 0);
+	do_dup2(shell, &shell->fds.dup2_in, &redir->fd, 0);
 }
 
 void	make_child_redir_out(t_app *shell, t_redir *redir)
 {
-	redir->fd = open(redir->value, O_WRONLY | O_CREAT |  O_TRUNC, 0644);
+	redir->fd = open(redir->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (redir->fd < 0)
 	{
 		print_fd_err(redir->value, strerror(errno));
 		exit_child(shell, 1, NULL);
 	}
-	do_dup2(shell, &shell->child_fds.dup2_out, &redir->fd, 1);
+	do_dup2(shell, &shell->fds.dup2_out, &redir->fd, 1);
 }
 
 void	make_child_redir_append(t_app *shell, t_redir *redir)
@@ -51,18 +51,17 @@ void	make_child_redir_append(t_app *shell, t_redir *redir)
 		print_fd_err(redir->value, strerror(errno));
 		exit_child(shell, 1, NULL);
 	}
-	do_dup2(shell, &shell->child_fds.dup2_out, &redir->fd, 1);
+	do_dup2(shell, &shell->fds.dup2_out, &redir->fd, 1);
 }
 
 void	redirects_in_child(t_app *shell, t_cmd *cmd)
 {
 	t_redir	*redir;
 
-	if (shell->child_fds.prev_pipe != -1)
-		do_dup2(shell, &shell->child_fds.dup2_in, &shell->child_fds.prev_pipe, 0);
+	if (shell->fds.prev_pipe != -1)
+		do_dup2(shell, &shell->fds.dup2_in, &shell->fds.prev_pipe, 0);
 	if (cmd->next != NULL)
-		do_dup2(shell, &shell->child_fds.dup2_out, &shell->child_fds.pipe[1], 1);
-
+		do_dup2(shell, &shell->fds.dup2_out, &shell->fds.pipe[1], 1);
 	redir = cmd->redirs;
 	while (redir)
 	{

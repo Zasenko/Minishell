@@ -6,22 +6,22 @@
 /*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:15:59 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/06 16:49:22 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/05/07 12:11:10 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	print_child_error(t_app *shell, t_cmd *cmd, char *massage, int exit_code)
+void	print_child_error(t_app *shell, t_cmd *cmd, char *massage, int code)
 {
 	char	*error_msg;
-	
+
 	error_msg = ft_strjoin(cmd->args[0], massage);
 	if (!error_msg)
 		exit_child(shell, 1, NULL);
 	ft_putstr_fd(error_msg, 2);
 	free(error_msg);
-	exit_child(shell, exit_code, NULL);
+	exit_child(shell, code, NULL);
 }
 
 void	handle_execve_error(t_app *shell, t_cmd *cmd)
@@ -48,32 +48,39 @@ void	handle_execve_error(t_app *shell, t_cmd *cmd)
 	exit(127);
 }
 
+void	change_lvl(t_app *shell, t_envp *node)
+{
+	int		level;
+	char	*new_lvl;
+	char	**new_2d_env;
+
+	level = ft_atoi(node->envp);
+	level++;
+	new_lvl = ft_itoa(level);
+	if (!new_lvl)
+		exit_child(shell, 1, NULL);
+	free(node->envp);
+	node->envp = new_lvl;
+	new_2d_env = copy_into_2d_arr(shell->envp);
+	if (!new_2d_env)
+		exit_child(shell, 1, NULL);
+	if (shell->env_var)
+	{
+		free_2d_array(shell->env_var);
+		shell->env_var = NULL;
+		shell->env_var = new_2d_env;
+	}
+}
+
 void	change_shell_lvl(t_app *shell)
 {
 	t_envp	*node;
-	int level;
 
 	node = find_envp_node(shell->envp, "SHLVL");
 	if (node && node->envp)
-	{
-		level = ft_atoi(node->envp);
-		level++;
-		char *new_lvl = ft_itoa(level);
-		if (!new_lvl)
-			exit_child(shell, 1, NULL);
-		free(node->envp);
-		node->envp = new_lvl;
-		char **new_2d_env = copy_into_2d_arr(shell->envp);
-		if (!new_2d_env)
-			exit_child(shell, 1, NULL);
-		if (shell->env_var)
-		{
-			free_2d_array(shell->env_var);
-			shell->env_var = NULL;
-			shell->env_var = new_2d_env;
-		}
-	}
+		change_lvl(shell, node);
 }
+
 void	execve_in_child(t_app *shell, t_cmd *cmd)
 {
 	if (ft_strstr(cmd->args[0], "/minishell"))
@@ -84,7 +91,6 @@ void	execve_in_child(t_app *shell, t_cmd *cmd)
 		execve(cmd->args[0], cmd->args, shell->env_var);
 	handle_execve_error(shell, cmd);
 }
-
 
 void	child_process(t_app *shell, t_cmd *cmd)
 {

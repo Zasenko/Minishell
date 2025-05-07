@@ -6,7 +6,7 @@
 /*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 14:29:59 by ibondarc          #+#    #+#             */
-/*   Updated: 2025/05/06 11:03:12 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/05/07 12:13:45 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	ft_putstr_fd(char *s, int fd)
 {
-	int length;
-	
+	int	length;
+
 	if (!s || !(fd >= 0))
 		return ;
 	length = ft_strlen(s);

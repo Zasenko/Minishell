@@ -12,18 +12,18 @@
 
 #include "../../../includes/minishell.h"
 
-void show_export_without_env(char  **str, int *i, int *g)
+void	show_export_without_env(char **str, int *i, int *g)
 {
-	int f;
+	int	f;
 
 	while (str[*i])
 	{
 		if (str[*i][0] == '_')
 		{
 			(*i)++;
-			continue;
+			continue ;
 		}
-		printf("declare -x "); 
+		printf("declare -x ");
 		*g = 0;
 		f = 1;
 		while (str[*i][*g])
@@ -41,10 +41,10 @@ void show_export_without_env(char  **str, int *i, int *g)
 	}
 }
 
-int create_node(t_app *shell, t_lib **lib)
+int	create_node(t_app *shell, t_lib **lib)
 {
-	t_envp *node;
-	t_envp *new;
+	t_envp	*node;
+	t_envp	*new;
 
 	node = find_envp_node(shell->envp, (*lib)->key);
 	if (!node)
@@ -67,13 +67,13 @@ int create_node(t_app *shell, t_lib **lib)
 	}
 	free(*lib);
 	*lib = NULL;
-	return 1;
+	return (1);
 }
 
-int create_export_list(t_app *shell, t_cmd *cmd, int *exit_code, bool is_child)
+int	create_export_list(t_app *shell, t_cmd *cmd, int *exit_code, bool is_child)
 {
-	int     n;
-	t_lib   *lib;
+	int		n;
+	t_lib	*lib;
 
 	n = 1;
 	while (cmd->args[n] != NULL)
@@ -83,28 +83,28 @@ int create_export_list(t_app *shell, t_cmd *cmd, int *exit_code, bool is_child)
 		{
 			shell->last_exit_code = *exit_code;
 			n++;
-			continue;                
+			continue ;
 		}
 		if (is_child)
 		{
 			free_lib_list(&lib);
 			n++;
-			continue;                
+			continue ;
 		}
 		if (!create_node(shell, &lib))
 			return (free_lib_list(&lib), 0);
 		shell->is_envp_list_changed = true;
 		n++;
 	}
-	return 1;
+	return (1);
 }
 
-bool handle_export(t_app *shell, t_cmd *cmd, int *exit_code, bool is_child)
+bool	handle_export(t_app *shell, t_cmd *cmd, int *exit_code, bool is_child)
 {
 	struct s_envp	*envp;
-	char            **new_2d_env;
-	int             i;
-	int             g;
+	char			**new_2d_env;
+	int				i;
+	int				g;
 
 	i = 0;
 	envp = shell->envp;
@@ -119,21 +119,21 @@ bool handle_export(t_app *shell, t_cmd *cmd, int *exit_code, bool is_child)
 	}
 	else
 	{
-		return create_export_list(shell, cmd, exit_code, is_child);
+		return (create_export_list(shell, cmd, exit_code, is_child));
 	}
 	return (1);
 }
 
-int ft_export(t_cmd *cmd, t_app *shell, bool is_child)
+int	ft_export(t_cmd *cmd, t_app *shell, bool is_child)
 {
-	int             exit_code;
-	int             res;
-	
+	int	exit_code;
+	int	res;
+
 	exit_code = 0;
 	res = handle_export(shell, cmd, &exit_code, is_child);
-	if (!res && is_child) 
+	if (!res && is_child)
 		exit_child(shell, exit_code, NULL);
 	else if (!res && !is_child)
 		exit_with_error(shell, 1, MALLOC_FAIL);
-	return(exit_code);
+	return (exit_code);
 }

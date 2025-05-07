@@ -12,7 +12,7 @@
 
 #include "../../../includes/minishell.h"
 
-int	ft_pwd()
+int	ft_pwd(void)
 {
 	char	buf[MAXPATHLEN];
 	char	*dir;
