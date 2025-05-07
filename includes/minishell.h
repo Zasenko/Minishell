@@ -53,8 +53,6 @@ bool	is_builtin_func(char *cmd);
 bool	lexing_checker(t_app *shell);
 bool	handle_command(t_app *shell, t_token *token, char *input, int *i);
 bool	handle_operators(t_token *token, char *input, int *i);
-bool	handle_variable(t_app *shell, t_token *token, t_token *prev,
-		char *input, int *i);
 bool	handle_heredoc(t_token *prev, char *input, int *i);
 bool	get_type_existence(t_token *token, t_type type);
 bool	ft_strstr(char *str, char *to_find);
