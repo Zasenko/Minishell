@@ -36,10 +36,10 @@ bool	create_shell_lvl_env_value(t_app *shell)
 	char	*name;
 	char	*value;
 
-	name = ft_strdup("1");
+	name = ft_strdup("SHLVL");
 	if (!name)
 		return (false);
-	value = ft_strdup("SHLVL");
+	value = ft_strdup("1");
 	if (!value)
 	{
 		free(name);
@@ -88,7 +88,9 @@ void	copy_env(t_app *shell, char **envp)
 	}
 	else
 	{
-		if (!create_pwd_env_value(shell) && !create_shell_lvl_env_value(shell))
+		if (!create_pwd_env_value(shell))
+			exit_with_error(shell, 1, MALLOC_FAIL);
+		if (!create_shell_lvl_env_value(shell))
 			exit_with_error(shell, 1, MALLOC_FAIL);
 	}
 }

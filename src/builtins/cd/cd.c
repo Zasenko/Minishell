@@ -36,6 +36,8 @@ int	cd_get_dir(t_cmd *cmd, t_pwd *pwd)
 		else
 			pwd->dir = ft_strdup(cmd->args[1]);
 	}
+	if (!pwd->dir)
+		return (EXIT_FAILURE);//NULL;//ERROR EXIT!!!!!!!!!!!!!!!!!
 	return (SUCCESS);
 }
 

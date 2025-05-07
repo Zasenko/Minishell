@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_child.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 13:52:33 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/04/30 12:32:17 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/05/06 14:54:30 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	close_all_redirs_fds_child(t_redir *redir)
 			temp->fd = -1;
 		}
 		temp = temp->next;
-
 	}
 	return (1);
 }
@@ -71,13 +70,13 @@ void	free_list_in_child(t_app *shell)
 		shell->env_var = NULL;
 	}
 	free_prompt(shell);
-	free_token_list(&shell->tokens); 
+	free_token_list(&shell->tokens);
 	free_cmd_list_child(&shell->cmd);
 }
 
 void	close_child_fds(t_app *shell)
 {
-	close_fd(&shell->child_fds.prev_pipe);
-	close_fd(&shell->child_fds.pipe[0]);
-	close_fd(&shell->child_fds.pipe[1]);
+	close_fd(&shell->fds.prev_pipe);
+	close_fd(&shell->fds.pipe[0]);
+	close_fd(&shell->fds.pipe[1]);
 }

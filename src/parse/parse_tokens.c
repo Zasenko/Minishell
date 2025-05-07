@@ -55,7 +55,7 @@ bool	handle_heredoc_parsing(t_cmd **cmd, t_token **token, t_type type)
 	if (is_there_quote((*token)->next->value))
 	{
 		redir->type = type;
-		redir->heredock_with_quotes = true;
+		redir->hd_with_quotes = true;
 		redir->stop_word = extract_word_from_quotes((*token)->next->value);
 		if (!redir->stop_word)
 			return (false);
