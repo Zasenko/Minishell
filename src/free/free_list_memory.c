@@ -114,7 +114,7 @@ void	free_list(t_app *shell)
 {
 	if (!shell)
 		return ;
-	if (shell->env_var)
+	if (shell->env_var && shell->is_envp_list_changed)
 	{
 		free_2d_array(shell->env_var);
 		shell->env_var = NULL;

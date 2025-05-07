@@ -55,6 +55,7 @@ bool		lexing_checker(t_app *shell);
 bool		handle_command(t_app *shell, t_token *token, char *input, int *i);
 bool		handle_operators(t_token *token, char *input, int *i);
 bool		handle_heredoc(t_token *prev, char *input, int *i);
+bool		validate_file_name(t_token **token, t_redir **redir);
 bool		get_type_existence(t_token *token, t_type type);
 bool		ft_strstr(char *str, char *to_find);
 bool		define_valid_string(char *input);
@@ -62,6 +63,7 @@ bool		handle_non_expansion(char **dest, char *input, int *j, int start);
 bool		create_new_pwd_node(t_app *shell, char *old_pwd, char *new_pwd);
 bool		handle_expansion(char **dest, char *expanded, bool *do_split);
 bool		is_there_quote(char *str);
+bool		get_pwd(t_app *shell);
 bool		parse_arguments(t_app *shell, t_cmd *cmd, t_token *token,
 				bool *iswriten);
 void		initialize_shell(t_app *shell, char **envp);

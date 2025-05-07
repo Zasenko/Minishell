@@ -42,12 +42,21 @@ void	handle_node_unset(t_app *shell, t_envp *node)
 			prev->next = next;
 			next->prev = prev;
 		}
+		else
+		{
+			next->prev = NULL;
+			shell->envp = next;
+		}
 	}
 	else
 	{
 		if (prev)
 		{
 			prev->next = NULL;
+		}
+		else
+		{
+			shell->envp = NULL;
 		}
 	}
 	free_node(node);

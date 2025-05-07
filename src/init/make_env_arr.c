@@ -67,9 +67,13 @@ void	build_env_into_2d_arr(t_app *shell)
 {
 	if (!shell)
 		return ;
-	shell->env_var = copy_into_2d_arr(shell->envp);
-	if (!shell->env_var)
+	if (shell->is_envp_list_changed)
 	{
-		exit_with_error(shell, 1, MALLOC_FAIL);
+		shell->env_var = copy_into_2d_arr(shell->envp);
+		if (!shell->env_var)
+		{	
+			exit_with_error(shell, 1, MALLOC_FAIL);
+		}
+		shell->is_envp_list_changed = false;
 	}
 }

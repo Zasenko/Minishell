@@ -21,7 +21,7 @@ int	check_delim(char *input, t_redir *redir)
 		ft_putstr_fd("')\n", 2);
 		return (0);
 	}
-	if (!ft_strncmp(redir->stop_word, input, ft_strlen(input)))
+	if (!ft_strcmp(redir->stop_word, input))
 	{
 		free(input);
 		return (0);
