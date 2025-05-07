@@ -57,3 +57,10 @@ long long	custom_atoi(t_app *shell, t_cmd *cmd, char *arg, int is_child)
 	}
 	return ((long long)res * sign);
 }
+
+void	exit_malloc(t_app *shell, bool is_child)
+{
+	if (is_child)
+		exit_child(shell, 1, NULL);
+	exit_with_error(shell, 1, MALLOC_FAIL);
+}

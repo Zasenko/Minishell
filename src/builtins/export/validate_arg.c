@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_arg.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:20:03 by ibondarc          #+#    #+#             */
-/*   Updated: 2025/04/30 12:20:27 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/05/07 13:53:13 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,7 @@ t_lib *check_export_arg(char *str, int *exit_code, t_app *shell, bool is_child)
 	if (res == 0)
 	{
 		free_lib_list(&lib);
-		if (is_child)
-			exit_child(shell, 1, NULL);
-		exit_with_error(shell, 1, MALLOC_FAIL);
+		exit_malloc(shell, is_child);
 	}
 	else if (res == 2)
 		return (free_lib_list(&lib), *exit_code = 1, NULL);
