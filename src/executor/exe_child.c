@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exe_child.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:15:59 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/06 16:51:18 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/07 12:11:10 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,30 +26,26 @@ void	print_child_error(t_app *shell, t_cmd *cmd, char *massage, int code)
 
 void	handle_execve_error(t_app *shell, t_cmd *cmd)
 {
-	struct stat	buffer;
+	struct stat buffer;
 
-	if (find_path(shell) && !*find_path(shell))
-		print_child_error(shell, cmd, ": No such file or directory\n", 127);
-	if (!find_path(shell) && !cmd->is_valid_cmd)
-		print_child_error(shell, cmd, ": Permission denied\n", 126);
-	else if (!find_path(shell))
-		print_child_error(shell, cmd, ": Permission denied\n", 126);
-	else if (find_path(shell) == NULL)
-		print_child_error(shell, cmd, ": No such file or directory\n", 127);
-	else if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0'
-		|| !ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
-		print_child_error(shell, cmd, ": command not found\n", 127);
-	else if (stat(cmd->cmd, &buffer) == 0)
+	if (!cmd->cmd || cmd->cmd[0] == '\0'|| 
+		!ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
+		print_child_error(shell, cmd, CMD_NOT_FND, 127);
+	if (stat(cmd->cmd, &buffer) == 0)
 	{
 		if (S_ISDIR(buffer.st_mode))
-			print_child_error(shell, cmd, ": Is a directory\n", 126);
+			print_child_error(shell, cmd, IS_DIR, 126);
 		else if (access(cmd->cmd, X_OK) == -1)
-			print_child_error(shell, cmd, ": Permission denied\n", 126);
+			print_child_error(shell, cmd, PR, 126);
 	}
 	else
+	{
 		if (errno == ENOENT || errno == ENOTDIR)
-			print_child_error(shell, cmd, ": No such file or directory\n", 127);
-	print_child_error(shell, cmd, ": command not found\n", 127);
+			print_child_error(shell, cmd, NSFOD, 127);
+		else
+			print_child_error(shell, cmd, CMD_NOT_FND, 127);
+	}
+	exit(127);
 }
 
 void	change_lvl(t_app *shell, t_envp *node)
@@ -89,10 +85,10 @@ void	execve_in_child(t_app *shell, t_cmd *cmd)
 {
 	if (ft_strstr(cmd->args[0], "/minishell"))
 		change_shell_lvl(shell);
-	if (cmd->cmd == NULL)
-		execve(cmd->args[0], cmd->args, shell->env_var);
-	else
+	if (cmd->cmd)
 		execve(cmd->cmd, cmd->args, shell->env_var);
+	else
+		execve(cmd->args[0], cmd->args, shell->env_var);
 	handle_execve_error(shell, cmd);
 }
 

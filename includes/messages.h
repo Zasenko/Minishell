@@ -21,7 +21,7 @@
 # define PIPE_ERROR "pipe failed"
 # define NOT_EXIST "does not exist."
 # define QUOTE_ERR "error: there is no right count of quotes"
-# define PR "permission denied"
+# define PR "permission denied\n"
 # define SERRNUT_NEWLI "syntax error near unexpected token `newline"
 # define SERRNUT "syntax error near unexpected token `"
 # define EXIT_TMA "exit: too many arguments\n"
@@ -30,6 +30,9 @@
 # define CD_HNS "cd: HOME not set\n"
 # define CD_ONS "minishell: cd: OLDPWD not set\n"
 # define NAVI "': not a valid identifier\n"
+# define IS_DIR ": Is a directory\n"
 # define EXIT "exit\n"
-
+# define NSFOD ": No such file or directory\n"
+# define AMBIGOUS_RED ": ambiguous redirect\n"
+# define WHDDEBE "warning: here-document delimited by end-of-file (wanted `"
 #endif

@@ -16,8 +16,7 @@ int	check_delim(char *input, t_redir *redir)
 {
 	if (input == NULL)
 	{
-		ft_putstr_fd("warning: here-document delimited by end-of-file ", 2);
-		ft_putstr_fd("(wanted `", 2);
+		ft_putstr_fd(WHDDEBE, 2);
 		ft_putstr_fd(redir->stop_word, 2);
 		ft_putstr_fd("')\n", 2);
 		return (0);
