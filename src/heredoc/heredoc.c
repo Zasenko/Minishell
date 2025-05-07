@@ -125,7 +125,7 @@ int	heredoc_prompt(t_app *shell, t_redir *redir)
 		}
 		if (input == NULL)
 		{
-			ft_putstr_fd("warning: here-document delimited by end-of-file (wanted `", 2);
+			ft_putstr_fd(WHDDEBE, 2);
 			ft_putstr_fd(redir->stop_word, 2);
 			ft_putstr_fd("')\n", 2);
 			break;

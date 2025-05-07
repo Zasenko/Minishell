@@ -19,7 +19,7 @@ int	check_redir(t_app *shell, t_redir *redir, int *dup_fd, int *fd)
 		if (redir->is_ambiguous) 
 		{
 			ft_putstr_fd(redir->err_name, 2);
-			ft_putstr_fd(": ambiguous redirect\n", 2);
+			ft_putstr_fd(AMBIGOUS_RED, 2);
 			shell->last_exit_code = 1;
 			return (EXIT_FAILURE);
 		}

@@ -24,54 +24,26 @@ void	print_child_error(t_app *shell, t_cmd *cmd, char *massage, int exit_code)
 	exit_child(shell, exit_code, NULL);
 }
 
-// void	handle_execve_error(t_app *shell, t_cmd *cmd)
-// {
-// 	struct stat	buffer;
-
-// 	if (find_path(shell) && !*find_path(shell))
-// 		print_child_error(shell, cmd, ": No such file or directory\n", 127);
-// 	if (!find_path(shell) && !cmd->is_valid_cmd )
-// 		print_child_error(shell, cmd, ": Permission denied\n", 126);
-// 	else if (!find_path(shell))
-// 		print_child_error(shell, cmd, ": Permission denied\n", 126);
-// 	else if (find_path(shell) == NULL)
-// 		print_child_error(shell, cmd, ": No such file or directory\n", 127);
-// 	else if (!cmd->is_valid_cmd || cmd->cmd[0] == '\0' || 
-// 		!ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
-// 		print_child_error(shell, cmd, ": command not found\n", 127);
-// 	else if (stat(cmd->cmd, &buffer) == 0)
-// 	{
-// 		if (S_ISDIR(buffer.st_mode))
-// 			print_child_error(shell, cmd, ": Is a directory\n", 126);
-// 		else if (access(cmd->cmd, X_OK) == -1)
-// 			print_child_error(shell, cmd, ": Permission denied\n", 126);
-// 	}
-// 	else
-// 		if (errno == ENOENT || errno == ENOTDIR)
-// 			print_child_error(shell, cmd, ": No such file or directory\n", 127);
-// 	print_child_error(shell, cmd, ": command not found\n", 127);
-// }
-
 void	handle_execve_error(t_app *shell, t_cmd *cmd)
 {
 	struct stat buffer;
 
 	if (!cmd->cmd || cmd->cmd[0] == '\0'|| 
 		!ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
-		print_child_error(shell, cmd, ": command not found\n", 127);
+		print_child_error(shell, cmd, CMD_NOT_FND, 127);
 	if (stat(cmd->cmd, &buffer) == 0)
 	{
 		if (S_ISDIR(buffer.st_mode))
-			print_child_error(shell, cmd, ": Is a directory\n", 126);
+			print_child_error(shell, cmd, IS_DIR, 126);
 		else if (access(cmd->cmd, X_OK) == -1)
-			print_child_error(shell, cmd, ": Permission denied\n", 126);
+			print_child_error(shell, cmd, PR, 126);
 	}
 	else
 	{
 		if (errno == ENOENT || errno == ENOTDIR)
-			print_child_error(shell, cmd, ": No such file or directory\n", 127);
+			print_child_error(shell, cmd, NSFOD, 127);
 		else
-			print_child_error(shell, cmd, ": command not found\n", 127);
+			print_child_error(shell, cmd, CMD_NOT_FND, 127);
 	}
 	exit(127);
 }
