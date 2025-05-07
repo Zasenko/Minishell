@@ -69,7 +69,7 @@ int	ft_unset(t_cmd *cmd, t_app *shell, bool is_child)
 		while (cmd->args[i])
 		{
 			node = find_envp_node(shell->envp, cmd->args[i]);
-			if (node)
+			if (node && node->name && ft_strcmp("_", node->name) != 0)
 				handle_node_unset(shell, node);
 			i++;
 		}

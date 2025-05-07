@@ -12,7 +12,7 @@
 
 #include "../../../includes/minishell.h"
 
-int	cd_get_dir(t_cmd *cmd, t_pwd *pwd)
+int	cd_get_dir(t_cmd *cmd, t_pwd *pwd, t_app *shell, bool is_child)
 {
 	if (arr2d_len(cmd->args) > 2)
 		return (ft_putstr_fd(CD_TMA, 2), EXIT_FAILURE);
@@ -27,17 +27,14 @@ int	cd_get_dir(t_cmd *cmd, t_pwd *pwd)
 		if (!ft_strcmp("-", cmd->args[1]))
 		{
 			if (!pwd->oldpwd || !pwd->oldpwd->envp)
-			{
-				ft_putstr_fd(CD_ONS, 2);
-				return (EXIT_FAILURE);
-			}
+				return (ft_putstr_fd(CD_ONS, 2), EXIT_FAILURE);
 			pwd->dir = ft_strdup(pwd->oldpwd->envp);
 		}
 		else
 			pwd->dir = ft_strdup(cmd->args[1]);
 	}
 	if (!pwd->dir)
-		return (EXIT_FAILURE);//NULL;//ERROR EXIT!!!!!!!!!!!!!!!!!
+		exit_malloc(shell, is_child);
 	return (SUCCESS);
 }
 
@@ -69,7 +66,10 @@ int	cd_change_dir(t_pwd *pwd)
 		ft_putstr_fd(strerror(errno), 2);
 		ft_putstr_fd("\n", 2);
 		if (pwd->dir)
+		{
 			free(pwd->dir);
+			pwd->dir = NULL;
+		}
 		return (EXIT_FAILURE);
 	}
 	if (pwd->dir)
@@ -96,7 +96,7 @@ int	ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
 	char	buf[MAXPATHLEN];
 
 	create_cd_pwd(&pwd, shell->envp);
-	if (cd_get_dir(cmd, &pwd) == EXIT_FAILURE)
+	if (cd_get_dir(cmd, &pwd, shell, is_child) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	result = cd_change_dir(&pwd);
 	if (result == EXIT_FAILURE)

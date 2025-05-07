@@ -12,9 +12,10 @@
 
 #include "../../../includes/minishell.h"
 
-void	show_export_without_env(char **str, int *i, int *g)
+void	show_export(char **str, int *i, int *g)
 {
 	int	f;
+	int	e;
 
 	while (str[*i])
 	{
@@ -26,17 +27,21 @@ void	show_export_without_env(char **str, int *i, int *g)
 		printf("declare -x ");
 		*g = 0;
 		f = 1;
+		e = 0;
 		while (str[*i][*g])
 		{
 			printf("%c", str[*i][*g]);
 			if (str[*i][*g] == '=' && f)
 			{
 				f = 0;
+				e = 1;
 				printf("%c", '"');
 			}
 			(*g)++;
 		}
-		printf("%c\n", '"');
+		if (e)
+			printf("%c", '"');
+		printf("\n");
 		(*i)++;
 	}
 }
@@ -114,7 +119,7 @@ bool	handle_export(t_app *shell, t_cmd *cmd, int *exit_code, bool is_child)
 		if (!new_2d_env)
 			return (0);
 		sort_2d_env(new_2d_env);
-		show_export_without_env(new_2d_env, &i, &g);
+		show_export(new_2d_env, &i, &g);
 		free_2d_array(new_2d_env);
 	}
 	else
