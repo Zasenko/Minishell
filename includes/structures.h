@@ -115,4 +115,12 @@ typedef struct s_heredoc
 	int		j;
 }	t_heredoc;
 
+typedef struct s_sort_env
+{
+	t_envp	*curr;
+	t_envp	*temp1;
+	t_envp	*temp2;
+	bool	swapped;
+}	t_sort_env;
+
 #endif

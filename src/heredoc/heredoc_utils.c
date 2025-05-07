@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 13:44:32 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/06 13:53:11 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/07 11:08:55 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ char	*expand_heredoc_input(t_app *shell, char *input)
 	t_heredoc	hd;
 
 	hd.j = 0;
+	hd.temp = NULL;
 	hd.dest = ft_strdup("");
 	if (!hd.dest)
 		return (NULL);

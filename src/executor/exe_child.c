@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:15:59 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/06 15:13:46 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:51:18 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void	change_lvl(t_app *shell, t_envp *node)
 void	change_shell_lvl(t_app *shell)
 {
 	t_envp	*node;
-	int		level;
 
 	node = find_envp_node(shell->envp, "SHLVL");
 	if (node && node->envp)

@@ -75,41 +75,43 @@ bool	ft_strstr(char *str, char *to_find)
 	return (false);
 }
 
+void	sorting_env(t_sort_env *sort_env, t_envp **envp)
+{
+	sort_env->temp1 = sort_env->curr;
+	sort_env->temp2 = sort_env->curr->next;
+	sort_env->temp1->next = sort_env->temp2->next;
+	if (sort_env->temp2->next)
+		sort_env->temp2->next->prev = sort_env->temp1;
+	sort_env->temp2->prev = sort_env->temp1->prev;
+	sort_env->temp2->next = sort_env->temp1;
+	if (sort_env->temp1->prev)
+		sort_env->temp1->prev->next = sort_env->temp2;
+	else
+		*envp = sort_env->temp2;
+	sort_env->temp1->prev = sort_env->temp2;
+	sort_env->swapped = false;
+}
+
 void	sort_environment(t_envp **envp)
 {
-	t_envp	*curr;
-	t_envp	*temp1;
-	t_envp	*temp2;
-	bool	swapped;
+	t_sort_env	sort_env;
 
 	if (!envp || !(*envp))
 		return ;
 	while (1)
 	{
-		swapped = true;
-		curr = *envp;
-		while (curr->next)
+		sort_env.swapped = true;
+		sort_env.curr = *envp;
+		while (sort_env.curr->next)
 		{
-			if (ft_strcmp(curr->name, curr->next->name) > 0)
+			if (ft_strcmp(sort_env.curr->name, sort_env.curr->next->name) > 0)
 			{
-				temp1 = curr;
-				temp2 = curr->next;
-				temp1->next = temp2->next;
-				if (temp2->next)
-					temp2->next->prev = temp1;
-				temp2->prev = temp1->prev;
-				temp2->next = temp1;
-				if (temp1->prev)
-					temp1->prev->next = temp2;
-				else
-					*envp = temp2;
-				temp1->prev = temp2;
-				swapped = false;
+				sorting_env(&sort_env, envp);
 			}
 			else
-				curr = curr->next;
+				sort_env.curr = sort_env.curr->next;
 		}
-		if (swapped)
+		if (sort_env.swapped)
 			break ;
 	}
 }
