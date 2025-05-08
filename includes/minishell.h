@@ -110,6 +110,7 @@ void		close_child_fds(t_app *shell);
 void		child_process(t_app *shell, t_cmd *cmd);
 void		redirects_in_child(t_app *shell, t_cmd *cmd);
 void		free_heredoc(t_heredoc *hd);
+void		exit_malloc(t_app *shell, bool is_child);
 char		*expand_words(t_app *shell, char *input, int *i);
 char		*get_word_from_quotes(char *input);
 char		**copy_into_2d_arr(t_envp *envp);
