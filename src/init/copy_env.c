@@ -98,7 +98,7 @@ bool	create_env_copy(t_app *shell, char **envp, int *i)
 {
 	int		j;
 	char	*name;
-	char	*env_var;
+	char	*env_var = NULL;
 	char	*s;
 	t_envp	*new;
 
@@ -108,17 +108,21 @@ bool	create_env_copy(t_app *shell, char **envp, int *i)
 		s = envp[*i];
 		while (s[j] != '=')
 			j++;
-		env_var = ft_strdup(ft_strchr(envp[*i], '=', true));
-		if (!env_var)
-			return (false);
+		char *value = ft_strchr(envp[*i], '=', true);
+		if (value)
+		{
+			env_var = ft_strdup(value);
+			if (!env_var)
+				return (false);
+		}
 		name = ft_substr(s, 0, j);
 		if (!name)
 			return (free(env_var), false);
-
 		new = create_new_envp(env_var, name);
 		if (!new)
 			return (free(env_var), free(name), false);
 		add_envp_back(&shell->envp, new);
+		env_var = NULL;
 		(*i)++;
 	}
 	return (true);

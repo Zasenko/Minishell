@@ -101,8 +101,16 @@ void	free_envp_list(t_envp **envp)
 	while (*envp != NULL)
 	{
 		temp = (*envp)->next;
-		free((*envp)->name);
-		free((*envp)->envp);
+		if ((*envp)->name)
+		{
+			free((*envp)->name);
+			(*envp)->name = NULL;
+		}
+		if ((*envp)->envp)
+		{
+			free((*envp)->envp);
+			(*envp)->envp = NULL;
+		}
 		free(*envp);
 		*envp = temp;
 	}
