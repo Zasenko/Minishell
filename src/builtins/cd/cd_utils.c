@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:25:00 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/08 09:50:10 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/08 14:35:45 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,9 @@ void	cd_change_pwd(t_app *shell, t_pwd *pwd, bool is_child)
 	{
 		if (pwd->changed_dir)
 			free(pwd->changed_dir);
-		exit_malloc(shell, is_child);
+		if (is_child)
+			exit_child(shell, 1, NULL);
+		exit_with_error(shell, 1, MALLOC_FAIL);
 	}
 	if (pwd->pwd->envp != NULL)
 	{

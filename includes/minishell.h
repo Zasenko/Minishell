@@ -66,6 +66,8 @@ bool		is_there_quote(char *str);
 bool		get_pwd(t_app *shell);
 bool		parse_arguments(t_app *shell, t_cmd *cmd, t_token *token,
 				bool *iswriten);
+bool		create_pwd_env_value(t_app *shell);
+bool		create_oldpwd_env_value(t_app *shell);
 void		initialize_shell(t_app *shell, char **envp);
 void		free_lib_list(t_lib **lib);
 void		show_error_message(char *str);
