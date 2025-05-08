@@ -6,7 +6,7 @@
 /*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 11:25:00 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/07 13:52:17 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/08 09:50:10 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,6 @@ int	cd_change_env(t_app *shell, t_pwd *pwd, bool is_child)
 		cd_set_old_pwd(shell, pwd, is_child);
 	if (pwd->pwd)
 		cd_change_pwd(shell, pwd, is_child);
+	shell->is_envp_list_changed = true;
 	return (EXIT_SUCCESS);
 }
