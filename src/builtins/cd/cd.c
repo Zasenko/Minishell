@@ -96,6 +96,21 @@ int	ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
 	char	buf[MAXPATHLEN];
 
 	create_cd_pwd(&pwd, shell->envp);
+
+	if (pwd.pwd == NULL)
+	{
+		if (!create_pwd_env_value(shell))
+			exit_malloc(shell, is_child);
+		pwd.pwd = find_envp_node(shell->envp, "PWD");
+
+	}	
+	if (pwd.oldpwd == NULL)
+	{
+		if (!create_oldpwd_env_value(shell))
+			exit_with_error(shell, 1, MALLOC_FAIL);
+		pwd.oldpwd = find_envp_node(shell->envp, "OLDPWD");
+	}
+
 	if (cd_get_dir(cmd, &pwd, shell, is_child) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	result = cd_change_dir(&pwd);
