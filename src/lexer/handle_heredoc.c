@@ -14,15 +14,12 @@
 
 bool	handle_heredoc(t_token *prev, char *input, int *i)
 {
-	int	start;
+	char *part;
 
-	start = *i;
-	while (input[*i] && input[*i] != ' ' && input[*i] != '|' && input[*i] != '>'
-		&& input[*i] != '<')
-		(*i)++;
-	prev->value = ft_substr(input, start, *i - start);
-	if (!prev->value)
+	part = divide_into_parts(input, i);
+	if (!part)
 		return (false);
+	prev->value = part;
 	prev->type = ARG;
 	return (true);
 }

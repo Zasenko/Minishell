@@ -67,7 +67,7 @@ void print_cmd(t_app **shell)
         redir = head->redirs;
         while (redir != NULL)
         {
-            printf("file: %s", redir->value);
+            printf("file: [%s]", redir->value);
             if (redir->type == REDIR_IN)
             {
                 printf(" REDIR_IN");
@@ -83,6 +83,8 @@ void print_cmd(t_app **shell)
             else if (redir->type == HEREDOC)
             {
                 printf(" HEREDOC");
+                printf("stop word: [%s]", redir->stop_word);
+
             }
             else {
                 printf(" FUCK");

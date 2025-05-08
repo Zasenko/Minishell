@@ -21,7 +21,7 @@ void	initialize_shell(t_app *shell, char **envp)
 	shell->prompt = NULL;
 	shell->envp = NULL;
 	shell->last_exit_code = 0;
-	shell->is_envp_list_changed = false;
+	shell->is_envp_list_changed = true;
 	shell->cmd = NULL;
 	shell->tokens = NULL;
 	shell->heredock_num = 1;

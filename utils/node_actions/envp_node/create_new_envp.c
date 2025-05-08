@@ -16,10 +16,15 @@ t_envp	*create_new_envp(char *envp, char *name)
 {
 	t_envp	*new;
 
+	if (!name)
+		return (NULL);
 	new = malloc(sizeof(t_envp));
 	if (!new)
 		return (NULL);
-	new->envp = envp;
+	if (envp)
+		new->envp = envp;
+	else
+		new->envp = NULL;
 	new->name = name;
 	new->prev = NULL;
 	new->next = NULL;

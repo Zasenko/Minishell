@@ -37,6 +37,18 @@ bool	handle_arguments(char **result, t_token **token, int *i)
 	return (true);
 }
 
+bool validate_file_name(t_token **token, t_redir **redir)
+{
+	if((*token)->next && (*token)->next->is_ambiguous)
+	{
+		(*redir)->is_ambiguous = true;
+		(*redir)->err_name = ft_strdup((*token)->next->err_name);
+		if (!(*redir)->err_name)
+			return (false);
+	}
+	return (true);
+}
+
 char	**extract_arguments(t_token *token)
 {
 	int		i;

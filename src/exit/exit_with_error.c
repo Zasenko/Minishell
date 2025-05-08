@@ -16,6 +16,7 @@ void	exit_with_error(t_app *shell, int status, char *message)
 {
 	if (message)
 		print_message(message, false);
+	shell->is_envp_list_changed = true;
 	close_child_fds(shell);
 	close_fd(&shell->fds.dup2_in);
 	close_fd(&shell->fds.dup2_out);
@@ -28,6 +29,7 @@ void	exit_child(t_app *shell, int status, char *message)
 {
 	if (message)
 		print_message(message, false);
+	shell->is_envp_list_changed = true;
 	close_child_fds(shell);
 	close_fd(&shell->fds.dup2_in);
 	close_fd(&shell->fds.dup2_out);

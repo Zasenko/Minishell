@@ -18,7 +18,7 @@ bool	handle_creating_prompt(char **prompt, char **parts)
 	int		i;
 
 	i = 0;
-	while (i < 8)
+	while (i < 4)
 	{
 		temp = ft_strjoin(*prompt, parts[i]);
 		free(*prompt);
@@ -33,21 +33,17 @@ bool	handle_creating_prompt(char **prompt, char **parts)
 void	create_prompt_path(t_app *shell)
 {
 	char	*prompt;
-	char	*parts[8];
+	char	*parts[4];
 
 	if (!get_env_info(shell))
 		exit_with_error(shell, 1, QUOTE_ERR);
-	prompt = ft_strjoin(GREEN, shell->name);
+	prompt = ft_strjoin(shell->name, "@");
 	if (!prompt)
 		exit_with_error(shell, 1, QUOTE_ERR);
-	parts[0] = "@";
-	parts[1] = shell->user;
-	parts[2] = RESET;
-	parts[3] = ":";
-	parts[4] = BLUE;
-	parts[5] = shell->pwd;
-	parts[6] = RESET;
-	parts[7] = "$ ";
+	parts[0] = shell->user;
+	parts[1] = ":";
+	parts[2] = shell->pwd;
+	parts[3] = "$ ";
 	if (!handle_creating_prompt(&prompt, parts))
 	{
 		exit_with_error(shell, 1, QUOTE_ERR);

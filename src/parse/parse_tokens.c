@@ -33,13 +33,8 @@ bool	handle_redir_parsing(t_cmd **cmd, t_token **token, t_type type)
 		if (!redir->value)
 			return (false);
 	}
-	if((*token)->next && (*token)->next->is_ambiguous)
-	{
-		redir->is_ambiguous = true;
-		redir->err_name = ft_strdup((*token)->next->err_name);
-		if (!redir->err_name)
-			return (false);
-	}
+	if (!validate_file_name(token, &redir))
+		return (false);
 	add_redir_back(&(*cmd)->redirs, redir);
 	*token = (*token)->next;
 	return (true);

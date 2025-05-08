@@ -35,8 +35,8 @@ char	*divide_into_parts(char *input, int *i)
 			is_sq_open = !is_sq_open;
 		else if (input[*i] == '\"' && !is_sq_open)
 			is_dq_open = !is_dq_open;
-		else if ((input[*i] == ' ' || input[*i] == '\t' || input[*i] == '>'
-				|| input[*i] == '<' || input[*i] == '|') && !is_dq_open
+		else if ((input[*i] == '>' || input[*i] == '<' || input[*i] == ' '
+				|| input[*i] == '\t' || input[*i] == '|') && !is_dq_open
 			&& !is_sq_open)
 			break ;
 		(*i)++;
