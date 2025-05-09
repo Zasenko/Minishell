@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 22:06:59 by dzasenko          #+#    #+#             */
 /*   Updated: 2025/04/23 22:06:59 by dzasenko         ###   ########.fr       */

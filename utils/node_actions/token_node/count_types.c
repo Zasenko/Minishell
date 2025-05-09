@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   count_types.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 15:10:25 by ibondarc          #+#    #+#             */
 /*   Updated: 2025/02/14 15:10:25 by ibondarc         ###   ########.fr       */

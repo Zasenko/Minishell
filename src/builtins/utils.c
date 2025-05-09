@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmitryzasenko <dmitryzasenko@student.42    +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/12 16:15:41 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/02/12 16:26:44 by dmitryzasen      ###   ########.fr       */
+/*   Created: 2025/02/12 16:15:41 by dzasenko          #+#    #+#             */
+/*   Updated: 2025/02/12 16:26:44 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

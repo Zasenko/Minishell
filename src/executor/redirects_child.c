@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirects_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 10:05:00 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/06 14:55:12 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:35:30 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

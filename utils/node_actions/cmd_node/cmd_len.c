@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_len.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmitryzasenko <dmitryzasenko@student.42    +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/11 16:48:41 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/02/11 16:49:25 by dmitryzasen      ###   ########.fr       */
+/*   Created: 2025/02/11 16:48:41 by ibondarc          #+#    #+#             */
+/*   Updated: 2025/02/11 16:49:25 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

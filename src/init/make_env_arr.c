@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   make_env_arr.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 11:25:07 by ibondarc          #+#    #+#             */
 /*   Updated: 2025/04/14 11:56:47 by ibondarc         ###   ########.fr       */

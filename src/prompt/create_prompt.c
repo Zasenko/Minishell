@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   create_prompt.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 20:28:34 by ibondarc          #+#    #+#             */
 /*   Updated: 2025/02/05 20:28:34 by ibondarc         ###   ########.fr       */

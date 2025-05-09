@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_parts_two.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:40:53 by ibondarc          #+#    #+#             */
-/*   Updated: 2025/04/23 11:09:08 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:47:16 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

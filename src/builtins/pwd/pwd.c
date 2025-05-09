@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmitryzasenko <dmitryzasenko@student.42    +#+  +:+       +#+        */
+/*   By: dzasenko <dzasenko@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/12 13:22:59 by dmitryzasen       #+#    #+#             */
-/*   Updated: 2025/02/12 15:41:19 by dmitryzasen      ###   ########.fr       */
+/*   Created: 2025/02/12 13:22:59 by dzasenko          #+#    #+#             */
+/*   Updated: 2025/02/12 15:41:19 by dzasenko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

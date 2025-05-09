@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   lexing_inputs_date.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 12:11:16 by ibondarc          #+#    #+#             */
 /*   Updated: 2025/02/12 12:11:16 by ibondarc         ###   ########.fr       */

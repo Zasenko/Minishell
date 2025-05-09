@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   add_node_back.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 12:24:27 by ibondarc          #+#    #+#             */
 /*   Updated: 2025/02/06 12:24:27 by ibondarc         ###   ########.fr       */

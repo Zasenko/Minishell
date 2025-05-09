@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   exit_status.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ibondarc <ibondarc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 10:16:28 by ibondarc          #+#    #+#             */
 /*   Updated: 2025/04/17 10:16:28 by ibondarc         ###   ########.fr       */
