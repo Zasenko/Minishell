@@ -53,7 +53,7 @@ bool	tokenize_data(t_app *shell, t_token *head, char *input)
 	if (!str)
 		return (false);
 	if (!handle_inputs(shell, &head, str, &i))
-		return (free(str), false);
+		return (free(str), free(head), false);
 	free(str);
 	shell->tokens = head;
 	if (!lexing_checker(shell))
