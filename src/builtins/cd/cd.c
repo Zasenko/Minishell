@@ -12,32 +12,6 @@
 
 #include "../../../includes/minishell.h"
 
-int	cd_get_dir(t_cmd *cmd, t_pwd *pwd, t_app *shell, bool is_child)
-{
-	if (arr2d_len(cmd->args) > 2)
-		return (ft_putstr_fd(CD_TMA, 2), EXIT_FAILURE);
-	if (cmd->args[1] == NULL || !ft_strcmp("~", cmd->args[1]))
-	{
-		if (!pwd->home || !pwd->home->envp)
-			return (ft_putstr_fd(CD_HNS, 2), EXIT_FAILURE);
-		pwd->dir = ft_strdup(pwd->home->envp);
-	}
-	else
-	{
-		if (!ft_strcmp("-", cmd->args[1]))
-		{
-			if (!pwd->oldpwd || !pwd->oldpwd->envp)
-				return (ft_putstr_fd(CD_ONS, 2), EXIT_FAILURE);
-			pwd->dir = ft_strdup(pwd->oldpwd->envp);
-		}
-		else
-			pwd->dir = ft_strdup(cmd->args[1]);
-	}
-	if (!pwd->dir)
-		exit_malloc(shell, is_child);
-	return (SUCCESS);
-}
-
 bool	create_new_pwd_node(t_app *shell, char *old_pwd, char *new_pwd)
 {
 	t_envp	*node;
@@ -89,6 +63,22 @@ void	create_cd_pwd(t_pwd *pwd, t_envp *envp)
 	pwd->changed_dir = NULL;
 }
 
+void	check_pwd(t_app *shell, t_pwd *pwd, bool is_child)
+{
+	if (pwd->pwd == NULL)
+	{
+		if (!create_pwd_env_value(shell))
+			exit_malloc(shell, is_child);
+		pwd->pwd = find_envp_node(shell->envp, "PWD");
+	}
+	if (pwd->oldpwd == NULL)
+	{
+		if (!create_oldpwd_env_value(shell))
+			exit_with_error(shell, 1, MALLOC_FAIL);
+		pwd->oldpwd = find_envp_node(shell->envp, "OLDPWD");
+	}
+}
+
 int	ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
 {
 	int		result;
@@ -96,21 +86,7 @@ int	ft_cd(t_cmd *cmd, t_app *shell, bool is_child)
 	char	buf[MAXPATHLEN];
 
 	create_cd_pwd(&pwd, shell->envp);
-
-	if (pwd.pwd == NULL)
-	{
-		if (!create_pwd_env_value(shell))
-			exit_malloc(shell, is_child);
-		pwd.pwd = find_envp_node(shell->envp, "PWD");
-
-	}	
-	if (pwd.oldpwd == NULL)
-	{
-		if (!create_oldpwd_env_value(shell))
-			exit_with_error(shell, 1, MALLOC_FAIL);
-		pwd.oldpwd = find_envp_node(shell->envp, "OLDPWD");
-	}
-
+	check_pwd(shell, &pwd, is_child);
 	if (cd_get_dir(cmd, &pwd, shell, is_child) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	result = cd_change_dir(&pwd);

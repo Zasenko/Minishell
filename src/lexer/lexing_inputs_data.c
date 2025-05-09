@@ -73,7 +73,7 @@ void	lexing_inputs_data(t_app *shell, char *input)
 		ft_putstr_fd(QUOTE_ERR, 2);
 		shell->last_exit_code = 1;
 		shell->is_valid_syntax = false;
-		return;
+		return ;
 	}
 	if (!tokenize_data(shell, head, input))
 	{

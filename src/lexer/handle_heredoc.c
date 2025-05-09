@@ -14,7 +14,7 @@
 
 bool	handle_heredoc(t_token *prev, char *input, int *i)
 {
-	char *part;
+	char	*part;
 
 	part = divide_into_parts(input, i);
 	if (!part)

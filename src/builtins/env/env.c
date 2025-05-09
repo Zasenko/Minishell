@@ -24,7 +24,7 @@ int	ft_env(char **env)
 		if (ft_strchr(env[i], '=', false))
 		{
 			ft_putstr_fd(env[i], 1);
-			ft_putstr_fd("\n", 1);	
+			ft_putstr_fd("\n", 1);
 		}
 		i++;
 	}

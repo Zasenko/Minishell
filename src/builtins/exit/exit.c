@@ -45,8 +45,8 @@ int	ft_exit(t_cmd *cmd, t_app *shell, int is_child)
 		return (res);
 	if (args_c > 2)
 	{
-		// if (!is_child)
-		// 	ft_putstr_fd(EXIT, 2);
+		if (!is_child)
+			ft_putstr_fd(EXIT, 2);
 		return (ft_putstr_fd(EXIT_TMA, 2), 1);
 	}
 	exit_code = custom_atoi(shell, cmd, cmd->args[1], is_child);

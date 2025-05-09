@@ -14,9 +14,6 @@
 
 void	show_export(char **str, int *i, int *g)
 {
-	int	f;
-	int	e;
-
 	while (str[*i])
 	{
 		if (str[*i][0] == '_')
@@ -26,21 +23,7 @@ void	show_export(char **str, int *i, int *g)
 		}
 		printf("declare -x ");
 		*g = 0;
-		f = 1;
-		e = 0;
-		while (str[*i][*g])
-		{
-			printf("%c", str[*i][*g]);
-			if (str[*i][*g] == '=' && f)
-			{
-				f = 0;
-				e = 1;
-				printf("%c", '"');
-			}
-			(*g)++;
-		}
-		if (e)
-			printf("%c", '"');
+		handle_export_showing(str, i, g);
 		printf("\n");
 		(*i)++;
 	}

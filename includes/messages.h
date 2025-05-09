@@ -21,7 +21,7 @@
 # define PIPE_ERROR "pipe failed"
 # define NOT_EXIST "does not exist."
 # define QUOTE_ERR "error: there is no right count of quotes\n"
-# define PR "permission denied\n"
+# define PR ": Permission denied\n"
 # define SERRNUT_NEWLI "syntax error near unexpected token `newline"
 # define SERRNUT "syntax error near unexpected token `"
 # define EXIT_TMA "exit: too many arguments\n"

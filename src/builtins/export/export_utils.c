@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dzasenko <dzasenko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 13:23:25 by ibondarc          #+#    #+#             */
-/*   Updated: 2025/05/06 14:09:19 by dzasenko         ###   ########.fr       */
+/*   Updated: 2025/05/09 12:50:28 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,28 @@ void	show_error_message(char *str)
 	ft_putstr_fd("export: `", 2);
 	ft_putstr_fd(str, 2);
 	ft_putstr_fd(NAVI, 2);
+}
+
+void	handle_export_showing(char **str, int *i, int *g)
+{
+	int	f;
+	int	e;
+
+	f = 1;
+	e = 0;
+	while (str[*i][*g])
+	{
+		printf("%c", str[*i][*g]);
+		if (str[*i][*g] == '=' && f)
+		{
+			f = 0;
+			e = 1;
+			printf("%c", '"');
+		}
+		(*g)++;
+	}
+	if (e)
+		printf("%c", '"');
 }
 
 void	free_lib_list(t_lib **lib)

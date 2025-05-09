@@ -92,34 +92,6 @@ int	ft_wait_children(t_app *shell)
 	return (1);
 }
 
-void	print_fd_err(char *val, char *err_msg)
-{
-	char	*err[4];
-	char	*temp;
-	char	*res;
-	int		i;
-
-	if (!val || !err_msg)
-		return ;
-	i = 0;
-	err[0] = val;
-	err[1] = ": ";
-	err[2] = err_msg;
-	err[3] = "\n";
-	res = ft_strdup("");
-	while (i < 4)
-	{
-		temp = ft_strjoin(res, err[i]);
-		free(res);
-		if (!temp)
-			return ;
-		res = temp;
-		i++;
-	}
-	ft_putstr_fd(res, 2);
-	free(res);
-}
-
 void	exe_multi_buildin(t_app *shell, t_cmd *cmd)
 {
 	signal(SIGINT, SIG_IGN);

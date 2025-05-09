@@ -27,6 +27,7 @@ int			cmd_len(t_cmd *cmd);
 int			token_len(t_token *token);
 int			count_types(t_token *token, t_type type);
 int			exec_buildin(t_cmd *cmd, t_app *shell, bool is_child, int fd);
+int			cd_get_dir(t_cmd *cmd, t_pwd *pwd, t_app *shell, bool is_child);
 int			ft_env(char **env);
 int			ft_echo(char **args, int fd);
 int			ft_cd(t_cmd *cmd, t_app *shell, bool is_child);
@@ -42,7 +43,8 @@ int			readline_event_hook2(void);
 int			get_envp_len(t_envp *envp);
 int			last_signal_status(void);
 int			cd_change_env(t_app *shell, t_pwd *pwd, bool is_child);
-int			validate_input_arguments(t_app *shell, t_cmd *cmd, int args_c, int is_child);
+int			validate_input_arguments(t_app *shell, t_cmd *cmd, int args_c,
+				int is_child);
 int			check_export_key(char *str);
 int			ft_pwd(void);
 int			close_all_redirs_fds_child(t_redir *redir);
@@ -64,6 +66,9 @@ bool		create_new_pwd_node(t_app *shell, char *old_pwd, char *new_pwd);
 bool		handle_expansion(char **dest, char *expanded, bool *do_split);
 bool		is_there_quote(char *str);
 bool		get_pwd(t_app *shell);
+bool		create_pwd_env_value(t_app *shell);
+bool		create_shell_lvl_env_value(t_app *shell);
+bool		create_oldpwd_env_value(t_app *shell);
 bool		parse_arguments(t_app *shell, t_cmd *cmd, t_token *token,
 				bool *iswriten);
 bool		create_pwd_env_value(t_app *shell);
@@ -77,6 +82,9 @@ void		read_input_line(t_app *shell);
 void		print_exit_error(char *str, bool is_child);
 void		free_2d_array(char **arr);
 void		exit_with_error(t_app *shell, int status, char *message);
+void		print_child_error(t_app *shell, t_cmd *cmd, char *massage,
+				int code);
+void		handle_export_showing(char **str, int *i, int *g);
 void		free_list(t_app *shell);
 bool		get_env_info(t_app *shell);
 void		ft_lstadd_back(t_app **shell, t_app *new);
@@ -130,7 +138,8 @@ char		*extract_subcommand(const char *str);
 char		*expand_heredoc_input(t_app *shell, char *input);
 t_cmd		*create_new_cmd(void);
 t_cmd		*last_cmd_node(t_cmd *node);
-t_lib		*check_export_arg(char *str, int *exit_code, t_app *shell, bool is_child);
+t_lib		*check_export_arg(char *str, int *exit_code, t_app *shell,
+				bool is_child);
 t_envp		*create_new_envp(char *envp, char *name);
 t_envp		*last_envp_node(t_envp *node);
 t_envp		*find_envp_node(t_envp *envp, char *key);

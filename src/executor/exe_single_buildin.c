@@ -46,19 +46,22 @@ int	make_redir_builtin(t_app *shell, t_redir *redir)
 	if (redir->type == REDIR_IN || redir->type == HEREDOC)
 	{
 		redir->fd = open(redir->value, O_RDONLY);
-		if (check_redir(shell, redir, &shell->fds.dup2_in, &shell->fds.pipe[0]) == EXIT_FAILURE)
+		if (check_redir(shell, redir, &shell->fds.dup2_in, &shell->fds.pipe[0])
+			== EXIT_FAILURE)
 			return (EXIT_FAILURE);
 	}
 	else if (redir->type == REDIR_OUT)
 	{
 		redir->fd = open(redir->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (check_redir(shell, redir, &shell->fds.dup2_out, &shell->fds.pipe[1]) == EXIT_FAILURE)
+		if (check_redir(shell, redir, &shell->fds.dup2_out, &shell->fds.pipe[1])
+			== EXIT_FAILURE)
 			return (EXIT_FAILURE);
 	}
 	else if (redir->type == APPEND)
 	{
 		redir->fd = open(redir->value, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (check_redir(shell, redir, &shell->fds.dup2_out, &shell->fds.pipe[1]) == EXIT_FAILURE)
+		if (check_redir(shell, redir, &shell->fds.dup2_out, &shell->fds.pipe[1])
+			== EXIT_FAILURE)
 			return (EXIT_FAILURE);
 	}
 	return (SUCCESS);

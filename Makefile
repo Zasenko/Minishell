@@ -25,6 +25,7 @@ SRC = 		main.c \
 			init/initialize_shell.c \
 			init/copy_env.c \
 			init/make_env_arr.c \
+			init/env_utils.c \
 			prompt/read_input_line.c  \
 			prompt/get_env_info.c  \
 			prompt/create_prompt.c \
@@ -40,6 +41,7 @@ SRC = 		main.c \
 			executor/exe_single_buildin.c \
 			executor/exe_child.c \
 			executor/redirects_child.c \
+			executor/execution_utils.c \
 			lexer/lexing_inputs_data.c \
 			lexer/handle_command.c \
 			lexer/handle_heredoc.c \
@@ -59,6 +61,7 @@ SRC = 		main.c \
 			builtins/echo/echo.c \
 			builtins/cd/cd.c \
 			builtins/cd/cd_utils.c \
+			builtins/cd/cd_get_dir.c \
 			builtins/exit/exit.c \
 			builtins/exit/exit_utils.c \
 			builtins/exit/validation.c \

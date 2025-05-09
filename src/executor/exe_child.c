@@ -6,30 +6,18 @@
 /*   By: ibondarc <ibondarc@student.42vienna.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 16:15:59 by dzasenko          #+#    #+#             */
-/*   Updated: 2025/05/07 12:11:10 by ibondarc         ###   ########.fr       */
+/*   Updated: 2025/05/09 13:02:42 by ibondarc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	print_child_error(t_app *shell, t_cmd *cmd, char *massage, int code)
-{
-	char	*error_msg;
-
-	error_msg = ft_strjoin(cmd->args[0], massage);
-	if (!error_msg)
-		exit_child(shell, 1, NULL);
-	ft_putstr_fd(error_msg, 2);
-	free(error_msg);
-	exit_child(shell, code, NULL);
-}
-
 void	handle_execve_error(t_app *shell, t_cmd *cmd)
 {
-	struct stat buffer;
+	struct stat	buffer;
 
-	if (!cmd->cmd || cmd->cmd[0] == '\0'|| 
-		!ft_strcmp(cmd->args[0], ".") || !ft_strcmp(cmd->args[0], ".."))
+	if (!cmd->cmd || cmd->cmd[0] == '\0' || !ft_strcmp(cmd->args[0], ".")
+		|| !ft_strcmp(cmd->args[0], ".."))
 		print_child_error(shell, cmd, CMD_NOT_FND, 127);
 	if (stat(cmd->cmd, &buffer) == 0)
 	{

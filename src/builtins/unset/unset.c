@@ -28,6 +28,20 @@ void	free_node(t_envp *node)
 	}
 }
 
+void	handle_node_swap(t_app *shell, struct s_envp *prev, struct s_envp *next)
+{
+	if (prev)
+	{
+		prev->next = next;
+		next->prev = prev;
+	}
+	else
+	{
+		next->prev = NULL;
+		shell->envp = next;
+	}
+}
+
 void	handle_node_unset(t_app *shell, t_envp *node)
 {
 	struct s_envp	*prev;
@@ -37,16 +51,7 @@ void	handle_node_unset(t_app *shell, t_envp *node)
 	next = node->next;
 	if (next)
 	{
-		if (prev)
-		{
-			prev->next = next;
-			next->prev = prev;
-		}
-		else
-		{
-			next->prev = NULL;
-			shell->envp = next;
-		}
+		handle_node_swap(shell, prev, next);
 	}
 	else
 	{
@@ -85,39 +90,3 @@ int	ft_unset(t_cmd *cmd, t_app *shell, bool is_child)
 	}
 	return (SUCCESS);
 }
-
-// void	handle_copying_value(t_envp **curr, t_envp **next)
-// {
-// 	if ((*curr)->prev)
-// 		(*curr)->prev->next = *next;
-// 	if (*next)
-// 		(*next)->prev = (*curr)->prev;
-// 	free((*curr)->name);
-// 	free((*curr)->envp);
-// 	free(*curr);
-// }
-
-// void	unset_env_values(t_app *shell, t_envp **envp)
-// {
-// 	t_token	*token;
-// 	t_envp	*curr;
-// 	t_envp	*next;
-
-// 	token = shell->tokens;
-// 	while (token)
-// 	{
-// 		if (ft_strncmp(token->value, "unset", 5) == 0)
-// 		{
-// 			curr = *envp;
-// 			while (curr != NULL)
-// 			{
-// 				next = curr->next;
-// 				if (ft_strncmp(curr->name, token->next->value,
-// 						ft_strlen(token->next->value)) == 0)
-// 					handle_copying_value(&curr, &next);
-// 				curr = next;
-// 			}
-// 		}
-// 		token = token->next;
-// 	}
-// }
