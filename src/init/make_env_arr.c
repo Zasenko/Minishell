@@ -21,7 +21,7 @@ char	*make_copy(t_envp *envp)
 		return (NULL);
 	if (!envp->envp && envp->name)
 	{
-		res = strdup(envp->name);
+		res = ft_strdup(envp->name);
 		if (!res)
 			return (NULL);
 	}
