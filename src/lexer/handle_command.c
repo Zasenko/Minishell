@@ -54,7 +54,7 @@ bool	handle_redir_outfile(t_app *shell, t_token *token, char *input,
 		return (free(input), free(result), false);
 	temp = ft_split(result, ' ');
 	if (!temp)
-		return (free_2d_array(temp), free(input), false);
+		return (free(result), free(input), false);
 	while (temp[j])
 		j++;
 	if (j == 0 || j > 1 || !ft_strlen(temp[0]))
@@ -79,19 +79,22 @@ bool	add_expanded_value_into_node(t_token *token, char **input)
 	while (input[j])
 	{
 		if (j == 0)
-			write_value(token, input[j], ARG);
+		{
+			if (!write_value(token, input[j], ARG))
+				return (false);
+		}
 		else
 		{
 			new = create_new_token();
 			if (!new)
-				return (free_2d_array(input), false);
+				return (false);
 			write_value(new, input[j], ARG);
-			add_token_back(&token, new);
+			if (!add_token_back(&token, new))
+				return (false);
 		}
 		j++;
 	}
-	free_2d_array(input);
-	return (true);
+	return (free_2d_array(input), true);
 }
 
 bool	handle_quotes_case(t_app *shell, t_token *token, char *part)
@@ -109,7 +112,7 @@ bool	handle_quotes_case(t_app *shell, t_token *token, char *part)
 			temp = ft_split(token->value, ' ');
 			free(token->value);
 			if (!add_expanded_value_into_node(token, temp))
-				return (false);
+				return (free_2d_array(temp), false);
 		}
 	}
 	else
@@ -147,6 +150,6 @@ bool	handle_command(t_app *shell, t_token *token, char *input, int *i)
 		return (free(part), free(result), false);
 	temp = ft_split(result, ' ');
 	if (!add_expanded_value_into_node(token, temp))
-		return (free(part), free(result), false);
+		return (free(part), free_2d_array(temp), free(result), false);
 	return (free(part), free(result), true);
 }

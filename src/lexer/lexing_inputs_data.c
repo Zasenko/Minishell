@@ -41,7 +41,7 @@ bool	handle_inputs(t_app *shell, t_token **head, char *input, int *i)
 	return (true);
 }
 
-bool	tokenize_data(t_app *shell, t_token *head, char *input)
+bool	tokenize_data(t_app *shell, t_token **head, char *input)
 {
 	char	*str;
 	int		i;
@@ -52,10 +52,10 @@ bool	tokenize_data(t_app *shell, t_token *head, char *input)
 	free(input);
 	if (!str)
 		return (false);
-	if (!handle_inputs(shell, &head, str, &i))
-		return (free(str), free(head), false);
+	if (!handle_inputs(shell, head, str, &i))
+		return (free(str), false);
 	free(str);
-	shell->tokens = head;
+	shell->tokens = *head;
 	if (!lexing_checker(shell))
 		shell->is_valid_syntax = false;
 	return (true);
@@ -75,8 +75,9 @@ void	lexing_inputs_data(t_app *shell, char *input)
 		shell->is_valid_syntax = false;
 		return ;
 	}
-	if (!tokenize_data(shell, head, input))
+	if (!tokenize_data(shell, &head, input))
 	{
+		free_token_list(&head);
 		exit_with_error(shell, 1, MALLOC_FAIL);
 	}
 }

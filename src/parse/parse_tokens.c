@@ -24,17 +24,17 @@ bool	handle_redir_parsing(t_cmd **cmd, t_token **token, t_type type)
 		redir->type = type;
 		redir->value = extract_word_from_quotes((*token)->next->value);
 		if (!redir->value)
-			return (false);
+			return (free(redir), false);
 	}
 	else
 	{
 		redir->type = type;
 		redir->value = ft_strdup((*token)->next->value);
 		if (!redir->value)
-			return (false);
+			return (free(redir), false);
 	}
 	if (!validate_file_name(token, &redir))
-		return (false);
+		return (free(redir), false);
 	add_redir_back(&(*cmd)->redirs, redir);
 	*token = (*token)->next;
 	return (true);
@@ -53,14 +53,14 @@ bool	handle_heredoc_parsing(t_cmd **cmd, t_token **token, t_type type)
 		redir->hd_with_quotes = true;
 		redir->stop_word = extract_word_from_quotes((*token)->next->value);
 		if (!redir->stop_word)
-			return (false);
+			return (free(redir), false);
 	}
 	else
 	{
 		redir->type = type;
 		redir->stop_word = ft_strdup((*token)->next->value);
 		if (!redir->stop_word)
-			return (false);
+			return (free(redir), false);
 	}
 	add_redir_back(&(*cmd)->redirs, redir);
 	*token = (*token)->next;
@@ -128,7 +128,7 @@ void	parse_tokens(t_app *shell)
 			exit_with_error(shell, 1, MALLOC_FAIL);
 		if (!handle_token_parsing(shell, &head, &cmd, &iswriten))
 		{
-			free(cmd);
+			free_cmd_list(&cmd);
 			exit_with_error(shell, 1, MALLOC_FAIL);
 		}
 		add_cmd_back(&head, cmd);

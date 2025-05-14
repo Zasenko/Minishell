@@ -12,12 +12,14 @@
 
 #include "../../includes/minishell.h"
 
-void	write_value(t_token *token, char *value, int type)
+bool	write_value(t_token *token, char *value, int type)
 {
+	(void)value;
 	token->value = ft_strdup(value);
 	if (!token->value)
-		return ;
+		return (false);
 	token->type = type;
+	return (true);
 }
 
 char	*divide_into_parts(char *input, int *i)

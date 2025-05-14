@@ -70,6 +70,7 @@ bool		get_pwd(t_app *shell);
 bool		create_pwd_env_value(t_app *shell);
 bool		create_shell_lvl_env_value(t_app *shell);
 bool		create_oldpwd_env_value(t_app *shell);
+bool		write_value(t_token *token, char *value, int type);
 bool		parse_arguments(t_app *shell, t_cmd *cmd, t_token *token,
 				bool *iswriten);
 bool		create_pwd_env_value(t_app *shell);
@@ -106,7 +107,6 @@ void		unset_env_values(t_app *shell, t_envp **envp);
 void		add_redir_back(t_redir **redir, t_redir *new);
 void		print_cmd(t_app **shell);
 void		skip_quotes(char *input, int *i, char quote);
-void		write_value(t_token *token, char *value, int type);
 void		skip_all_beafor_variable(char *input, int *j);
 void		free_prompt(t_app *shell);
 void		handle_child_signal(void);
