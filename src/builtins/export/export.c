@@ -29,35 +29,6 @@ void	show_export(char **str, int *i, int *g)
 	}
 }
 
-int	create_node(t_app *shell, t_lib **lib)
-{
-	t_envp	*node;
-	t_envp	*new;
-
-	node = find_envp_node(shell->envp, (*lib)->key);
-	if (!node)
-	{
-		new = create_new_envp((*lib)->value, (*lib)->key);
-		if (!new)
-			return (0);
-		add_envp_back(&shell->envp, new);
-	}
-	else
-	{
-		if (node->envp != NULL)
-		{
-			free(node->envp);
-			node->envp = NULL;
-		}
-		node->envp = (*lib)->value;
-		if ((*lib)->key)
-			free((*lib)->key);
-	}
-	free(*lib);
-	*lib = NULL;
-	return (1);
-}
-
 int	create_export_list(t_app *shell, t_cmd *cmd, int *exit_code, bool is_child)
 {
 	int		n;

@@ -51,6 +51,7 @@ int			close_all_redirs_fds_child(t_redir *redir);
 int			exe_singl_buildin(t_app *shell, t_cmd *cmd);
 int			make_heredoc(t_app *shell);
 int			create_heredoc_file(t_app *shell, t_redir *redir);
+int			create_node(t_app *shell, t_lib **lib);
 bool		add_token_back(t_token **token, t_token *new);
 bool		is_builtin_func(char *cmd);
 bool		lexing_checker(t_app *shell);
