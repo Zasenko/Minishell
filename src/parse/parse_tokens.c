@@ -127,7 +127,10 @@ void	parse_tokens(t_app *shell)
 		if (!cmd)
 			exit_with_error(shell, 1, MALLOC_FAIL);
 		if (!handle_token_parsing(shell, &head, &cmd, &iswriten))
+		{
+			free(cmd);
 			exit_with_error(shell, 1, MALLOC_FAIL);
+		}
 		add_cmd_back(&head, cmd);
 		shell->cmd = head;
 	}

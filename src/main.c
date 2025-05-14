@@ -18,8 +18,8 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	initialize_shell(&shell, envp);
 	handle_signal_main();
+	initialize_shell(&shell, envp);
 	read_input_line(&shell);
 	return (0);
 }
