@@ -14,7 +14,6 @@
 
 bool	write_value(t_token *token, char *value, int type)
 {
-	(void)value;
 	token->value = ft_strdup(value);
 	if (!token->value)
 		return (false);
