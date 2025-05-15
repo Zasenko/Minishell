@@ -21,11 +21,7 @@ void	cd_change_old_pwd(t_app *shell, t_pwd *pwd, bool is_child)
 	{
 		new_oldpwd = ft_strdup(pwd->pwd->envp);
 		if (!new_oldpwd)
-		{
-			if (pwd->changed_dir)
-				free(pwd->changed_dir);
 			exit_malloc(shell, is_child);
-		}
 		if (pwd->oldpwd->envp)
 		{
 			free(pwd->oldpwd->envp);
@@ -35,13 +31,6 @@ void	cd_change_old_pwd(t_app *shell, t_pwd *pwd, bool is_child)
 	}
 }
 
-void	handle_exit_and_free(t_app *shell, t_pwd *pwd, bool is_child)
-{
-	if (pwd->changed_dir)
-		free(pwd->changed_dir);
-	exit_malloc(shell, is_child);
-}
-
 void	cd_set_old_pwd(t_app *shell, t_pwd *pwd, bool is_child)
 {
 	char	*new_old_pwd;
@@ -49,15 +38,15 @@ void	cd_set_old_pwd(t_app *shell, t_pwd *pwd, bool is_child)
 
 	new_old_pwd = ft_strdup(pwd->pwd->envp);
 	if (!new_old_pwd)
-		handle_exit_and_free(shell, pwd, is_child);
+		exit_malloc(shell, is_child);
 	new_old_pwd_name = ft_strdup("OLDPWD");
 	if (!new_old_pwd_name)
 	{
 		free(new_old_pwd);
-		handle_exit_and_free(shell, pwd, is_child);
+		exit_malloc(shell, is_child);
 	}
 	if (!create_new_pwd_node(shell, new_old_pwd, new_old_pwd_name))
-		handle_exit_and_free(shell, pwd, is_child);
+		exit_malloc(shell, is_child);
 }
 
 void	cd_change_pwd(t_app *shell, t_pwd *pwd, bool is_child)
@@ -67,9 +56,7 @@ void	cd_change_pwd(t_app *shell, t_pwd *pwd, bool is_child)
 	new_pwd = NULL;
 	new_pwd = ft_strdup(pwd->changed_dir);
 	if (!new_pwd)
-	{
-		if (pwd->changed_dir)
-			free(pwd->changed_dir);
+	{	
 		if (is_child)
 			exit_child(shell, 1, NULL);
 		exit_with_error(shell, 1, MALLOC_FAIL);
