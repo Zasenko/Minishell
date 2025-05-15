@@ -73,7 +73,7 @@ bool	create_env_copy(t_app *shell, char **envp, int *i)
 		if (!name)
 			return (free(env_var), false);
 		if (!make_new_envp(shell, envp[*i], &name, &env_var))
-			return (false);
+			return (free(name), false);
 		env_var = NULL;
 		(*i)++;
 	}

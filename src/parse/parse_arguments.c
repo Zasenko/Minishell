@@ -65,7 +65,7 @@ char	**extract_arguments(t_token *token)
 		if (token->type == PIPE)
 			break ;
 		if (!handle_arguments(result, &token, &i))
-			return (false);
+			return (free_2d_array(result), NULL);
 		token = token->next;
 	}
 	return (result);

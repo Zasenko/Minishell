@@ -110,7 +110,7 @@ endif
 all: $(OBJ_DIR) $(NAME)
 $(NAME): $(OBJ) $(UTILS_OBJ) 
 	@$(MAKE) -C $(LIBFT_DIR)
-	@$(CC) $(CFLAGS) $(OBJ) $(UTILS_OBJ) -o $(NAME) $(LIBFT) $(INCLUDES) $(LIBS)
+	@$(CC) $(CFLAGS) $(OBJ) $(UTILS_OBJ)  -o  $(NAME) $(LIBFT) $(INCLUDES) $(LIBS) 
 	@echo "$(GREEN)Compilation Successful.$(RESET)"
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
