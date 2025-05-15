@@ -17,6 +17,8 @@ int	my_whitespace(const char *str, int *idx)
 	int	i;
 	int	sign;
 
+	if (!str)
+		return 2;
 	i = 0;
 	sign = 1;
 	while ((str[i] >= 9 && str[i] <= 13) || str[i] == 32)
@@ -41,6 +43,8 @@ long long	custom_atoi(t_app *shell, t_cmd *cmd, char *arg, int is_child)
 	i = 0;
 	res = 0;
 	sign = my_whitespace(arg, &i);
+	if (sign == 2)
+		return 2;
 	while (arg[i] >= 48 && arg[i] <= 57)
 	{
 		res = res * 10 + (arg[i] - 48);
